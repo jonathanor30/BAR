@@ -1,0 +1,681 @@
+<?php
+
+/**
+ * This file is part of Elephant Framework
+ * Copyright (C) 2018-2019 Juan Bautista <soyjuanbautista0@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http: //www.gnu.org/licenses/>.
+ */
+
+/**
+ * Users controller of the Elephant framework
+ *
+ * @author Juan Bautista <soyjuanbautista0@gmail.com>
+ *
+ */
+class Usuarios extends Controller
+{
+    public $nombrePlugin;
+    public $comprobator; //variable para comprobar sesiones
+
+    public function __construct()
+    {
+        //Esto debe ir acá en el constructor si quieres proteger el acceso al mismo
+        $this->sessionValidator();
+        $this->adminProtector(); //Protección
+        //Así definimos el nombre del plugin en el controlador
+        $this->nombrePlugin = __CLASS__;
+
+        //Así instanciamos los modelos al controlador
+        $this->usuarioModelo = $this->modelo('Usuario', $this->nombrePlugin);
+    }
+
+    /**
+     * Método index() método por defecto del cotrolador
+     * se encarga de mostrar la vista del listado de usuarios.
+     * @access public
+     * @param array $datos
+     */
+    public function index()
+    {
+        //Así se instancia un metodo del modelo que ha sido instanciado previamente en el constructor
+        //Obtener los usuarios
+        $usuarios = $this->usuarioModelo->obtenerUsuarios();
+
+        //Obtener recuros para visualizar registros en DataTables
+        $dataTables = dataTables();
+
+        //Para paasar o mostrar datos a la vista, usa la variable $datos, que es de tipo array
+        //para cuando definas la vista tambien pasese los datos involucrados en la variable $datos
+        //Ejmplo: $this->vista("Paginas/usuarios", $datos);
+        $datos = [
+            'titulo'     => 'Usuarios',       //Titulo de la pagina
+            'usuarios'   => $usuarios,        //Aśi pasamos datos del controlador a la vista
+            'icon'       => "fas fa-users",
+            'dataTables' => $dataTables,
+
+        ];
+
+        //Así cargamos la vista del controlador presente
+        $this->vista("Usuarios/ListUsuarios", $datos, $this->nombrePlugin);
+    }
+
+    /**
+     * Método index() método por defecto del cotrolador
+     * se encarga de agregar un nuevo usuario a la base de datos
+     * @access public
+     * @param array $datos
+     */
+    public function agregar()
+    {
+
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            //Validacion de posible campo vacio: nombres
+            $exc = array();
+            $dat = $this->formValidator($_POST, $exc);
+            if (is_array($dat)) {
+                //Evaluamos si  el usuario a editar es de tipo 3 = afiliado, lo cual debe enviar el valor de vigencia capturado del formulario por metodo post
+                if (isset($_POST["vigencia"])) {
+                    $user_vigencia = $_POST["vigencia"];
+                } else {
+                    //De lo contrario asignaremos la siguiente fecha
+                    $user_vigencia = date('9999-12-31');
+                }
+                $user_password = $_POST['user_password_new'];
+
+                $user_password_hash = password_hash($user_password, PASSWORD_DEFAULT);
+                //preparamos los datos en un array en la variable datos.
+                $datos = [
+                    'firstname'          => $_POST["firstname"],
+                    'lastname'           => $_POST["lastname"],
+                    'user_name'          => $_POST["user_name"],
+                    'user_email'         => $_POST["user_email"],
+                    'user_password_hash' => $user_password_hash,
+                    'user_type'          => $_POST["user_type"],
+                    'user_status'        => $_POST["estado"],
+                    'user_vigencia'      => $user_vigencia,
+                    'date_added'         => date("Y-m-d H:i:s"),
+
+                ];
+                //Estructura de control, para evaluar el query de agregar usuario
+                switch ($this->usuarioModelo->agregarUsuario($datos)) {
+                    case 1:
+                        echo true;
+                        break;
+                    case 2:
+                        //Redireccionamos de nuevo al formulario
+                        echo "Hubo un error al guardar el registro, por favor vuelva a intenter";
+                        break;
+                    case 3:
+                        //Redireccionamos a usuarios
+                        echo "El usuario que quiere registrar ya existe";
+                        break;
+                }
+
+                exit();
+            } else {
+                echo "Faltan datos por completar";
+            }
+        } else {
+
+            redireccionar('/usuarios');
+        }
+    }
+
+    /**
+     * Método index() método por defecto del cotrolador
+     * se encarga de  editar usuario.
+     * @access public
+     * @param array $datos
+     */
+    public function editar($id = null)
+    {
+        if (!isset($id) && $id == null) {
+            //Redireccionamos a usuarios
+            exit(redireccionar('/usuarios'));
+        }
+
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $exceptions = array('estado', 'telegram_id');
+
+            //Validar campos del formulario
+            if ($this->formValidator($_POST, $exceptions)) {
+
+                //Evaluamos si  el usuario a editar es de tipo 3 = afiliado, lo cual debe enviar el valor de vigencia capturado del formulario por metodo post
+                if (isset($_POST["vigencia"])) {
+                    $user_vigencia = $_POST["vigencia"];
+                } else {
+                    //De lo contrario asignaremos la siguiente fecha
+                    $user_vigencia = date('9999-12-31');
+                }
+                if (isset($_POST['2-step'])) {
+                    $verification = 1;
+                    require_once RUTA_APP . SEPARATOR . 'Controllers' . SEPARATOR . 'Email.php';
+                    $emailAlert = new Email();
+                    $emailAlert->telegramAlert($_POST['telegram_id'], 'Haz activado la verificación en 2 pasos para iniciar sesión en ' . NOMBRE_APP . ' con Telegram');
+                } else {
+                    $verification = 0;
+                }
+                if (isset($_POST['2-step-email'])) {
+
+                    $em_verification = 1;
+                    require RUTA_APP . SEPARATOR . 'Controllers' . SEPARATOR . 'Email.php';
+                    $emailAlertC = new Email();
+                    if ($emailAlertC->emailVerification($_POST['user_email']) == true) {
+                    } else {
+                        exit('Error');
+                    }
+                } else {
+                    $em_verification = 0;
+                }
+
+                $user_password = $_POST['user_password_new'];
+
+                $user_password_hash = password_hash($user_password, PASSWORD_DEFAULT);
+
+                $id_set = $id;
+                //preparamos los datos en un array en la variable datos.
+                $datos = [
+                    'user_id'            => $id_set,
+                    'firstname'          => $_POST["firstname"],
+                    'lastname'           => $_POST["lastname"],
+                    'user_name'          => $_POST["user_name"],
+                    'user_email'         => $_POST["user_email"],
+                    'user_password_hash' => $user_password_hash,
+                    'user_type'          => $_POST["user_type"],
+                    'user_status'        => $_POST["estado"],
+                    'user_vigencia'      => $user_vigencia,
+                    'telegram_id'        => $_POST['telegram_id'],
+                    'verification'       => $verification,
+                    'em_verification'    => $em_verification,
+
+                ];
+                //Estructura de control, para evaluar el query de agregar usuarios
+                switch ($this->usuarioModelo->editarUsuario($datos)) {
+                    case 1:
+                        //Usuario editado correctamente
+                        echo "true";
+                        //$_POST = array();
+
+                        break;
+                    case 2:
+                        //error
+                        echo "Hubo un error al guardar el registro, por favor vuelva a intentar";
+                        break;
+                    case 3:
+                        //error
+                        echo "El usuario que quiere renombrar ya existe";
+                        break;
+                }
+            }
+        } else {
+            //Obtenemos usaurio
+            $usuario = $this->usuarioModelo->obtenerUsuario($id);
+            $modulos = $this->usuarioModelo->obtenerModulos($id);
+
+            //Comprobador 404
+            $this->pagina404($usuario);
+
+            $datos = [
+                'titulo'            => 'Editar Usuario',   //Titulo de la pagina
+                'usuario'           => $usuario,           //Aśi pasamos datos del controlador a la vista
+                'icon'              => "fas fa-users",
+                'modulos_asignados' => $modulos,
+
+            ];
+
+            //Así cargamos la vista
+            $this->vista('Usuarios/EditarUsuario', $datos);
+        }
+    }
+    //Método para asignar Módulos a los usuarios
+    public function asignarModulos($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($this->usuarioModelo->validarModulo(array(
+                'nombre_modulo' => $_POST['id'],
+                'user_id'       => $id
+            ))) {
+                echo "false";
+            } else {
+                if ($this->usuarioModelo->asignarModulo(array(
+                    'nombre_modulo'     => $_POST['id'],
+                    'user_id'           => $id,
+                    'user_id_asignador' => $_SESSION['user_id'],
+
+                ))) {
+                    $_POST = array();
+                    echo "true";
+                }
+            }
+        } else {
+            redireccionar('');
+        }
+    }
+
+    //Métodos para deshabilitar Módulos a los usuarios
+    public function quitarModulos($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($this->usuarioModelo->eliminarModulo(array(
+                'nombre_modulo' => $_POST['id'],
+                'user_id'       => $id,
+            ))) {
+                $_POST = array();
+                //Eliminado correctamente
+                echo "true";
+            } else {
+                //error al eliminar módulo
+                echo "false";
+            }
+        } else {
+            redireccionar('');
+        }
+    }
+
+    /**
+     * Método borrar()
+     * se encarga de  eliminar usuario.
+     * @access public
+     * @param array $datos
+     */
+    public function borrar()
+    {
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $plugin = $_POST['id'];
+            $datos  = [
+                'user_id' => $plugin,
+            ];
+            //Instancia del moldelo
+            if (intval($_POST['type']) != 99) {
+                switch ($this->usuarioModelo->borrarUsuario($datos)) {
+                    case 1:
+                        echo "true";
+                        break;
+                    case 2:
+                        echo "false";
+                        break;
+                }
+            } else {
+                echo "Este tipo de usuario no se puede eliminar";
+            }
+        } else {
+            redireccionar('/Usuarios');
+        }
+    }
+
+    public function autocompletarUsuario()
+    {
+        if (isset($_GET['term'])) {
+            $dato  = array();
+            $datos = [
+                'term'      => $_GET['term'],
+                'user_id'   => $_SESSION['user_id'],
+                'user_type' => $_SESSION['user_type'],
+            ];
+
+            //Consultamos registros
+            $rows = $this->usuarioModelo->autocompletarUsuarios($datos);
+            /* Recuperar y almacenar en matriz los resultados de la consulta.*/
+            foreach ($rows as $key => $value) {
+                $dato[] = array(
+                    'user_id'    => $value['user_id'],
+                    'value'      => $value['user_name'],    //Busqueda
+                    'user_type'  => $value['user_type'],
+                    'firstname'  => $value['firstname'],
+                    'lastname'   => $value['lastname'],
+                    'user_name'  => $value['user_name'],
+                    'user_email' => $value['user_email'],
+                );
+            }
+
+            echo json_encode($dato);
+        } else {
+            redireccionar('');
+        }
+    }
+
+    public function tableViews()
+    {
+        //Si existe una petición de tipo post a este método se ejecuta el siguiente script
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            //Tabla a usar
+            $table = 'users';
+
+            //Llave primaria de la tabla
+            $primaryKey = 'user_id';
+
+            // Conjunto de columnas de la base de datos que se deben leer y enviar a DataTables.
+            // El parámetro `db` representa el nombre de la columna en la base de datos, mientras que el parámetro` dt` representa el identificador de la columna DataTables. En este caso, el parámetro objeto.
+
+            $columns = array(
+                array('db' => 'user_name', 'dt' => 'user_name'),
+                array('db' => 'firstname', 'dt' => 'firstname'),
+                array('db' => 'user_email', 'dt' => 'user_email'),
+                array('db' => 'user_type', 'dt' => 'user_type'),
+                array('db' => 'estado_usuario', 'dt' => 'estado_usuario'),
+                array('db' => 'user_id', 'dt' => 'user_id'),
+
+            );
+
+            //Información del servidor de base de datos
+            $sql_details = array(
+                'user' => DB_USER,
+                'pass' => DB_PASS,
+                'db'   => DB_NAME,
+                'host' => DB_HOST,
+            );
+            if (isset($_POST['id']) && !empty($_POST['id'])) {
+                switch ($_POST['id']) {
+                    case 1:
+                        $where = "estado_usuario ='1'";
+                        break;
+                    case 2:
+                        $where = "estado_usuario ='2'";
+                        break;
+                    case 3:
+                        $where = "estado_usuario ='0'";
+                        break;
+                }
+
+                //Retornamos los valores consultados con filtro
+                echo json_encode(
+                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null, $where)
+                );
+            } else {
+
+                //Retornamos los valores consultados si filtro
+                echo json_encode(
+                    SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)
+                );
+            }
+        } else {
+            //De lo contrario será redireccionado
+            redireccionar('');
+        }
+    }
+    public function contratosAsignados()
+    {
+        //Si existe una petición de tipo post a este método se ejecuta el siguiente script
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            //Tabla a usar
+            $table = 'contratos_asignados';
+
+            //Llave primaria de la tabla
+            $primaryKey = 'id_contrato_asignado';
+
+            // Conjunto de columnas de la base de datos que se deben leer y enviar a DataTables.
+            // El parámetro `db` representa el nombre de la columna en la base de datos, mientras que el parámetro` dt` representa el identificador de la columna DataTables. En este caso, el parámetro objeto.
+            $columns = array(
+                array('db' => 'numero_contrato', 'dt' => 'numero_contrato'),
+                array('db' => 'fecha_inicial', 'dt' => 'fecha_inicial'),
+                array('db' => 'fecha_final', 'dt' => 'fecha_final'),
+                array('db' => 'objeto_contrato', 'dt' => 'objeto_contrato'),
+                array('db' => 'contratante', 'dt' => 'contratante'),
+                array('db' => 'nit_contratante', 'dt' => 'nit_contratante'),
+                array('db' => 'responsable', 'dt' => 'responsable'),
+                array('db' => 'nit_responsable', 'dt' => 'nit_responsable'),
+                array('db' => 'telefono_responsable', 'dt' => 'telefono_responsable'),
+                array('db' => 'estado_contrato', 'dt' => 'estado_contrato'),
+                array('db' => 'id_contrato_asignado', 'dt' => 'id_contrato_asignado'),
+
+            );
+
+            //Información del servidor de base de datos
+            $sql_details = array(
+                'user' => DB_USER,
+                'pass' => DB_PASS,
+                'db'   => DB_NAME,
+                'host' => DB_HOST,
+            );
+            if (isset($_POST['id']) && !empty($_POST['id'])) {
+                $where = "user_id={$_POST['id']}";
+
+                //Retornamos los valores consultados con filtro
+                echo json_encode(SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null, $where));
+            } else {
+
+                //Retornamos los valores consultados si filtro
+                echo json_encode(
+                    SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)
+                );
+            }
+        } else {
+            //De lo contrario será redireccionado
+            redireccionar('');
+        }
+    }
+    //Método para eliminar contratos asignados
+    public function asignarContrato()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id']) && !empty($_POST['id'])) {
+            $identificador = explode("-", $_POST['id']);
+
+            $this->modeloContrato = $this->modelo('Contrato', 'Contratos');
+            $contrato             = $this->modeloContrato->obtenerContrato($identificador[0]);
+            $usuario              = $this->usuarioModelo->obtenerUsuario($identificador[1]);
+            $comprobarContrato    = $this->usuarioModelo->comprobarContrato($contrato->numero_contrato, $usuario->user_id);
+            if ($comprobarContrato == false) {
+                $datos = [
+                    'id_contrato'           => $contrato->id_contrato,
+                    'numero_contrato'       => $contrato->numero_contrato,
+                    'usuario_asignado'      => $usuario->user_name,
+                    'user_id'               => $usuario->user_id,
+                    'fecha_inicial'         => $contrato->fecha_inicial,
+                    'fecha_final'           => $contrato->fecha_final,
+                    'objeto_contrato'       => $contrato->objeto_contrato,
+                    'contratante'           => $contrato->contratante,
+                    'nit_contratante'       => $contrato->nit_contratante,
+                    'responsable'           => $contrato->responsable,
+                    'nit_responsable'       => $contrato->nit_responsable,
+                    'telefono_responsable'  => $contrato->telefono_responsable,
+                    'direccion_responsable' => $contrato->direccion_responsable,
+                    'estado_contrato'       => $contrato->estado_contrato,
+                    'date_added'            => $contrato->date_added,
+                ];
+
+                switch ($this->usuarioModelo->asignarContrato($datos)) {
+                    case 1:
+                        echo "true";
+                        break;
+                    case 2:
+                        echo "false";
+                        break;
+                }
+            } else {
+                echo "Este contrato ya esta asignado ";
+                exit();
+            }
+        } else {
+            redireccionar('');
+        }
+    }
+    //Método para eliminar contratos asignados
+    public function asignarRuta()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id']) && !empty($_POST['id'])) {
+            $identificador = explode("-", $_POST['id']);
+
+            $this->modeloRuta = $this->modelo('Ruta', 'Rutas');
+            $ruta             = $this->modeloRuta->obtenerRuta($identificador[0]);
+            $usuario          = $this->usuarioModelo->obtenerUsuario($identificador[1]);
+            $comprobarRuta    = $this->usuarioModelo->comprobarRuta($ruta->id_ruta, $usuario->user_id);
+            if ($comprobarRuta == false) {
+                $datos = [
+                    'id_ruta'          => $ruta->id_ruta,
+                    'usuario_asignado' => $usuario->user_name,
+                    'user_id'          => $usuario->user_id,
+                    'nombre_ruta'      => $ruta->nombre_ruta,
+                    'descripccion'     => $ruta->descripccion,
+                    'status_ruta'      => $ruta->status_ruta,
+                    'date_added'       => date("Y-m-d H:i:s"),
+                ];
+
+                switch ($this->usuarioModelo->asignarRuta($datos)) {
+                    case 1:
+                        echo "true";
+                        break;
+                    case 2:
+                        echo "false";
+                        break;
+                }
+            } else {
+                echo "Esta ruta ya esta asignada ";
+                exit();
+            }
+        } else {
+            redireccionar('');
+        }
+    }
+    //Método para eliminar contratos asignados
+    public function eliminarContrato()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id']) && !empty($_POST['id'])) {
+            $datos = [
+                'id' => $_POST['id'],
+            ];
+            switch ($this->usuarioModelo->eliminarContrato($datos)) {
+                case 1:
+                    echo "true";
+                    break;
+                case 2:
+                    echo "false";
+                    break;
+            }
+        } else {
+            redireccionar('');
+        }
+    }
+
+    public function rutasAsignadas()
+    {
+        //Si existe una petición de tipo post a este método se ejecuta el siguiente script
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            //Tabla a usar
+            $table = 'rutas_asignadas';
+
+            //Llave primaria de la tabla
+            $primaryKey = 'id_ruta_asignada';
+
+            // Conjunto de columnas de la base de datos que se deben leer y enviar a DataTables.
+            // El parámetro `db` representa el nombre de la columna en la base de datos, mientras que el parámetro` dt` representa el identificador de la columna DataTables. En este caso, el parámetro objeto.
+            $columns = array(
+                array('db' => 'nombre_ruta', 'dt' => 'nombre_ruta'),
+                array('db' => 'descripccion', 'dt' => 'descripccion'),
+                array('db' => 'status_ruta', 'dt' => 'status_ruta'),
+                array('db' => 'id_ruta_asignada', 'dt' => 'id_ruta_asignada'),
+
+            );
+
+            //Información del servidor de base de datos
+            $sql_details = array(
+                'user' => DB_USER,
+                'pass' => DB_PASS,
+                'db'   => DB_NAME,
+                'host' => DB_HOST,
+            );
+            if (isset($_POST['id']) && !empty($_POST['id'])) {
+                $where = "user_id={$_POST['id']}";
+
+                //Retornamos los valores consultados con filtro
+                echo json_encode(SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null, $where));
+            } else {
+
+                //Retornamos los valores consultados si filtro
+                echo json_encode(
+                    SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)
+                );
+            }
+        } else {
+            //De lo contrario será redireccionado
+            redireccionar('');
+        }
+    }
+
+    //Método para eliminar rutas asignadas
+    public function borrarRuta()
+    {
+
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id']) && !empty($_POST['id'])) {
+            //Si no se asigno se asigna al usuario admin
+            $id    = $_POST['id'];
+            $datos = [
+                'id' => $id,
+            ];
+
+            switch ($this->usuarioModelo->borrarRuta($datos)) {
+                case 1:
+                    echo "true";
+                    break;
+                case 2:
+                    echo "Hubo un error al intentar borrar la ruta ";
+                    break;
+            }
+        } else {
+            redireccionar('');
+        }
+    }
+    //Metodo disfuncional para asignar datos aun usuario
+    /* public function datosUsuario($id)
+    {
+        if (isset($id) && !empty($id)) {
+
+            //Usuario
+            $usuario = $this->usuarioModelo->obtenerUsuario($id);
+            //verificación de usuario
+            $this->pagina404($usuario);
+
+            //variable datos para la vista del presente método
+            $datos = [
+                'titulo'     => 'Datos ' . $usuario->user_name,
+                'usuario'    => $usuario,
+                'dataTables' => dataTables(),
+
+            ];
+            //Vista método datosUsuario
+            $this->vista('Usuarios/DatosUsuario', $datos);
+
+        } else {
+            redireccionar('');
+        }
+    }*/
+
+    //Método para manejar arhcivos
+    public function files()
+    {
+        if (isset($_GET['img']) || isset($_GET['js']) || isset($_GET['css']) || isset($_GET['pdf'])) {
+            if (isset($_GET['img'])) {
+                return $this->filesGTEP($_GET['img'], false, 'img');
+            }
+            if (isset($_GET['pdf'])) {
+                return $this->filesGTEP($_GET['pdf'], false, 'pdf');
+            }
+            if (isset($_GET['js'])) {
+                //Personalizado
+                return $this->filesGTEP('Assets' . SEPARATOR . $this->nombrePlugin, $_GET['js'], 'js', 'Assets');
+            }
+            if (isset($_GET['css'])) {
+                return $this->filesGTEP($this->nombrePlugin, $_GET['css'], 'css');
+            }
+        } else {
+            $this->pagina404(false);
+        }
+    }
+}
