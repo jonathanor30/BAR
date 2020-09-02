@@ -1,5 +1,6 @@
 <?php require RUTA_APP . '/Views/inc/header.php'; ?>
 
+
 <?php 
 echo "<pre>";
 print_r($datos['producto']);

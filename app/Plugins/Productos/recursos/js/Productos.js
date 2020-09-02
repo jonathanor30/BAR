@@ -77,7 +77,7 @@ function actualizar(id, type) {
   pre.style.textAlign = "center";
 
   pre.appendChild(
-    document.createTextNode("Realmente desea cambiar el estado del producto")
+    document.createTextNode("Realmente desea actualizar este producto")
   );
 
   alertify.confirm(

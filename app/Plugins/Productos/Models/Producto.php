@@ -34,5 +34,32 @@ class Producto
         return $this->db->registro();
 
     }
+     //Método para eliminar usuario del sistema
+     public function actualizarProducto($datos = [])
+     {
+         
+             //Preparamos consulta:
+             if($datos['Estado_P'] != 1){
+             $this->db->query('UPDATE producto SET Estado_P= 1 WHERE IdProducto=:id');
+            }
+            if($datos['Estado_P'] != 2)
+            {
+                $this->db->query('UPDATE producto SET Estado_P= 2 WHERE IdProducto=:id');
+            }
+             //Vinculamos valores:
+             $this->db->bind(':id', $datos['IdProducto']);
+             //Ejecutamos la consulta:
+             if ($this->db->execute()) {
+                return 2;
+            } else {
+                return 1;
+            }
+             
+            
+           
+             
+        
+     }
+ 
 
 }
