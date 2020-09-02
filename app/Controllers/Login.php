@@ -91,7 +91,7 @@ class Login extends Controller
                                 $_SESSION['user_email']        = $usuario->user_email;
                                 $_SESSION['user_login_status'] = 1;
                                 $_SESSION['user_type']         = $usuario->user_type;
-                                $_SESSION['modulos']           = $this->modeloUsuario->obtenerModulos($usuario->user_id) ?? 'Dashboard';
+                                $_SESSION['modulos']           = $this->modeloUsuario->obtenerModulos($usuario->user_id) ?? 'Productos';
 
                                 //Log inicio de sesión
                                 $this->writeLog = new LogManager(array(
@@ -104,7 +104,7 @@ class Login extends Controller
                                     if ($_SESSION['modulos'] != false || $_SESSION['modulos'] != null) {
                                         redireccionar('/' . $_SESSION['modulos'][0]->nombre_modulo);
                                     } else {
-                                        redireccionar('/Dashboard');
+                                        redireccionar('/Productos');
                                     }
                                 } else if ($_SESSION['user_type'] == 1) {
                                     redireccionar('/Productos');

@@ -28,8 +28,9 @@ class Core
     public function __construct()
     {
         
-        $url = $this->getUrl();
-        //print_r($this->getUrl());
+        $url = (array)$this->getUrl();
+        $url[0] = (isset($url) && $url != NULL)? $url[0]: $this->controladorActual;
+        
         //Buscar en Conttroladores si el controlador llamado existe
         if (file_exists('../app/Controllers/' . ucwords($url[0]) . '.php')) {
             //Si el controlador existe se setea como controlador por defecto

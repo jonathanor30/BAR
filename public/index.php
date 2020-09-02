@@ -1,7 +1,6 @@
 <?php
 /**
- * This file is part of GTEP Framework
- * Copyright (C) 2018-2019 Juan Bautista <soyjuanbautista0@gmail.com>
+ * This file is part of Bar70 Framework
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
