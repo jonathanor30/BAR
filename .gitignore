@@ -1,5 +1,4 @@
 app/Config/
-app/Plugins/
 app/Storage/
 app/Logs/Log.json
 vendor/
