@@ -109,10 +109,13 @@ class Productos extends Controller
                     SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null, $where)
                 );
             } else {
-
+                $where = "Estado_P !='4'";
                 //Retornamos los valores consultados si filtro
-                echo json_encode(
+                /*echo json_encode(
                     SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)
+                );*/
+                echo json_encode(
+                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null, $where)
                 );
             }
         } else {
@@ -147,4 +150,16 @@ class Productos extends Controller
         }
     }
     
+
+    public function eliminar()
+    {
+        //Validar datos recibido mediante POST
+        if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id']) && !empty($_POST['id']) ):
+           if($this->model->actualizarProducto([], 'update', 'Estado_P', 4, $_POST['id'])){
+                   echo "true";
+           }else{
+                echo "false";
+           }
+        endif;
+    }
 }

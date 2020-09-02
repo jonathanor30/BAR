@@ -1,5 +1,6 @@
 <?php require RUTA_APP . '/Views/inc/header.php'; ?>
 <br>
+<div id="ResultadoAjax" class="container"></div>
 <div class="container-fluid d-print-none">
    <div class="row">
       <div class="col-md-7">
