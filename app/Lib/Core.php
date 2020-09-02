@@ -27,8 +27,9 @@ class Core
     //Constructor
     public function __construct()
     {
-        
-        $url = $this->getUrl();
+
+        $url = (array)$this->getUrl();
+        $url[0] = (isset($url) && $url != NULL)? $url[0]: $this->controladorActual;
         //print_r($this->getUrl());
         //Buscar en Conttroladores si el controlador llamado existe
         if (file_exists('../app/Controllers/' . ucwords($url[0]) . '.php')) {
@@ -79,7 +80,7 @@ class Core
             $url = rtrim($_GET['url'], '/');
             $url = filter_var($url, FILTER_SANITIZE_URL);
             $url = explode('/', $url);
-            return $url;
+            return (array)$url;
         }
     }
 }

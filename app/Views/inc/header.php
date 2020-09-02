@@ -44,18 +44,19 @@
          <!--Barra Lateral - Marca -->
          <?php if ($_SESSION['user_type'] != 1 && $_SESSION['user_type'] != 99) { ?>
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo RUTA_URL . SEPARATOR . $_SESSION['modulos'][0]->nombre_modulo ?>">
-               <img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.jpeg">
-               <div class="sidebar-brand-text mx-3"><img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.jpeg"></div>
+               <img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png">
+               <div class="sidebar-brand-text mx-3"><img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png"></div>
             </a>
          <?php } else { ?>
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo RUTA_URL; ?>/Productos">
-               <img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.jpeg">
-               <div class="sidebar-brand-text mx-3"><img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.jpeg"></div>
+               <img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png">
+               <div class="sidebar-brand-text mx-3"><img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png"></div>
             </a>
          <?php } ?>
          <!-- Divider -->
          <hr class="sidebar-divider my-0">
          <!-- Nav Item - Dashboard -->
+         <br>
          <li class="nav-item active">
             <a class="nav-link">
 
@@ -114,7 +115,7 @@
                </div>
             </div>
          </li>
-         <!-- Divider -->
+         <!-- Divider 
          <hr class="sidebar-divider">
          <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#system-status" aria-expanded="true" aria-controls="collapseTwo">
@@ -129,7 +130,7 @@
                   <a class="collapse-item" title="Memory"><span id="memory"></span> <i class="fas fa-memory"></i></a>
                </div>
             </div>
-         </li>
+         </li>-->
          <!-- Divider -->
          <hr class="sidebar-divider d-none d-md-block">
          <!-- Sidebar Toggler (Sidebar) -->

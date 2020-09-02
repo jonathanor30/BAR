@@ -34,17 +34,13 @@
 <?php
 //Tipo de usaurio
 switch ($datos['usuario']->user_type) {
+   
    case 1:
-      $tipo_usuario = "<span class='badge badge-warning'>root</span>";
+      $tipo_usuario = "<span class='badge badge-warning'>Empleado</span>";
       break;
+      
    case 2:
-      $tipo_usuario = "<span class='badge badge-primary'>admin</span>";
-      break;
-   case 3:
-      $tipo_usuario = "<span class='badge badge-info'>operador</span>";
-      break;
-   case 99:
-      $tipo_usuario = "<span class='badge badge-outline-primary'>Desarrollador</span>";
+      $tipo_usuario = "<span class='badge badge-primary'>Administrador</span>";
       break;
 }
 //Estado usurio
@@ -104,10 +100,8 @@ switch ($datos['usuario']->estado_usuario) {
                   <label for="exampleInputPassword1">Tipo de usuario</label>
                   <select class="form-control form-control-sm" id="user_type" <?php echo ($datos['usuario']->user_type == 99 ? "disabled" : "") ?> name="user_type">
                      <option disabled="" selected="">Selecciona el tipo de usuario</option>
-                     <option value="<?php echo $datos['usuario']->user_type; ?>" selected=""><?php echo $tipo_usuario; ?></option>
-                     <option value="1">root</option>
-                     <option value="2">admin</option>
-                     <option value="3">operador</option>
+                     <option value="1" <?php   if($datos['usuario']->user_type ==1){echo "selected"; } ?>>Empleado</option>
+                     <option value="2"  <?php if($datos['usuario']->user_type ==2){echo "selected"; }?>>Administrador</option>
                   </select>
                </div>
             </div>

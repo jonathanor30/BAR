@@ -21,20 +21,12 @@ $(document).ready(function() {
         fnCreatedCell: function(nTd, sData, oData, iRow, iCol) {
           switch (oData.user_type) {
             case "1":
-              var estado = "root";
+              var estado = "Empleado";
               var clase = "badge badge-success";
               break;
             case "2":
-              var estado = "admin";
+              var estado = "Administrador";
               var clase = "badge badge-primary";
-              break;
-            case "3":
-              var estado = "operador";
-              var clase = "badge badge-warning";
-              break;
-            case "99":
-              var estado = "Desarrollador";
-              var clase = "badge badge-info";
               break;
           }
           $(nTd).html("<span class='" + clase + "'>" + estado + "</span>");
@@ -89,9 +81,11 @@ function eliminar(id, type) {
   pre.style.margin = "0";
   pre.style.padding = "24px";
   //pre.style.whiteSpace = "pre-wrap";
+
   pre.style.textAlign = "center";
 
   pre.appendChild(
+  
     document.createTextNode("Realmente desea eliminar este usuario")
   );
 
@@ -113,7 +107,7 @@ function eliminar(id, type) {
               .DataTable()
               .ajax.reload();
             alertify.success(
-              '<h6><i class="fas fa-check"></i> Usuario eliminado correctamente</h6>'
+              '<h6><i class="fas fa-check"></i> Usuario eliminado correctamente  </h6>'
             );
           } else {
             console.log(datos);
@@ -125,7 +119,7 @@ function eliminar(id, type) {
       });
     },
     function() {
-      alertify.error('<i class="fas fa-ban"></i> Cencelado');
+      alertify.error('<i class="fas fa-ban"></i> Cancelado');
     }
   );
 }

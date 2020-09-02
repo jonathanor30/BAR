@@ -20,7 +20,7 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">×</span>
     </button>
-        <strong>Ups!</strong> GTEP no encontró ningún resultado para este parámetro, posiblemente no exista en la base de datos. 
+        <strong>Ups!</strong> Bar70 no encontró ningún resultado para este parámetro, posiblemente no exista en la base de datos. 
         </div>
 <div class="container">
         <div class="row">
