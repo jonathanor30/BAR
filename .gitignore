@@ -4,7 +4,3 @@ app/Logs/Log.json
 vendor/
 composer.json
 composer.lock
-.htaccess
-*.htaccess
-**.htaccess
-*/.htaccess
