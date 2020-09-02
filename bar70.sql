@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6deb5
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3306
--- Tiempo de generación: 28-08-2020 a las 22:43:35
--- Versión del servidor: 5.7.31-0ubuntu0.18.04.1
--- Versión de PHP: 7.2.33-1+ubuntu18.04.1+deb.sury.org+1
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 30-08-2020 a las 00:11:49
+-- Versión del servidor: 10.4.11-MariaDB
+-- Versión de PHP: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,6 +20,96 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `bar70`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cliente`
+--
+
+CREATE TABLE `cliente` (
+  `IdCliente` int(11) NOT NULL,
+  `IdTipoDocumento` int(11) NOT NULL,
+  `Numero_Documento` varchar(20) NOT NULL,
+  `Nombre` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `compra`
+--
+
+CREATE TABLE `compra` (
+  `IdCompra` int(11) NOT NULL,
+  `IdProveedor` int(11) NOT NULL,
+  `FechaCompra` date NOT NULL,
+  `Iva` double NOT NULL,
+  `Total` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_compra`
+--
+
+CREATE TABLE `detalle_compra` (
+  `IdDetalleCompra` int(11) NOT NULL,
+  `IdProducto` int(11) NOT NULL,
+  `IdCompra` int(11) NOT NULL,
+  `Cantidad` int(11) NOT NULL,
+  `Precio` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_venta`
+--
+
+CREATE TABLE `detalle_venta` (
+  `IdDetalleVenta` int(11) NOT NULL,
+  `IdUnidadMedida` int(11) NOT NULL,
+  `IdVenta` int(11) NOT NULL,
+  `IdProducto` int(11) NOT NULL,
+  `Unidad_Medida` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estado`
+--
+
+CREATE TABLE `estado` (
+  `IdEstado` int(11) NOT NULL,
+  `Nombre` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estado_venta`
+--
+
+CREATE TABLE `estado_venta` (
+  `IdEstadoVenta` int(11) NOT NULL,
+  `Pendiente` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `home`
+--
+
+CREATE TABLE `home` (
+  `IdHome` int(11) NOT NULL,
+  `Mision` varchar(256) NOT NULL,
+  `Vision` varchar(256) NOT NULL,
+  `Quienes_Somos` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -64,6 +155,21 @@ INSERT INTO `modulos_asignados` (`id`, `nombre_modulo`, `user_id`, `user_id_asig
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `novedad`
+--
+
+CREATE TABLE `novedad` (
+  `IdNovedad` int(11) NOT NULL,
+  `IdProducto` int(4) NOT NULL,
+  `IdTipoNovedad` int(11) NOT NULL,
+  `Cantidad` int(4) NOT NULL,
+  `Descripcion` text NOT NULL,
+  `Fecha` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `perfil`
 --
 
@@ -90,7 +196,7 @@ CREATE TABLE `perfil` (
   `hostEmail` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `userEmail` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `passwordEmail` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `logoGTEP` blob,
+  `logoGTEP` blob DEFAULT NULL,
   `nombre_banco` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `tipo_cuenta` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `numero_cuenta` varchar(255) CHARACTER SET utf8 DEFAULT NULL
@@ -149,6 +255,40 @@ INSERT INTO `producto` (`IdProducto`, `IdMarca`, `IdPresentacion`, `IdTipoProduc
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `proveedor`
+--
+
+CREATE TABLE `proveedor` (
+  `IdProveedor` int(11) NOT NULL,
+  `Nombre` varchar(256) NOT NULL,
+  `Telefono` int(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipo_documento`
+--
+
+CREATE TABLE `tipo_documento` (
+  `IdTipoDocumento` int(11) NOT NULL,
+  `Nombre_Documento` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipo_novedad`
+--
+
+CREATE TABLE `tipo_novedad` (
+  `IdTipoNovedad` int(11) NOT NULL,
+  `Nombre_Novedad` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tipo_producto`
 --
 
@@ -178,38 +318,105 @@ CREATE TABLE `unidad_medida` (
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL COMMENT 'auto incrementing user_id of each user, unique index',
   `telegram_id` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `telegram_verification` tinyint(1) DEFAULT '0',
+  `telegram_verification` tinyint(1) DEFAULT 0,
   `user_type` int(11) NOT NULL,
   `firstname` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `lastname` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `user_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'user''s name, unique',
   `user_password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'user''s password in salted and hashed format',
   `user_email` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'user''s email, unique',
-  `email_verification` tinyint(1) DEFAULT '0',
+  `email_verification` tinyint(1) DEFAULT 0,
   `vigencia` date DEFAULT NULL,
   `estado_usuario` tinyint(4) NOT NULL,
-  `date_added` datetime NOT NULL
+  `date_added` datetime NOT NULL,
+  `IdTipoDocumento` int(11) NOT NULL,
+  `Numero_Documento` varchar(64) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='user data';
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`user_id`, `telegram_id`, `telegram_verification`, `user_type`, `firstname`, `lastname`, `user_name`, `user_password_hash`, `user_email`, `email_verification`, `vigencia`, `estado_usuario`, `date_added`) VALUES
-(1, NULL, NULL, 1, 'Juan David', 'Bautista', 'admin', '$2y$10$eg4yWgPEGWpqecKYUBZnGOvXx.3e6PUtl3SFzLLG/jFm9MvhK.W.W', 'contacto@plenusservices.com', NULL, '9999-12-31', 1, '2016-05-21 15:06:00'),
-(5, NULL, 0, 1, 'Sebastian', 'Londoño Giraldo', 'directoroperativo', '$2y$10$k/JdStKPCTd5ZDRbSINsyuo6rrft/5/DMQiqkg.onHcfHZ489tIS.', 'directoroperativo@transportesonix.com', 0, '9999-12-31', 1, '2019-11-09 01:53:51'),
-(6, NULL, NULL, 1, 'Yeraldin', 'Guerrero Posada', 'asistentegerencia', '$2y$10$7FReabQF1risOIaWbi61bOydUADyspcGf/Mf3AklhLnBO6.zkN9w.', 'asistentegerencia@transportesonix.com', NULL, '9999-12-31', 1, '2019-11-09 01:54:51'),
-(7, NULL, 0, 3, 'TRANSPORTE Y TURISMO', ' 1A ', 'TRANSPORTEYTURISMO', '$2y$10$iiEkEQgAe0zBL89bz98cGujOURtkAwuK7/ms2REKN12mZH1G1xX.O', 'auxiliar2@transporteyturismo1a.com', 0, '9999-12-31', 1, '2020-01-24 18:55:21'),
-(8, NULL, NULL, 1, 'leidy', 'posada cañas', 'asistenteadministrativa', '$2y$10$yWQweNzDmSgFhG2sZGG4R.cZpTZo.0oun/tQkCm6dtcbhix2iGWpe', 'asistenteadministrativa@transportesonix.com', NULL, '9999-12-31', 1, '2020-01-31 10:39:53'),
-(9, NULL, 0, 1, 'Sebastian', 'Londoño', 'coordinadorlogistico', '$2y$10$a8nQ.UaN2f1he/jWnzi6pOV4ngaAWS4Mv8NT1t1dgvDb9pUxlVKHe', 'coordinadorlogistico@transportesonix.com', 0, '9999-12-31', 1, '2020-05-05 15:29:00'),
-(10, NULL, 0, 1, 'Gina', 'Giraldo', 'directoracomercial', '$2y$10$cjjypHOnQfsQnz0op09IQuth39GNRiCmcvw9/rhQfMbM5gu3gViE.', 'directoracomercial@transportesonix.com', 0, '9999-12-31', 1, '2020-05-12 12:14:52'),
-(11, NULL, NULL, 2, 'Viviana ', 'Arboleda Lopez', 'directoraoperativa', '$2y$10$IcKzhNIQPYaO8Z6H.peaN.hPfaQ0QdOgd2nOpsaIFHJb8B6RlT1YW', 'directoraperativa@transportesonix.com', NULL, '9999-12-31', 1, '2020-05-13 15:36:57'),
-(12, NULL, 0, 1, 'Natalia', 'Gasca Rivera', 'Contabilidad', '$2y$10$TF.zEngILnTzEnu39GbQf.jo6swndqBbhPSyROSJld4xzeG8U5wBG', 'contabilidad@transportesonix.com', 0, '9999-12-31', 1, '2020-05-30 18:31:32'),
-(13, NULL, NULL, 1, 'Elizabeth', 'algarin', 'COMERCIAL', '$2y$10$/CJH8M5b37tw59dGsio5EuiCjhcwlJD6X8N2u6hExYfZCCe27ejb.', 'comercial@transportesonix.com', NULL, '9999-12-31', 1, '2020-07-16 10:33:36');
+INSERT INTO `users` (`user_id`, `telegram_id`, `telegram_verification`, `user_type`, `firstname`, `lastname`, `user_name`, `user_password_hash`, `user_email`, `email_verification`, `vigencia`, `estado_usuario`, `date_added`, `IdTipoDocumento`, `Numero_Documento`) VALUES
+(1, NULL, NULL, 1, 'Juan David', 'Bautista', 'admin', '$2y$10$eg4yWgPEGWpqecKYUBZnGOvXx.3e6PUtl3SFzLLG/jFm9MvhK.W.W', 'contacto@plenusservices.com', NULL, '9999-12-31', 1, '2016-05-21 15:06:00', 0, ''),
+(5, NULL, 0, 1, 'Sebastian', 'Londoño Giraldo', 'directoroperativo', '$2y$10$k/JdStKPCTd5ZDRbSINsyuo6rrft/5/DMQiqkg.onHcfHZ489tIS.', 'directoroperativo@transportesonix.com', 0, '9999-12-31', 1, '2019-11-09 01:53:51', 0, ''),
+(6, NULL, NULL, 1, 'Yeraldin', 'Guerrero Posada', 'asistentegerencia', '$2y$10$7FReabQF1risOIaWbi61bOydUADyspcGf/Mf3AklhLnBO6.zkN9w.', 'asistentegerencia@transportesonix.com', NULL, '9999-12-31', 1, '2019-11-09 01:54:51', 0, ''),
+(7, NULL, 0, 3, 'TRANSPORTE Y TURISMO', ' 1A ', 'TRANSPORTEYTURISMO', '$2y$10$iiEkEQgAe0zBL89bz98cGujOURtkAwuK7/ms2REKN12mZH1G1xX.O', 'auxiliar2@transporteyturismo1a.com', 0, '9999-12-31', 1, '2020-01-24 18:55:21', 0, ''),
+(8, NULL, NULL, 1, 'leidy', 'posada cañas', 'asistenteadministrativa', '$2y$10$yWQweNzDmSgFhG2sZGG4R.cZpTZo.0oun/tQkCm6dtcbhix2iGWpe', 'asistenteadministrativa@transportesonix.com', NULL, '9999-12-31', 1, '2020-01-31 10:39:53', 0, ''),
+(9, NULL, 0, 1, 'Sebastian', 'Londoño', 'coordinadorlogistico', '$2y$10$a8nQ.UaN2f1he/jWnzi6pOV4ngaAWS4Mv8NT1t1dgvDb9pUxlVKHe', 'coordinadorlogistico@transportesonix.com', 0, '9999-12-31', 1, '2020-05-05 15:29:00', 0, ''),
+(10, NULL, 0, 1, 'Gina', 'Giraldo', 'directoracomercial', '$2y$10$cjjypHOnQfsQnz0op09IQuth39GNRiCmcvw9/rhQfMbM5gu3gViE.', 'directoracomercial@transportesonix.com', 0, '9999-12-31', 1, '2020-05-12 12:14:52', 0, ''),
+(11, NULL, NULL, 2, 'Viviana ', 'Arboleda Lopez', 'directoraoperativa', '$2y$10$IcKzhNIQPYaO8Z6H.peaN.hPfaQ0QdOgd2nOpsaIFHJb8B6RlT1YW', 'directoraperativa@transportesonix.com', NULL, '9999-12-31', 1, '2020-05-13 15:36:57', 0, ''),
+(12, NULL, 0, 1, 'Natalia', 'Gasca Rivera', 'Contabilidad', '$2y$10$TF.zEngILnTzEnu39GbQf.jo6swndqBbhPSyROSJld4xzeG8U5wBG', 'contabilidad@transportesonix.com', 0, '9999-12-31', 1, '2020-05-30 18:31:32', 0, ''),
+(13, NULL, NULL, 1, 'Elizabeth', 'algarin', 'COMERCIAL', '$2y$10$/CJH8M5b37tw59dGsio5EuiCjhcwlJD6X8N2u6hExYfZCCe27ejb.', 'comercial@transportesonix.com', NULL, '9999-12-31', 1, '2020-07-16 10:33:36', 0, '');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `venta`
+--
+
+CREATE TABLE `venta` (
+  `IdVenta` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `IdCliente` int(11) NOT NULL,
+  `IdEstadoVenta` int(11) NOT NULL,
+  `Fecha` date NOT NULL,
+  `Iva` double NOT NULL,
+  `Total` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `cliente`
+--
+ALTER TABLE `cliente`
+  ADD PRIMARY KEY (`IdCliente`),
+  ADD KEY `IdTipoDocumento` (`IdTipoDocumento`);
+
+--
+-- Indices de la tabla `compra`
+--
+ALTER TABLE `compra`
+  ADD PRIMARY KEY (`IdCompra`),
+  ADD KEY `IdProveedor` (`IdProveedor`);
+
+--
+-- Indices de la tabla `detalle_compra`
+--
+ALTER TABLE `detalle_compra`
+  ADD PRIMARY KEY (`IdDetalleCompra`),
+  ADD KEY `IdProducto` (`IdProducto`),
+  ADD KEY `IdCompra` (`IdCompra`);
+
+--
+-- Indices de la tabla `detalle_venta`
+--
+ALTER TABLE `detalle_venta`
+  ADD PRIMARY KEY (`IdDetalleVenta`),
+  ADD KEY `IdUnidadMedida` (`IdUnidadMedida`),
+  ADD KEY `IdVenta` (`IdVenta`),
+  ADD KEY `IdProducto` (`IdProducto`);
+
+--
+-- Indices de la tabla `estado`
+--
+ALTER TABLE `estado`
+  ADD PRIMARY KEY (`IdEstado`);
+
+--
+-- Indices de la tabla `estado_venta`
+--
+ALTER TABLE `estado_venta`
+  ADD PRIMARY KEY (`IdEstadoVenta`);
+
+--
+-- Indices de la tabla `home`
+--
+ALTER TABLE `home`
+  ADD PRIMARY KEY (`IdHome`);
 
 --
 -- Indices de la tabla `marca`
@@ -222,6 +429,14 @@ ALTER TABLE `marca`
 --
 ALTER TABLE `modulos_asignados`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `novedad`
+--
+ALTER TABLE `novedad`
+  ADD PRIMARY KEY (`IdNovedad`),
+  ADD KEY `IdProducto` (`IdProducto`),
+  ADD KEY `IdTipoNovedad` (`IdTipoNovedad`);
 
 --
 -- Indices de la tabla `perfil`
@@ -246,6 +461,24 @@ ALTER TABLE `producto`
   ADD KEY `IdUnidadMedida` (`IdUnidadMedida`);
 
 --
+-- Indices de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  ADD PRIMARY KEY (`IdProveedor`);
+
+--
+-- Indices de la tabla `tipo_documento`
+--
+ALTER TABLE `tipo_documento`
+  ADD PRIMARY KEY (`IdTipoDocumento`);
+
+--
+-- Indices de la tabla `tipo_novedad`
+--
+ALTER TABLE `tipo_novedad`
+  ADD PRIMARY KEY (`IdTipoNovedad`);
+
+--
 -- Indices de la tabla `tipo_producto`
 --
 ALTER TABLE `tipo_producto`
@@ -266,52 +499,166 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `user_email` (`user_email`);
 
 --
+-- Indices de la tabla `venta`
+--
+ALTER TABLE `venta`
+  ADD PRIMARY KEY (`IdVenta`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `IdCliente` (`IdCliente`),
+  ADD KEY `IdEstadoVenta` (`IdEstadoVenta`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `cliente`
+--
+ALTER TABLE `cliente`
+  MODIFY `IdCliente` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `compra`
+--
+ALTER TABLE `compra`
+  MODIFY `IdCompra` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_compra`
+--
+ALTER TABLE `detalle_compra`
+  MODIFY `IdDetalleCompra` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_venta`
+--
+ALTER TABLE `detalle_venta`
+  MODIFY `IdDetalleVenta` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `estado`
+--
+ALTER TABLE `estado`
+  MODIFY `IdEstado` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `estado_venta`
+--
+ALTER TABLE `estado_venta`
+  MODIFY `IdEstadoVenta` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `home`
+--
+ALTER TABLE `home`
+  MODIFY `IdHome` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `marca`
 --
 ALTER TABLE `marca`
   MODIFY `IdMarca` int(12) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `modulos_asignados`
 --
 ALTER TABLE `modulos_asignados`
   MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT de la tabla `novedad`
+--
+ALTER TABLE `novedad`
+  MODIFY `IdNovedad` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `perfil`
 --
 ALTER TABLE `perfil`
   MODIFY `id_perfil` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT de la tabla `presentacion`
 --
 ALTER TABLE `presentacion`
   MODIFY `IdPresentacion` int(12) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
   MODIFY `IdProducto` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  MODIFY `IdProveedor` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_documento`
+--
+ALTER TABLE `tipo_documento`
+  MODIFY `IdTipoDocumento` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_novedad`
+--
+ALTER TABLE `tipo_novedad`
+  MODIFY `IdTipoNovedad` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `tipo_producto`
 --
 ALTER TABLE `tipo_producto`
   MODIFY `IdTipoProducto` int(12) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`
 --
 ALTER TABLE `unidad_medida`
   MODIFY `IdUnidadMedida` int(12) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'auto incrementing user_id of each user, unique index', AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT de la tabla `venta`
+--
+ALTER TABLE `venta`
+  MODIFY `IdVenta` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `cliente`
+--
+ALTER TABLE `cliente`
+  ADD CONSTRAINT `IdTipoDocumento` FOREIGN KEY (`IdTipoDocumento`) REFERENCES `tipo_documento` (`IdTipoDocumento`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `compra`
+--
+ALTER TABLE `compra`
+  ADD CONSTRAINT `IdProveedor` FOREIGN KEY (`IdProveedor`) REFERENCES `proveedor` (`IdProveedor`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `detalle_compra`
+--
+ALTER TABLE `detalle_compra`
+  ADD CONSTRAINT `IdCompra` FOREIGN KEY (`IdCompra`) REFERENCES `compra` (`IdCompra`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `IdProducto` FOREIGN KEY (`IdProducto`) REFERENCES `producto` (`IdProducto`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `novedad`
+--
+ALTER TABLE `novedad`
+  ADD CONSTRAINT `IdTipoNovedad` FOREIGN KEY (`IdTipoNovedad`) REFERENCES `tipo_novedad` (`IdTipoNovedad`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `producto`
@@ -321,6 +668,15 @@ ALTER TABLE `producto`
   ADD CONSTRAINT `IdPresentacion` FOREIGN KEY (`IdPresentacion`) REFERENCES `presentacion` (`IdPresentacion`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `IdTipoProducto` FOREIGN KEY (`IdTipoProducto`) REFERENCES `tipo_producto` (`IdTipoProducto`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `IdUnidadMedida` FOREIGN KEY (`IdUnidadMedida`) REFERENCES `unidad_medida` (`IdUnidadMedida`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `venta`
+--
+ALTER TABLE `venta`
+  ADD CONSTRAINT `IdCliente` FOREIGN KEY (`IdCliente`) REFERENCES `cliente` (`IdCliente`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `IdEstadoVenta` FOREIGN KEY (`IdEstadoVenta`) REFERENCES `estado_venta` (`IdEstadoVenta`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -90,7 +90,7 @@
                <div class="row">
                   <div class="col-sm">
                      <label for="user_password_new" class="col-form-label">Contraseña</label>
-                     <input type="password" class="form-control form-control-sm" id="user_password_new" name="user_password_new" placeholder="Contraseña" pattern=".{6,}" title="Contraseña ( min . 6 caracteres)" required="">
+                     <input type="password" class="form-control form-control-sm" id="user_password_new" name="user_password_new" placeholder="Contraseña" pattern=".{8,}" title="Contraseña De Minimo 8 caracteres)" required="">
                   </div>
                   <div class="col-sm">
                      <label for="user_password_repeat" class="col-form-label">Repite contraseña</label>
@@ -102,9 +102,8 @@
                   <label for="mod_type_user" class="col-form-label">Tipo usuario</label>
                      <select class="form-control form-control-sm" name="user_type" required="">
                         <option disabled="" selected="">Selecciona el tipo de usuario</option>
-                        <option value="1">root</option>
-                        <option value="2">admin</option>
-                        <option value="3">operador</option>
+                        <option value="1">Empleado</option>
+                        <option value="2">Administrador</option>
                      </select>
                   </div>
                   <div class="col-sm">

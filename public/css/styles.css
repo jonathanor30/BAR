@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .bg-bar70{
-    background-color: #10171e;
+    background: linear-gradient(to bottom right, rgb(0, 0, 0), rgb(102, 90, 90));
     -webkit-box-shadow: 0 2px 4px 0 rgba(0,0,0,0.25);
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.25);
     color: #fff;
@@ -238,7 +238,7 @@ footer a:hover{
   width: 17px;
 }
 
-input:checked + .slider {
+input:checked + .slider{
   
 }
 

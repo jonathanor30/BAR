@@ -20,4 +20,5 @@
 require_once'../app/iniciador.php';
 
 //Instanciamos el nucleo del sistema, la clase Controller()
+
 $iniciar = new Core;
