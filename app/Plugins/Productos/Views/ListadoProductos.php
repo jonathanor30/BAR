@@ -48,6 +48,7 @@
          <thead>
             <tr>
                <th class="text-left">Nombre</th>
+               <th class="text-left">imagen</th>
                <th class="text-left">Código</th>
                <th class="text-left">Precio sugerido</th>
                <th class="text-left">Existencia</th>

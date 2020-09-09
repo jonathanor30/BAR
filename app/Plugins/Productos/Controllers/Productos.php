@@ -85,6 +85,7 @@ class Productos extends Controller
                 array('db' => 'PrecioSugerido', 'dt' => 'PrecioSugerido'),
                 array('db' => 'Estado_P', 'dt' => 'Estado_P'),
                 array('db' => 'Existencias', 'dt' => 'Existencias'),
+                array('db' => 'ImagenProducto', 'dt' => 'ImagenProducto'),
                 array('db' => 'IdProducto', 'dt' => 'IdProducto'),
 
             );

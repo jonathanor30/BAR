@@ -1,5 +1,5 @@
 var ruta = $("#ruta").val();
-$(document).ready(function() {
+$(document).ready(function () {
   var filter = $("#filter").val();
   $("#Productos").DataTable({
     processing: true,
@@ -8,23 +8,33 @@ $(document).ready(function() {
     ajax: {
       url: ruta + "/Productos/tableViews",
       type: "POST",
-      data: function(d) {
+      data: function (d) {
         d.id = $("#filter").val();
-      }
+      },
     },
     columns: [
       { data: "NombreProducto" },
+      {
+        data: "ImagenProducto",
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+          if(oData.ImagenProducto != null && oData.ImagenProducto != ''){
+            $(nTd).html(`<img class="img-fluid" src="${ruta}/Productos/files?img=${oData.ImagenProducto}">`);
+
+          }else{
+          }
+        },
+      },
       { data: "CodigoProducto" },
       {
         data: "PrecioSugerido",
-        fnCreatedCell: function(nTd, sData, oData, iRow, iCol) {
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
           $(nTd).html(formatNumber.new(oData.PrecioSugerido, "$ "));
-        }
+        },
       },
       { data: "Existencias" },
       {
         data: "Estado_P",
-        fnCreatedCell: function(nTd, sData, oData, iRow, iCol) {
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
           switch (oData.Estado_P) {
             case "1":
               var estado = "Activo";
@@ -38,14 +48,13 @@ $(document).ready(function() {
               var estado = "Agotado";
               var clase = "badge badge-warning";
               break;
-           
           }
           $(nTd).html("<span class='" + clase + "'>" + estado + "</span>");
-        }
+        },
       },
       {
         data: "IdProducto",
-        fnCreatedCell: function(nTd, sData, oData, iRow, iCol) {
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
           $(nTd).html(
             "<div class='btn-group'> <a title='Editar' class='btn btn-sm btn-outline-secondary' href='" +
               ruta +
@@ -54,18 +63,18 @@ $(document).ready(function() {
               "'>" +
               "<i class='fas fa-edit'></i>" +
               "</a><a title='Actualizar' href='#' class='btn btn-sm btn-outline-secondary' onclick='actualizar(" +
-               oData.IdProducto+
+              oData.IdProducto +
               "," +
               oData.Estado_P +
               ");'><i class='fas fa-exchange-alt'></i></a><a title='Actualizar' href='#' class='btn btn-sm btn-outline-secondary' onclick='Eliminar(" +
-              oData.IdProducto+
-             "," +
-             oData.Estado_P +
-             ");'><i class='fas fa-trash-alt'></i></a></div>"
+              oData.IdProducto +
+              "," +
+              oData.Estado_P +
+              ");'><i class='fas fa-trash-alt'></i></a></div>"
           );
-        }
-      }
-    ]
+        },
+      },
+    ],
   });
 });
 
@@ -85,21 +94,19 @@ function actualizar(id, type) {
 
   alertify.confirm(
     pre,
-    function() {
+    function () {
       $.ajax({
         type: "POST",
         url: ruta + "/productos/actualizar",
         data: "id=" + id + "&type=" + type,
         q: q,
-        beforeSend: function(objeto) {
+        beforeSend: function (objeto) {
           //$("#resultados").html("Mensaje: Cargando...");
         },
-        success: function(datos) {
+        success: function (datos) {
           var result = datos;
           if (datos == "true") {
-            $("#Productos")
-              .DataTable()
-              .ajax.reload();
+            $("#Productos").DataTable().ajax.reload();
             alertify.success(
               '<h6><i class="fas fa-check"></i> producto actualizado correctamente</h6>'
             );
@@ -109,10 +116,10 @@ function actualizar(id, type) {
               '<i class="fas fa-ban"></i> Error al actualizar producto'
             );
           }
-        }
+        },
       });
     },
-    function() {
+    function () {
       alertify.error('<i class="fas fa-ban"></i> Cancelado');
     }
   );
@@ -134,9 +141,7 @@ function reloadTable() {
       break;
   }
 
-  $("#Productos")
-    .DataTable()
-    .ajax.reload();
+  $("#Productos").DataTable().ajax.reload();
 }
 
 function Eliminar(id) {
@@ -155,13 +160,13 @@ function Eliminar(id) {
 
   alertify.confirm(
     pre,
-    function() {
+    function () {
       $.ajax({
         type: "POST",
         url: ruta + "/productos/eliminar",
         data: "id=" + id,
         q: q,
-        beforeSend: function(objeto) {
+        beforeSend: function (objeto) {
           $("#ResultadoAjax").html(`
           <div class="mx-auto" style="width: 200px;">
             <div class="spinner-border text-info" role="status">
@@ -172,13 +177,11 @@ function Eliminar(id) {
           
           `);
         },
-        success: function(datos) {
+        success: function (datos) {
           var result = datos;
           if (datos == "true") {
             $("#ResultadoAjax").html("");
-            $("#Productos")
-              .DataTable()
-              .ajax.reload();
+            $("#Productos").DataTable().ajax.reload();
             alertify.success(
               '<h6><i class="fas fa-check"></i> producto actualizado correctamente</h6>'
             );
@@ -188,10 +191,10 @@ function Eliminar(id) {
               '<i class="fas fa-ban"></i> Error al actualizar producto'
             );
           }
-        }
+        },
       });
     },
-    function() {
+    function () {
       alertify.error('<i class="fas fa-ban"></i> Cancelado');
     }
   );
