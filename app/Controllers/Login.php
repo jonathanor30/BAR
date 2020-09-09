@@ -18,6 +18,7 @@ class Login extends Controller
     public $messages = array();
     private $modeloUsuario;
     public  $writeLog;
+    public $defaultModule = 'Productos';
     public function __construct()
     {
         //Así instanciamos los modelos al controlador
@@ -35,7 +36,7 @@ class Login extends Controller
     {
         session_start();
         if (isset($_SESSION['user_login_status']) && $_SESSION['user_login_status'] == 1) {
-            redireccionar('/Dashboard');
+            redireccionar('/'.$this->defaultModule);
         } else {
             $datos = [
                 'titulo' => 'Bar70',

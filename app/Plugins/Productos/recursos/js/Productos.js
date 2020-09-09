@@ -57,7 +57,7 @@ $(document).ready(function() {
                oData.IdProducto+
               "," +
               oData.Estado_P +
-              ");'><i class='fas fa-trash-alt'></i></a><a title='Actualizar' href='#' class='btn btn-sm btn-outline-secondary' onclick='Eliminar(" +
+              ");'><i class='fas fa-exchange-alt'></i></a><a title='Actualizar' href='#' class='btn btn-sm btn-outline-secondary' onclick='Eliminar(" +
               oData.IdProducto+
              "," +
              oData.Estado_P +

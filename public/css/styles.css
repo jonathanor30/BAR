@@ -429,3 +429,9 @@ table tbody tr:hover {
 [data-title] {
   position: relative;
 }
+
+/*Producto*/
+.img-producto{
+  width: 150px;
+
+}

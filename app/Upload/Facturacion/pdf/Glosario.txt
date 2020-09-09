@@ -1,9 +1,0 @@
-Glosario  
-
-        Tipo doc: NIT/CC/CE= 1,2,3
-        Forma Pago: Transf/Efectivo/Cheque=	1,2,3
-        Divisa:	COP= COP
-        Régimen IVA: Común, Simpl, Simple=	1,2,3
-        Persona Física: Sí, No =	1, 0
-        Tipo cuenta bancaria: Ahorros, corriente=1, 2
-        

@@ -149,7 +149,7 @@ class Base
     /**
      * Update
      * Este método se encarga de editar un registro de manera dinamica, solo 
-     * indcando los campos con sus respectivos valores y la tabla
+     * indicando los campos con sus respectivos valores y la tabla
      * @access public
      * @param array $datos
      * La variable datos contiene un array asociativo con los indices
@@ -164,7 +164,6 @@ class Base
      */
     public function Update(array $datos, string $tabla, string $campo, $id): bool
     {
-
         $text = '';
         foreach ($datos as $key => $value) {
             $text .= $key . '=:' . $key . ',';

@@ -13,10 +13,18 @@ class Producto
      */
     public $resultado;
 
+    /**
+     * 
+     * @var string
+     * 
+     */
+    private $relacion;
+
     public function __construct()
     {
         //Instancia de la conexión con base de datos
         $this->db = new Base;
+        $this->relacion = (count($this->ObtenerTiposDeProductos()) > 0 ? "INNER JOIN tipo_producto ON tipo_producto.IdTipoProducto=producto.IdTipoProducto" : NULL);
     }
 
     public function ObtenerTodos(string $ordenar = '')
@@ -27,7 +35,12 @@ class Producto
 
     public function ObtenerUno(string $campo = '', $id = null)
     {
-        $this->db->query("SELECT * FROM producto WHERE {$campo}=:id");
+        $join = $this->relacion;
+        if ($join != NULL) {
+            $this->db->query("SELECT * FROM producto {$join} WHERE {$campo}=:id");
+        } else {
+            $this->db->query("SELECT * FROM producto WHERE {$campo}=:id");
+        }
         $this->db->bind(":id", $id);
         return $this->db->registro();
     }
@@ -59,6 +72,18 @@ class Producto
             } else {
                 return 1;
             }
+        }
+    }
+
+    public function ObtenerTiposDeProductos()
+    {
+        $join = $this->relacion;
+        if ($join != NULL) {
+            $this->db->query("SELECT * FROM tipo_producto");
+            return $this->db->registros();
+        } else {
+            $this->db->query("SELECT * FROM tipo_producto");
+            return $this->db->registros() ?? new StdClass ;
         }
     }
 }
