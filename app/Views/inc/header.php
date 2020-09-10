@@ -42,6 +42,7 @@
       <!-- Acá inicia la barra lateral-->
       <ul class="navbar-nav bg-bar70 sidebar sidebar-dark accordion toggled" id="accordionSidebar">
          <!--Barra Lateral - Marca -->
+         <br>
          <?php if ($_SESSION['user_type'] != 1 && $_SESSION['user_type'] != 99) { ?>
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo RUTA_URL . SEPARATOR . $_SESSION['modulos'][0]->nombre_modulo ?>">
                <img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png">
@@ -49,18 +50,19 @@
             </a>
          <?php } else { ?>
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo RUTA_URL; ?>/Productos">
-               <img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png">
+               <img class="logo img-fluid marigin-top" src="<?php echo RUTA_URL; ?>/public/img/logo.png">
                <div class="sidebar-brand-text mx-3"><img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png"></div>
             </a>
          <?php } ?>
          <!-- Divider -->
+         <br>
          <hr class="sidebar-divider my-0">
          <!-- Nav Item - Dashboard -->
-         <br>
+        
          <li class="nav-item active">
             <a class="nav-link">
 
-               <span><?php echo $datos['titulo']; ?></span></a>
+               <span ><?php echo $datos['titulo']; ?></span></a>
          </li>
          <!-- Divider -->
          <hr class="sidebar-divider">
@@ -186,7 +188,7 @@
                   <li class="nav-item dropdown no-arrow">
                      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                        <img class="img-profile rounded-circle" src="<?php echo RUTA_URL ?>/public/img/icon.png">
+                        <img class="img-profile rounded-circle" src="<?php echo RUTA_URL ?>/public/img/logouser.png">
                      </a>
                      <!-- Dropdown - User Information -->
                      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

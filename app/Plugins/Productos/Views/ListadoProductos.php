@@ -17,7 +17,7 @@
                <select class="btn btn-secondary" id="filter" onchange="reloadTable();">
                   <option value="" selected="" data-icon="fas fa-filter">Filtrar</option>
                   <option value="1">Activos</option>
-                  <option value="3">Inactivos</option>
+                  <option value="2">Inactivos</option>
                </select>
                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-plus"></i> Nuevo</button>
                <div class="dropdown-menu">
