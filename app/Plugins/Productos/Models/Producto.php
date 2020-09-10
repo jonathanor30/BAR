@@ -83,7 +83,7 @@ class Producto
             return $this->db->registros();
         } else {
             $this->db->query("SELECT * FROM tipo_producto");
-            return $this->db->registros() ?? new StdClass ;
+            return $this->db->registros() ?? new StdClass;
         }
     }
 }
