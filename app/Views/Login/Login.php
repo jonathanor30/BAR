@@ -37,7 +37,7 @@
             <div class="card card-signin my-5">
                <div class="card-body">
                   <div align="center">
-                     <img class="img-fluid" id="logo" src="<?php echo RUTA_URL; ?>/public/img/logo.jpeg"><br><br>
+                     <img class="img-fluid" id="logo" src="<?php echo RUTA_URL; ?>/public/img/logo.png"><br><br>
                   </div>
                   <?php
                   // show potential errors / feedback (from login object)

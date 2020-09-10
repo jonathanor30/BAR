@@ -34,11 +34,11 @@
 <?php
 //Tipo de usaurio
 switch ($datos['usuario']->user_type) {
-   
+
    case 1:
       $tipo_usuario = "<span class='badge badge-warning'>Empleado</span>";
       break;
-      
+
    case 2:
       $tipo_usuario = "<span class='badge badge-primary'>Administrador</span>";
       break;
@@ -100,56 +100,21 @@ switch ($datos['usuario']->estado_usuario) {
                   <label for="exampleInputPassword1">Tipo de usuario</label>
                   <select class="form-control form-control-sm" id="user_type" <?php echo ($datos['usuario']->user_type == 99 ? "disabled" : "") ?> name="user_type">
                      <option disabled="" selected="">Selecciona el tipo de usuario</option>
-                     <option value="1" <?php   if($datos['usuario']->user_type ==1){echo "selected"; } ?>>Empleado</option>
-                     <option value="2"  <?php if($datos['usuario']->user_type ==2){echo "selected"; }?>>Administrador</option>
+                     <option value="1" <?php if ($datos['usuario']->user_type == 1) {
+                                          echo "selected";
+                                       } ?>>Empleado</option>
+                     <option value="2" <?php if ($datos['usuario']->user_type == 2) {
+                                          echo "selected";
+                                       } ?>>Administrador</option>
                   </select>
                </div>
             </div>
-            <br>
-            <label>Telegram</label>
-            <hr>
-            <div class="row">
-               <div class="col-sm-2">
-                  <label>Id de telegram</label>
-                  <input type="text" class="form-control form-control-sm" id="telegram_id" name="telegram_id" value="<?php echo $datos['usuario']->telegram_id; ?>">
-                  <label>Verificación en 2 pasos?</label>
-                  <?php if ($datos['usuario']->telegram_verification == 1) : ?>
-                     <input type="checkbox" checked onchange="Validity();" id="2-step" name="2-step">
-                  <?php else : ?>
-                     <input type="checkbox" onchange="Validity();" id="2-step" name="2-step">
-                  <?php endif; ?>
-               </div>
 
+            <div>
+
+               <input type="hidden" class="form-control form-control-sm" id="telegram_id" name="telegram_id" value="<?php echo $datos['usuario']->telegram_id; ?>">
             </div>
-            <hr>
-            <?php if ($datos['usuario']->user_type != 1 && $datos['usuario']->user_type != 99) : ?>
-               <div class="row">
-                  <div class="col-sm">
-                     <i class="fas fa-cubes"></i> Asignar Módulos:
-                     <?php $modulos = getExistingPlugins(RUTA_PLUGINS); ?>
-                     <select id="modulos" class="form-control form-control-sm" style="width:300px" onchange="asignarModulos();">
-                        <option selected="" disabled="">---Seleccione Módulos---</option>
-                        <?php foreach ($modulos as $plugin) : ?>
-                           <?php $i = parse_ini_file(RUTA_PLUGINS . $plugin . SEPARATOR . 'info.ini'); ?>
-                           <?php if ($i["estado"] != "inactivo") : ?>
-                              <option value="<?php echo $i["nombre"] ?>"><?php echo $i["nombre"] ?></option>
-                           <?php endif ?>
-                        <?php endforeach ?>
-                     </select>
-                  </div>
-               </div>
-               <hr>
-               <div class="table-responsive-sm">
-                  <table id="TableBody">
-                     <?php foreach ($datos['modulos_asignados'] as $key => $value) : ?>
-                        <?php echo '<tr id="' . $value->nombre_modulo . '"><td><input class="form-control form-control-sm-plaintext input-sm numero_item" type="hidden" name="nombre_plugin[]" readonly="" value="' . $value->nombre_modulo . '" required=""><span class="badge badge-pill badge-info">' . $value->nombre_modulo . '</span></td><td><button class="btn btn-sm badge badge-danger" type="button" title="Inhabilitar ' . $value->nombre_modulo . '" onclick="deleteRow(this, ' . "'" . $value->nombre_modulo . "'" . ');"><i class="fas fa-trash"></i></button></td></tr>'
-                        ?>
 
-                     <?php endforeach ?>
-                  </table>
-                  <hr>
-               </div>
-            <?php endif; ?>
 
             <div class="row">
                <div class="col-sm-2">
@@ -160,10 +125,7 @@ switch ($datos['usuario']->estado_usuario) {
                      <option value="0">Inactivo</option>
                   </select>
                </div>
-               <div class="col-sm-2">
-                  <label for="exampleInputPassword1">Vigencia</label>
-                  <input type="date" class="form-control form-control-sm" placeholder="" name="vigencia" value="<?php echo $datos['usuario']->vigencia; ?>">
-               </div>
+
                <div class="col-sm-2">
                   <br>
                   <?php if ($datos['usuario']->user_type == 99 && $_SESSION['user_type'] == 1) : ?>
@@ -172,6 +134,9 @@ switch ($datos['usuario']->estado_usuario) {
                   <?php else : ?>
                      <button type="button" id="guardar_datos" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Guardar</button>
                   <?php endif; ?>
+               </div>
+               <div class="col-sm-2">
+                  <input type="hidden" class="form-control form-control-sm" placeholder="" name="vigencia" value="<?php echo $datos['usuario']->vigencia; ?>">
                </div>
             </div>
          </form>

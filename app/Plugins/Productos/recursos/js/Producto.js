@@ -1,5 +1,6 @@
 var ruta = document.getElementById("ruta").value;
 
+// se ejecuta automaticamente la funcion de obtener tipo producto
 window.onload=Autoload();
 
 function Autoload(){
