@@ -1,6 +1,6 @@
 <?php
 
-class Productos extends Controller
+class Clientes extends Controller
 {
 
     private $model;
@@ -8,8 +8,8 @@ class Productos extends Controller
     public function __construct()
     {
         $this->sessionValidator(); //Validamos sesion
-        $this->model = $this->modelo('Producto', 'Productos');
-        $this->PluginName = 'Productos';
+        $this->model = $this->modelo('Cliente', 'Clientes');
+        $this->PluginName = 'Clientes';
         $this->folderCreator($this->PluginName);
         //Directorio de imagenes del plugin
         $this->imgFolder = RUTA_UPLOAD .  $this->PluginName . SEPARATOR . 'img' . SEPARATOR;
@@ -19,25 +19,25 @@ class Productos extends Controller
     {
         $dataTables = dataTables();
         $datos =  array(
-            'titulo' => 'Listado Productos',
-            'icon'   => 'fas fa-boxes',
+            'titulo' => 'Listado Clientes',
+            'icon'   => 'fas fa-users',
             'dataTables' => $dataTables
 
         );
-        $this->vista('ListadoProductos', $datos, 'Productos', true);
+        $this->vista('ListadoClientes', $datos, 'Clientes', true);
     }
 
-    public function VerProducto($id = null)
+    public function VerClientes($id = null)
     {
-        
+
         $this->pagina404($id);
-        $producto = $this->model->ObtenerUno("IdProducto", $id);
+        $cliente = $this->model->ObtenerUno("IdCliente", $id);
         $datos =  array(
-            'titulo' => $producto->NombreProducto,
-            'producto' => $producto,
+            'titulo' => $cliente->Nombre,
+            'Cliente' => $cliente,
         );
 
-        $this->vista('VerProducto', $datos, 'Productos');
+        $this->vista('VerClientes', $datos, 'Clientes');
     }
 
     /**
@@ -71,22 +71,19 @@ class Productos extends Controller
         //Si existe una petición de tipo post a este método se ejecuta el siguiente script
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             //Tabla a usar
-            $table = 'producto';
+            $table = 'cliente';
 
             //Llave primaria de la tabla
-            $primaryKey = 'IdProducto';
+            $primaryKey = 'IdCliente';
 
             // Conjunto de columnas de la base de datos que se deben leer y enviar a DataTables.
             // El parámetro `db` representa el nombre de la columna en la base de datos, mientras que el parámetro` dt` representa el identificador de la columna DataTables. En este caso, el parámetro objeto.
 
             $columns = array(
-                array('db' => 'CodigoProducto', 'dt' => 'CodigoProducto'),
-                array('db' => 'NombreProducto', 'dt' => 'NombreProducto'),
-                array('db' => 'PrecioSugerido', 'dt' => 'PrecioSugerido'),
-                array('db' => 'Estado_P', 'dt' => 'Estado_P'),
-                array('db' => 'Existencias', 'dt' => 'Existencias'),
-                array('db' => 'ImagenProducto', 'dt' => 'ImagenProducto'),
-                array('db' => 'IdProducto', 'dt' => 'IdProducto'),
+                array('db' => 'IdTipoDocumento', 'dt' => 'IdTipoDocumento'),
+                array('db' => 'Numero_Documento', 'dt' => 'Numero_Documento'),
+                array('db' => 'Nombre', 'dt' => 'Nombre'),
+                array('db' => 'IdCliente', 'dt' => 'IdCliente'),
 
             );
 
@@ -97,33 +94,12 @@ class Productos extends Controller
                 'db'   => DB_NAME,
                 'host' => DB_HOST,
             );
-            if (isset($_POST['id']) && !empty($_POST['id'])) {
-                switch ($_POST['id']) {
-                    case 1:
-                        $where = "Estado_P ='1'";
-                        break;
-                    case 2:
-                        $where = "Estado_P ='2'";
-                        break;
-                    case 3:
-                        $where = "Estado_P ='0'";
-                        break;
-                }
-
+         
                 //Retornamos los valores consultados con filtro
                 echo json_encode(
-                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null, $where)
+                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null,)
                 );
-            } else {
-                $where = "Estado_P !='4'";
-                //Retornamos los valores consultados si filtro
-                /*echo json_encode(
-                    SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)
-                );*/
-                echo json_encode(
-                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null, $where)
-                );
-            }
+           
         } else {
             //De lo contrario será redireccionado
             redireccionar('');

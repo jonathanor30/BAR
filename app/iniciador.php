@@ -1,9 +1,6 @@
 <?php
 
-/**
- * Copyright (C) 2018-2019 Juan Bautista <soyjuanbautista0@gmail.com>
- *
- */
+
 header('x-powered-by: ASP.NET');
 header('x-powered-by: Java Servlet 3.1');
 

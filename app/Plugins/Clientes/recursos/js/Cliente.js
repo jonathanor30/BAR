@@ -1,12 +1,5 @@
 var ruta = document.getElementById("ruta").value;
 
-//se active la funcion automaticamente
-window.onload=Autoload();
-
-function Autoload(){
-  ObtenerTipoDeProducto();
-}
-
 //Mostrar nombre de producto de manera dinamica
 document
   .getElementById("NombreProducto")
