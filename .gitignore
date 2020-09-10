@@ -1,4 +1,5 @@
 app/Storage/
+app/Upload/
 app/Logs/Log.json
 vendor/
 composer.json

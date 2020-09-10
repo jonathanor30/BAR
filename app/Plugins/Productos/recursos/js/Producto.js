@@ -1,5 +1,10 @@
 var ruta = document.getElementById("ruta").value;
 
+window.onload=Autoload();
+
+function Autoload(){
+  ObtenerTipoDeProducto();
+}
 //Mostrar nombre de producto de manera dinamica
 document
   .getElementById("NombreProducto")
@@ -65,6 +70,7 @@ function ObtenerTipoDeProducto() {
       }
       //Definimos el tipo de producto actual
       x.value = parseInt(document.getElementById("TipoProductoActual").value);
+      
     },
   });
 }

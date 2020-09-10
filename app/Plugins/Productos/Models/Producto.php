@@ -78,7 +78,7 @@ class Producto
     public function ObtenerTiposDeProductos()
     {
         $join = $this->relacion;
-        if ($join != NULL) {
+        if ($join !=  NULL) {
             $this->db->query("SELECT * FROM tipo_producto");
             return $this->db->registros();
         } else {
