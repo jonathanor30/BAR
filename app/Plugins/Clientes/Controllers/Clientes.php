@@ -8,7 +8,7 @@ class Clientes extends Controller
     public function __construct()
     {
         $this->sessionValidator(); //Validamos sesion
-        $this->model = $this->modelo('Cliente', 'Clientes');
+        $this->clienteModelo = $this->modelo('Cliente', 'Clientes');
         $this->PluginName = 'Clientes';
         $this->folderCreator($this->PluginName);
         //Directorio de imagenes del plugin
@@ -153,80 +153,8 @@ class Clientes extends Controller
         }
     }
 
-    /**
-     * ImagenProducto
-     * (ES) Este método se encarga de subir la imagen/foto de un producto
-     * @access public
-     * @return void
-     */
-    public function ImagenProducto($id)
-    {
-        //validación para cargar una imagen
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES["ImagenProducto"]) && !empty($_FILES["ImagenProducto"])) {
-            if (isset($_FILES["ImagenProducto"])) {
-                //$target_dir    = RUTA_PLUGINS .  $this->PluginName . SEPARATOR . "assets" . SEPARATOR . "img" . SEPARATOR;
-                $target_dir    = $this->imgFolder;
-                $image_name    = time() . "_" . basename($_FILES["ImagenProducto"]["name"]);
-                $target_file   = $target_dir . $image_name;
-                $ImagenProductoType = pathinfo($target_file, PATHINFO_EXTENSION);
-                $ImagenProductoZise = trim($_FILES["ImagenProducto"]["size"]);
-                //$image         = $_POST['ImagenProducto'];
-
-                /* Inicio Validacion*/
-                // Allow certain file formats
-                $extensiones_permitidas = [
-                    'jpg',
-                    'png',
-                    'jpeg'
-                ];
-                //validar formato y tamaño de imagen
-                if (!in_array($ImagenProductoType, $extensiones_permitidas) && $ImagenProductoZise == 0) {
-                    echo "Lo sentimos, sólo se permiten archivos JPG , JPEG, PNG.";
-                    //1048576 byte=1MB
-                    exit();
-                } else if ($ImagenProductoZise > 1048576) {
-                    echo "Lo sentimos, pero el archivo es demasiado grande. Selecciona una imagen de menos de 1MB.";
-                    exit();
-                } else {
-                    //Aca se hace el query para almacenar la la url de la imagen
-
-                    ///* Fin Validacion*/
-                    if ($ImagenProductoZise > 0) {
-                        move_uploaded_file($_FILES["ImagenProducto"]["tmp_name"], $target_file);
-                        $foto_updated = "Productos/img/{$image_name}";
-                    } else {
-                        $foto_updated = "";
-                    }
-
-                    $datos = [
-                        'ImagenProducto' => $foto_updated,
-                    ];
-
-                    $producto = $this->model->ObtenerUno("IdProducto", $id);
-                    //validar si existe una imagen que será actualizada
-                    if ($producto->ImagenProducto != "" || $producto->ImagenProducto != NULL) {
-                        //Si es así, elimino la que esta actualmente
-                        unlink(RUTA_UPLOAD . SEPARATOR . $producto->ImagenProducto);
-                    }
-
-                    //Actualizar campo de la imagen del producto en la base de datos
-                    switch ($this->model->db->Update($datos, 'producto', 'IdProducto', intval($id))) {
-                        case true:
-                            echo  $foto_updated;
-                            break;
-                        case false:
-                            //Cambiar
-                            echo false;
-                            break;
-                    }
-                }
-            }
-        } else {
-            redireccionar('/Productos');
-        }
-    }
-
-    public function ObtenerTiposDeProductos()
+    // pendiente
+    public function ObtenerTiposDeDocumentos()
     {
          //Validar datos recibido mediante POST
          if ($_SERVER['REQUEST_METHOD']) :
@@ -245,5 +173,51 @@ class Clientes extends Controller
                 echo "false";
             }
         endif;
+    }
+
+    public function agregar()
+    {
+
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            //Validacion de posible campo vacio: nombres
+            $exc = array();
+            $dat = $this->formValidator($_POST, $exc);
+            if (is_array($dat)) {
+                //Evaluamos si  el usuario a editar es de tipo 3 = afiliado, lo cual debe enviar el valor de vigencia capturado del formulario por metodo post
+              
+            
+                //preparamos los datos en un array en la variable datos.
+                $datos = [
+                    'IdTipoDocumento'    => $_POST["IdTipoDocumento"],
+                    'Numero_Documento'   => $_POST["Numero_Documento"],
+                    'Nombre'             => $_POST["Nombre"],
+                    
+
+                ];
+                //Estructura de control, para evaluar el query de agregar usuario
+                switch ($this->clienteModelo->agregarCliente($datos)) {
+                    case 1:
+                        echo true;
+                        break;
+                    case 2:
+                        //Redireccionamos de nuevo al formulario
+                        echo "Hubo un error al guardar el registro, por favor vuelva a intenter";
+                        break;
+                    case 3:
+                        //Redireccionamos a usuarios
+                        echo "El cliente que quiere registrar ya existe";
+                        break;
+                }
+
+                exit();
+            } else {
+                echo "Faltan datos por completar";
+            }
+        } else {
+
+            redireccionar('/Clientes');
+        }
     }
 }

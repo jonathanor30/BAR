@@ -86,4 +86,57 @@ class Cliente
             return $this->db->registros() ?? new StdClass ;
         }
     }
+
+    public function agregarCliente($datos = [])
+    {
+        $this->comprobator = $this->comprobarCliente($datos['Numero_Documento']);
+        if ($this->comprobator == true) {
+            //El usuario ya existe
+            return 3;
+        } else {
+            $this->db->query('INSERT INTO cliente (IdTipoDocumento, Numero_Documento, Nombre) VALUES(:IdTipoDocumento, :Numero_Documento, :Nombre)');
+
+            //Vincular valores
+            /*
+            $this->db->bind(':IdTipoDocumento', $datos['IdTipoDocumento']);
+            $this->db->bind(':Numero_Documento', $datos['Numero_Documento']);
+            $this->db->bind(':Nombre', $datos['Nombre']);
+             */
+            //Algoritmo para vincular valores de las columnas a la consulta preparada
+            //Requisito: los seudo campos de las columna en VALUE() de la consulta, debe ser iguales a los nombres
+            //de los indices en la variable datos que son recibidos desde el controlador
+            foreach ($datos as $campo => $valor) {
+                //Iteración en el método  bind() de la clase Base, donde se agrega el indice y valor
+                $this->db->bind(":{$campo}", $valor);
+            }
+
+            //Ejecutar consulta
+            if ($this->db->execute()) {
+                return 2;
+            } else {
+
+                return 1;
+            }
+        }
+    }
+    public function comprobarCliente($cliente)
+    {
+        //verificamos que exista y no este vacio el campo placa vehiculo
+        if (isset($cliente) && !empty($cliente)) {
+
+            //preparamos consulta
+            $this->db->query("SELECT * FROM cliente WHERE Numero_Documento=:Numero_Documento");
+            //Vinculamos consulta
+            $this->db->bind(':Numero_Documento', $cliente);
+            $this->db->execute();
+            $this->result = $this->db->rowCount();
+            if ($this->result == 1) {
+                //Existe
+                return true;
+            } else {
+                //No existe
+                return false;
+            }
+        }
+    }
 }

@@ -1,12 +1,12 @@
 var ruta = $("#ruta").val();
 $(document).ready(function () {
   var filter = $("#filter").val();
-  $("#Clientes").DataTable({
+  $("#Compras").DataTable({
     processing: true,
     serverSide: true,
     language: { url: ruta + "/public/js/Spanish.json" },
     ajax: {
-      url: ruta + "/Clientes/tableViews",
+      url: ruta + "/Compras/tableViews",
       type: "POST",
       data: function (d) {
         d.id = $("#filter").val();
@@ -15,29 +15,23 @@ $(document).ready(function () {
     columns: [
       
       {
-        data: "IdTipoDocumento",
+        data: "IdProveedor"
+      },
+      { data: "Fecha_Compra"},
+      {
+        data: "Iva",
         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-          switch (oData.IdTipoDocumento) {
-            case "1":
-              var Tipo = "Cedula";
-              var clase = "";
-              break;
-            case "2":
-              var Tipo = "Cedula extranjera";
-              var clase = "";
-              break;
-            case "3":
-              var Tipo = "NIT";
-              var clase = "";
-              break;
-          }
-          $(nTd).html("<span class='" + clase + "'>" + Tipo + "</span>");
+          $(nTd).html(formatNumber.new(oData.Iva, "%"));
         },
       },
-      { data: "Numero_Documento" },
-      { data: "Nombre" },
       {
-        data: "IdCliente",
+        data: "Total",
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+          $(nTd).html(formatNumber.new(oData.Total, "$ "));
+        },
+      },
+      {
+        data: "IdCompra",
         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
           $(nTd).html(
             "<div class='btn-group'> <a title='Editar' class='btn btn-sm btn-outline-secondary' href='" +
@@ -182,34 +176,3 @@ function Eliminar(id) {
     }
   );
 }
-
-$("#guardar_cliente").submit(function(event) {
-  $("#guardar_datos").attr("disabled", true);
-  var parametros = $(this).serialize();
-  $.ajax({
-    type: "POST",
-    url: ruta + "/Clientes/agregar",
-    data: parametros,
-    beforeSend: function(objeto) {
-      //$("#resultados_ajax").html("Mensaje: Cargando...");
-    },
-    success: function(datos) {
-      var result = datos;
-      if (datos == true) {
-        $("#Clientes")
-          .DataTable()
-          .ajax.reload();
-        $("#exampleModal").modal("hide");
-        $("#guardar_cliente")[0].reset();
-        $("#guardar_datos").attr("disabled", false);
-        alertify.success(
-          '<h6><i class="fas fa-check"></i> Cliente creado correctamente</h6>'
-        );
-      } else {
-        $("#guardar_datos").attr("disabled", false);
-        alertify.warning(result);
-      }
-    }
-  });
-  event.preventDefault();
-});

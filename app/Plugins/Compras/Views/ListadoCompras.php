@@ -43,14 +43,13 @@
 </div>
 <div class="container-fluid">
    <div class="table-responsive">
-      <table style="font-size: 12px;" id="Productos" class="table table-hover">
+      <table style="font-size: 12px;" id="Compras" class="table table-hover">
          <thead>
             <tr>
-               <th class="text-left">Nombre</th>
-               <th class="text-left">Código</th>
-               <th class="text-left">Precio sugerido</th>
-               <th class="text-left">Existencia</th>
-               <th class="text-left">Estado</th>
+               <th class="text-left">IdProveedor</th>
+               <th class="text-left">Fecha_Compra</th>
+               <th class="text-left">Iva</th>
+               <th class="text-left">Total</th>
                <th class="text-left">Acciones</th>
             </tr>
          </thead>
@@ -61,5 +60,5 @@
 
 <!-- Modal -->
 
-<script src="<?php echo RUTA_URL; ?>/Productos/files?js=recursos/js/Productos.js"></script>
+<script src="<?php echo RUTA_URL; ?>/Compras/files?js=recursos/js/Compras.js"></script>
 <?php require RUTA_APP . '/Views/inc/footer.php'; ?>

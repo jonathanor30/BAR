@@ -1,6 +1,6 @@
 <?php 
 
-class Productos extends Controller
+class Compras extends Controller
 {
 
     private $model;
@@ -8,20 +8,20 @@ class Productos extends Controller
     public function __construct()
     {
         $this->sessionValidator(); //Validamos sesion
-        $this->model = $this->modelo('Producto', 'Productos');
-        $this->PluginName = 'Productos';
+        $this->model = $this->modelo('Compra', 'Compras');
+        $this->PluginName = 'Compras';
     }
 
     public function index()
     {
         $dataTables = dataTables(); 
         $datos =  array(
-            'titulo' => 'Listado Productos',
-            'icon'   => 'fas fa-boxes',
+            'titulo' => 'Listado Compras',
+            'icon'   => 'fas fa-shopping-bag',
             'dataTables' => $dataTables
            
         );
-       $this->vista('ListadoProductos',$datos, 'Productos', true);
+       $this->vista('ListadoCompras',$datos, 'Compras', true);
 
     }
 
@@ -66,21 +66,20 @@ class Productos extends Controller
         //Si existe una petición de tipo post a este método se ejecuta el siguiente script
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             //Tabla a usar
-            $table = 'producto';
+            $table = 'compra';
 
             //Llave primaria de la tabla
-            $primaryKey = 'IdProducto';
+            $primaryKey = 'IdCompra';
 
             // Conjunto de columnas de la base de datos que se deben leer y enviar a DataTables.
             // El parámetro `db` representa el nombre de la columna en la base de datos, mientras que el parámetro` dt` representa el identificador de la columna DataTables. En este caso, el parámetro objeto.
 
             $columns = array(
-                array('db' => 'CodigoProducto', 'dt' => 'CodigoProducto'),
-                array('db' => 'NombreProducto', 'dt' => 'NombreProducto'),
-                array('db' => 'PrecioSugerido', 'dt' => 'PrecioSugerido'),
-                array('db' => 'Estado_P', 'dt' => 'Estado_P'),
-                array('db' => 'Existencias', 'dt' => 'Existencias'),
-                array('db' => 'IdProducto', 'dt' => 'IdProducto'),
+                array('db' => 'IdProveedor', 'dt' => 'IdProveedor'),
+                array('db' => 'Fecha_Compra', 'dt' => 'Fecha_Compra'),
+                array('db' => 'Iva', 'dt' => 'Iva'),
+                array('db' => 'Total', 'dt' => 'Total'),
+                array('db' => 'IdCompra', 'dt' => 'IdCompra'),
 
             );
 

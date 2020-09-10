@@ -1,6 +1,6 @@
 <?php 
 
-class Producto
+class Compra
 {
     /**
      * @var object
@@ -22,14 +22,14 @@ class Producto
 
     public function ObtenerTodos(string $ordenar = '')
     {
-        $this->db->query("SELECT * FROM producto");
+        $this->db->query("SELECT * FROM compra");
         return $this->db->registrosrow();
       
     }
 
     public function ObtenerUno(string $campo = '', $id = null )
     {
-        $this->db->query("SELECT * FROM producto WHERE {$campo}=:id");
+        $this->db->query("SELECT * FROM compra WHERE {$campo}=:id");
         $this->db->bind(":id", $id);
         return $this->db->registro();
 

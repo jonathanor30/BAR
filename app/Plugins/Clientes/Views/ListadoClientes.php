@@ -65,25 +65,25 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
          </div>
          <div class="modal-body">
-            <form class="form-horizontal" action="" id="guardar_usuario" method="POST" autocomplete="off">
+            <form class="form-horizontal" action="" id="guardar_cliente" method="POST" autocomplete="off">
                <div class="row">
                   <div class="col-sm">
-                     <label for="IdTipoProducto" class="col-form-label">Tipo documento<b style="color:gray;">*</b></label>
-                     <select class="form-control form-control-sm" name="IdTipoProducto" required="">
+                     <label for="IdTipoDocumento" class="col-form-label">Tipo documento<b style="color:gray;">*</b></label>
+                     <select class="form-control form-control-sm" name="IdTipoDocumento" required="">
                         <option disabled="" selected="">Selecciona tipo de documento</option>
                         <option value="1">Cedula</option>
                         <option value="2">Cedula extrajera</option>
                      </select>
                   </div>
                   <div class="col-sm">
-                     <label for="NombreProducto" class="col-form-label">Número documento<b style="color:gray;">*</b></label>
-                     <input type="text" class="form-control form-control-sm" id="NombreProducto" name="NombreProducto" placeholder="Número documento" required="">
+                     <label for="Numero_Documento" class="col-form-label">Número documento<b style="color:gray;">*</b></label>
+                     <input type="text" class="form-control form-control-sm" id="Numero_Documento" name="Numero_Documento" placeholder="Número documento" required="">
                   </div>
                </div>
                <div class="row">
                   <div class="col-sm-6">
-                     <label for="NombreProducto" class="col-form-label">Nombre<b style="color:gray;">*</b></label>
-                     <input type="text" class="form-control form-control-sm" id="NombreProducto" name="NombreProducto" placeholder="Nombre" required="">
+                     <label for="Nombre" class="col-form-label">Nombre<b style="color:gray;">*</b></label>
+                     <input type="text" class="form-control form-control-sm" id="Nombre" name="Nombre" placeholder="Nombre" required="">
                   </div>
                </div>
                <div id="vigencia_usuario2"></div>
