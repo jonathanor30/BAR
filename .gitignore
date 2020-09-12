@@ -1,5 +1,5 @@
 app/Storage/
-app/Config/Configurar.php
+app/Config/
 app/Upload/
 app/Logs/Log.json
 vendor/
