@@ -26,7 +26,7 @@ define('DB_HOST', 'localhost'); //Tambien puede usar: 127.0.0.1
 //Usuario de base de datos
 define('DB_USER', 'root');
 //Contraseña de base de datos
-define('DB_PASS', 'Poni2020!');
+define('DB_PASS', '');
 //Nombre de base de datos
 define('DB_NAME', 'bar70'); //fr
 //Driver o motor de base de datos
