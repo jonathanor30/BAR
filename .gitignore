@@ -1,7 +1,0 @@
-app/Storage/
-app/Config/
-app/Upload/
-app/Logs/Log.json
-vendor/
-composer.json
-composer.lock
