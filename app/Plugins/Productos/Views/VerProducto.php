@@ -39,6 +39,11 @@
 
                     </div>
                     <div class="col-sm">
+                        <label>Precio de venta</label>
+                        <input class="form-control form-control-sm" type="number" name="PrecioVenta" id="PrecioVenta" value="<?php echo $datos['producto']->PrecioVenta ?>" />
+
+                    </div>
+                    <div class="col-sm">
                         <label>Stock Máximo</label>
                         <input class="form-control form-control-sm" type="number" name="StockMaximo" id="StockMaximo" value="<?php echo $datos['producto']->StockMaximo ?>" />
                     </div>

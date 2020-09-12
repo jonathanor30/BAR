@@ -27,9 +27,10 @@ class Productos extends Controller
         $this->vista('ListadoProductos', $datos, 'Productos', true);
     }
 
+
     public function VerProducto($id = null)
     {
-        
+
         $this->pagina404($id);
         $producto = $this->model->ObtenerUno("IdProducto", $id);
         $datos =  array(
@@ -252,10 +253,10 @@ class Productos extends Controller
 
     public function ObtenerTiposDeProductos()
     {
-         //Validar datos recibido mediante POST
-         if ($_SERVER['REQUEST_METHOD']) :
+        //Validar datos recibido mediante POST
+        if ($_SERVER['REQUEST_METHOD']) :
             header('Content-Type: application/json');
-          echo json_encode($this->model->ObtenerTiposDeProductos(), JSON_PRETTY_PRINT);
+            echo json_encode($this->model->ObtenerTiposDeProductos(), JSON_PRETTY_PRINT);
         endif;
     }
 
