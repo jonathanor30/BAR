@@ -1,0 +1,30 @@
+Tablas:
+
+divisas
+facturacion_electronica
+facturascli
+facturasprov
+notas_dian
+paises
+proveedores
+recibos_proveedor
+lineasfacturascli
+lineasfacturasprov
+ingresos_clientes
+clientes
+
+Nuevas tablas:
+Type_liabilities
+payment_methods
+type_environment
+item_clasificator
+facturasnotes
+lineasfacturasnotes
+zip_numbering
+
+Funcionalidades
+añadido print_debug al helper
+añadido html_minify al helper
+Metodos CRUD en BAse
+sprloader en iniciador
+Metodo accept en login

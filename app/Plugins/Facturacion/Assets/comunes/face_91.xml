@@ -1,0 +1,269 @@
+<!--INICABECERAXMLSUNAT--><?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:sts="urn:dian:gov:co:facturaelectronica:Structures-2-1" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2     http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-CreditNote-2.1.xsd">
+	<ext:UBLExtensions>
+		<ext:UBLExtension>
+			<ext:ExtensionContent>
+				<sts:DianExtensions>
+					<sts:InvoiceControl>
+						<sts:InvoiceAuthorization>Q_INVOICEAUTHORIZATION</sts:InvoiceAuthorization>
+						<sts:AuthorizationPeriod>
+							<cbc:StartDate>Q_STARDATE</cbc:StartDate>
+							<cbc:EndDate>Q_ENDDATE</cbc:EndDate>
+						</sts:AuthorizationPeriod>
+						<sts:AuthorizedInvoices>
+							<sts:Prefix>Q_PREFIX</sts:Prefix>
+							<sts:From>Q_FROM_AUTHIRIZEDINVOICES</sts:From>
+							<sts:To>Q_TO_AUTHIRIZEDINVOICES</sts:To>
+						</sts:AuthorizedInvoices>
+					</sts:InvoiceControl>
+					<sts:InvoiceSource>
+						<cbc:IdentificationCode listAgencyID="6" listAgencyName="United Nations Economic Commission for Europe" listSchemeURI="urn:oasis:names:specification:ubl:codelist:gc:CountryIdentificationCode-2.1">CO</cbc:IdentificationCode>
+					</sts:InvoiceSource>
+					<sts:SoftwareProvider>
+					<sts:ProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="Q_DV_PROVIDER" schemeName="Q_PROVIDERTIPODOC">Q_PROVIDERID</sts:ProviderID>
+					<sts:SoftwareID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">Q_SOFTWAREID</sts:SoftwareID>
+					</sts:SoftwareProvider>
+					<sts:SoftwareSecurityCode schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">Q_SOFTWARESECURITYCODE</sts:SoftwareSecurityCode>
+					<sts:AuthorizationProvider>
+					<sts:AuthorizationProviderID schemeID="4" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">800197268</sts:AuthorizationProviderID>
+					</sts:AuthorizationProvider>
+					<sts:QRCode>Q_QRCODE</sts:QRCode>
+				</sts:DianExtensions>
+			</ext:ExtensionContent>
+		</ext:UBLExtension>
+		<ext:UBLExtension>
+			<ext:ExtensionContent></ext:ExtensionContent>
+		</ext:UBLExtension>
+	</ext:UBLExtensions>
+	<cbc:UBLVersionID>Q_UBLVERSIONID</cbc:UBLVersionID>
+	<cbc:CustomizationID>Q_CUSTOMIZATIONID</cbc:CustomizationID>
+	<cbc:ProfileID>Q_PROFILEID</cbc:ProfileID>
+	<cbc:ProfileExecutionID>Q_PROFILEEXECUTIONID</cbc:ProfileExecutionID>
+	<cbc:ID>Q_ID_INVOICE</cbc:ID>
+	<cbc:UUID schemeName="CUDE-SHA384" schemeID="Q_PROFILEEXECUTIONID">Q_UUID_INVOICE</cbc:UUID>
+	<cbc:IssueDate>Q_ISSUEDATE_INVOICE</cbc:IssueDate>
+	<cbc:IssueTime>Q_ISSUETIME_INVOICE</cbc:IssueTime>
+	<cbc:CreditNoteTypeCode>91</cbc:CreditNoteTypeCode>
+	<cbc:Note>Q_NOTE_INVOICE</cbc:Note>
+	<cbc:DocumentCurrencyCode>Q_DOCUMENTCURRENCYCODE</cbc:DocumentCurrencyCode>
+	<cbc:LineCountNumeric>Q_CANTIDADLINEAS</cbc:LineCountNumeric>
+	<cac:DiscrepancyResponse>
+		<cbc:ReferenceID>VNINVOICEDOCUMENTREFERENCE</cbc:ReferenceID>
+		<cbc:ResponseCode>1</cbc:ResponseCode>
+		<cbc:Description></cbc:Description>
+	</cac:DiscrepancyResponse>
+	<cac:BillingReference>
+		<cac:InvoiceDocumentReference>
+			<cbc:ID>VNINVOICEDOCUMENTREFERENCE</cbc:ID>
+			<cbc:UUID schemeName="CUFE-SHA384">VNREFERENCEID</cbc:UUID>
+			<cbc:IssueDate>VNREFERENCEFECHA</cbc:IssueDate>
+		</cac:InvoiceDocumentReference>
+	</cac:BillingReference>
+	<cac:AccountingSupplierParty>
+		<cbc:AdditionalAccountID schemeAgencyID="195">Q_TIPOORGJURID_SUPPLIER</cbc:AdditionalAccountID>
+		<cac:Party>
+			<cac:PartyName>
+				<cbc:Name>Q_NOMBRESUPPLIER</cbc:Name>
+			</cac:PartyName>
+			<cac:PhysicalLocation>
+				<cac:Address>
+					<cbc:ID>11001</cbc:ID>
+					<cbc:CityName>Q_CITYNAME_SUPPLIER</cbc:CityName>
+					<cbc:CountrySubentity>Q_CITYNAME_SUPPLIER</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>Q_DIRECCION_SUPPLIER</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:Address>			
+			</cac:PhysicalLocation>
+			<cac:PartyTaxScheme>
+				<cbc:RegistrationName>Q_NOMBRESUPPLIER</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="Q_NIT_DV_SUPPLIER" schemeName="Q_TIPODOC_SUPPLIER" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeAgencyID="195">Q_NIT_SUPPLIER</cbc:CompanyID>
+				<cbc:TaxLevelCode listName="05">O-99</cbc:TaxLevelCode>
+				<cac:RegistrationAddress>
+					<cbc:ID>11001</cbc:ID>
+					<cbc:CityName>Q_CITYNAME_SUPPLIER</cbc:CityName>
+					<cbc:CountrySubentity>Districto Capital</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>Q_DIRECCION_SUPPLIER</cbc:Line>
+					</cac:AddressLine>   
+					<cac:Country>
+						<cbc:IdentificationCode>Q_CODIGO_COUNTRY_SUPPLIER</cbc:IdentificationCode>
+						<cbc:Name>Colombia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Q_NOMBRESUPPLIER</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="Q_NIT_DV_SUPPLIER" schemeName="Q_TIPODOC_SUPPLIER" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeAgencyID="195">Q_NIT_SUPPLIER</cbc:CompanyID>
+					<cac:CorporateRegistrationScheme>
+						<cbc:ID>Q_PREFIX</cbc:ID>
+						<cbc:Name>Q_NOMBRESUPPLIER</cbc:Name>
+					</cac:CorporateRegistrationScheme>
+			</cac:PartyLegalEntity>			
+			<cac:Contact>
+				<cbc:Telephone></cbc:Telephone>
+				<cbc:ElectronicMail></cbc:ElectronicMail>
+			</cac:Contact>			
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+        <cbc:AdditionalAccountID>Q_TIPOORGJURID_CUSTOMER</cbc:AdditionalAccountID>
+		<cac:Party>
+         <cac:PartyName>
+            <cbc:Name>Q_NOMBREEMPRESA_PRIMERNOMBRE</cbc:Name>
+         </cac:PartyName>
+         <cac:PhysicalLocation>
+            <cac:Address>
+               <cbc:ID>11001</cbc:ID>
+               <cbc:CityName>Q_CITYNAME_CUSTOMER</cbc:CityName>
+               <cbc:CountrySubentity>Q_CITYNAME_CUSTOMER</cbc:CountrySubentity>
+               <cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
+               <cac:AddressLine>
+                  <cbc:Line>Q_DIRECCION_CUSTOMER</cbc:Line>
+               </cac:AddressLine>
+               <cac:Country>
+                  <cbc:IdentificationCode>Q_CODIDO_COUNTRY_CUSTOMER</cbc:IdentificationCode>
+                  <cbc:Name>Colombia</cbc:Name>
+               </cac:Country>
+            </cac:Address>
+         </cac:PhysicalLocation>
+         <cac:PartyTaxScheme>
+            <cbc:RegistrationName>Q_NOMBREEMPRESA_PRIMERNOMBRE</cbc:RegistrationName>
+            <cbc:CompanyID schemeID="Q_NIT_DV_CUSTOMER" schemeName="Q_TIPODOC_CUSTOMER" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeAgencyID="195">Q_NIT_CUSTOMER</cbc:CompanyID>
+            <cbc:TaxLevelCode listName="05">O-99</cbc:TaxLevelCode>
+            <cac:TaxScheme>
+               <cbc:ID>01</cbc:ID>
+               <cbc:Name>IVA</cbc:Name>
+            </cac:TaxScheme>
+         </cac:PartyTaxScheme>
+         <cac:PartyLegalEntity>
+            <cbc:RegistrationName>Q_NOMBREEMPRESA_PRIMERNOMBRE</cbc:RegistrationName>
+            <cbc:CompanyID schemeID="Q_NIT_DV_CUSTOMER" schemeName="Q_TIPODOC_CUSTOMER">Q_NIT_CUSTOMER</cbc:CompanyID>
+            <cac:CorporateRegistrationScheme>
+				<cbc:ID>BC</cbc:ID>
+               <cbc:Name>Q_NOMBREEMPRESA_PRIMERNOMBRE</cbc:Name>
+            </cac:CorporateRegistrationScheme>
+         </cac:PartyLegalEntity>			
+         <cac:Contact>
+            <cbc:Telephone></cbc:Telephone>
+            <cbc:ElectronicMail></cbc:ElectronicMail>
+         </cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	
+     <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_IMPUESTO1_T</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+         <cbc:TaxableAmount currencyID="Q_MONEDAOP">Q_BI_IMPUESTO1_19</cbc:TaxableAmount>
+         <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_IMPUESTO1_19</cbc:TaxAmount>
+         <cac:TaxCategory>
+            <cbc:Percent>19.00</cbc:Percent>
+            <cac:TaxScheme>
+               <cbc:ID>01</cbc:ID>
+               <cbc:Name>IVA</cbc:Name>
+            </cac:TaxScheme>
+         </cac:TaxCategory>
+      </cac:TaxSubtotal>
+      <cac:TaxSubtotal>
+         <cbc:TaxableAmount currencyID="Q_MONEDAOP">Q_BI_IMPUESTO1_05</cbc:TaxableAmount>
+         <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_IMPUESTO1_05</cbc:TaxAmount>
+         <cac:TaxCategory>
+            <cbc:Percent>5.00</cbc:Percent>
+            <cac:TaxScheme>
+               <cbc:ID>01</cbc:ID>
+               <cbc:Name>IVA</cbc:Name>
+            </cac:TaxScheme>
+         </cac:TaxCategory>
+      </cac:TaxSubtotal>
+      <cac:TaxSubtotal>
+         <cbc:TaxableAmount currencyID="Q_MONEDAOP">Q_BI_IMPUESTO1_00</cbc:TaxableAmount>
+         <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_IMPUESTO1_00</cbc:TaxAmount>
+         <cac:TaxCategory>
+            <cbc:Percent>0.00</cbc:Percent>
+            <cac:TaxScheme>
+               <cbc:ID>01</cbc:ID>
+               <cbc:Name>IVA</cbc:Name>
+            </cac:TaxScheme>
+         </cac:TaxCategory>
+      </cac:TaxSubtotal>
+	  </cac:TaxTotal>
+     <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_IMPUESTO2</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+         <cbc:TaxableAmount currencyID="Q_MONEDAOP">Q_BI_IMPUESTO2</cbc:TaxableAmount>
+         <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_IMPUESTO2</cbc:TaxAmount>
+         <cac:TaxCategory>
+            <cbc:Percent>Q_PORC_IMPUESTO2</cbc:Percent>
+            <cac:TaxScheme>
+               <cbc:ID>Q_COD_IMPUESTO2</cbc:ID>
+               <cbc:Name>Impuesto al Consumo</cbc:Name>
+            </cac:TaxScheme>
+         </cac:TaxCategory>
+      </cac:TaxSubtotal>
+   </cac:TaxTotal>
+     <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_IMPUESTO3</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+         <cbc:TaxableAmount currencyID="Q_MONEDAOP">Q_BI_IMPUESTO3</cbc:TaxableAmount>
+         <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_IMPUESTO3</cbc:TaxAmount>
+         <cac:TaxCategory>
+            <cbc:Percent>Q_PORC_IMPUESTO3</cbc:Percent>
+            <cac:TaxScheme>
+               <cbc:ID>Q_COD_IMPUESTO3</cbc:ID>
+               <cbc:Name>Industria Comercio Avisos</cbc:Name>
+            </cac:TaxScheme>
+         </cac:TaxCategory>
+      </cac:TaxSubtotal>
+   </cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="Q_MONEDAOP">Q_TOTALBI_IMPUESTO</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="Q_MONEDAOP">Q_TOTALBI_IMPUESTO</cbc:TaxExclusiveAmount>
+      <cbc:TaxInclusiveAmount currencyID="COP">Q_TOTALIMPORTE</cbc:TaxInclusiveAmount>		
+		<cbc:PayableAmount currencyID="Q_MONEDAOP">Q_TOTALIMPORTE</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+<!--FINCABECERAXMLSUNAT-->
+<!--INIDETALLESXMLSUNAT-->		
+	<cac:CreditNoteLine>
+		<cbc:ID>Q_DET_ITEM</cbc:ID>
+		<cbc:Note>UN</cbc:Note>
+		<cbc:CreditedQuantity unitCode="EA">Q_DET_CANTIDAD</cbc:CreditedQuantity>
+		<cbc:LineExtensionAmount currencyID="COP">Q_DET_SUBTOTAL</cbc:LineExtensionAmount>
+		<cbc:FreeOfChargeIndicator>false</cbc:FreeOfChargeIndicator>
+      <cac:TaxTotal>
+         <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_DET_IVA</cbc:TaxAmount>
+         <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="Q_MONEDAOP">Q_DET_SUBTOTAL</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="Q_MONEDAOP">Q_DET_IVA</cbc:TaxAmount>
+            <cac:TaxCategory>
+               <cbc:Percent>Q_DET_PERCENT</cbc:Percent>
+               <cac:TaxScheme>
+                  <cbc:ID>01</cbc:ID>
+                  <cbc:Name>IVA</cbc:Name>
+               </cac:TaxScheme>
+            </cac:TaxCategory>
+         </cac:TaxSubtotal>
+      </cac:TaxTotal>
+      <cac:Item>
+         <cbc:Description>Q_DET_DESCRIPCION</cbc:Description>
+         <cac:SellersItemIdentification>
+            <cbc:ID>Q_DET_CODIGO_PRODUCTO</cbc:ID>
+         </cac:SellersItemIdentification>
+      </cac:Item>
+      <cac:Price>
+         <cbc:PriceAmount currencyID="Q_MONEDAOP">Q_DET_PRECIO</cbc:PriceAmount>
+         <cbc:BaseQuantity unitCode="NIU">Q_DET_CANTIDAD</cbc:BaseQuantity>
+      </cac:Price>
+	</cac:CreditNoteLine>
+<!--FINDETALLESXMLSUNAT-->
+<!--INICIERREXMLSUNAT-->	
+</CreditNote><!--FINCIERREXMLSUNAT-->
