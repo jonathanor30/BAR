@@ -274,7 +274,7 @@ function eliminar(idProv) {
       function () {
         $.ajax({
           type: "POST",
-          url: ruta + "/Facturacion/page/DeleteCLient",
+          url: ruta + "/Facturacion/page/InvoiceDelete",
           data: parametros,
           q: q,
           beforeSend: function (objeto) {

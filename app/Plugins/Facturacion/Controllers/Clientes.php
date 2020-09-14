@@ -279,14 +279,44 @@ class Clientes extends Controller
      * @method ajax
      */
 
-    public function DeleteClient()
+    public function InvoiceDelete()
     {
+        try {
+                   //Acá se valida que el método de acceso sea POST
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id    = $_POST['id'];
             $table = $_POST['table'];
             $key   = $_POST['key'];
+            //Acá se valida que el usuario que desea eliminar la factura, se root
             if ($_SESSION['user_type'] == 1 && $table == 'facturascli') {
-                if (DB::table($table)->where($key, $id)->delete()) {
+                //Aquí se obtienen la factura mediante un modelo
+                $factura = \Models\FacturaClienteLines\FacturaClienteLines::where('idfactura', intval($_POST['id']))->get()->toArray();
+            
+                //Array acumulador de productos
+                $codigos = array();
+                $bandera = 0;
+                //Acá se entriquece el acomulador
+                foreach ($factura as $key => $value) {
+                    //Enriquecer
+                    array_push($codigos, [
+                        'CodigoProducto' =>  $value['codigo_estandar'],
+                        'cantidad'       =>  $value['cantidad']
+                    ]);
+                }
+               $codigos = array_values($codigos);
+                //Actualizar existencias, por motivo de eliminación de Factura
+                foreach ($codigos as $key => $value) {
+                    //Así se instacia un Modelo con WHERE
+                    $producto = \Models\Producto\Producto::where('CodigoProducto', $value['CodigoProducto'])->first();
+                   
+                    //Actualizar existencias
+                    if(\Models\Producto\Producto::where('CodigoProducto', $value['CodigoProducto'])->update(['Existencias' => $producto->Existencias + $value['cantidad']])){
+                      $bandera++;
+                    }
+                }
+              
+                if (count($codigos) == $bandera) {
+                    DB::table($table)->where('idfactura', $id)->delete();
                     $this->writeLog = new LogManager(array(
                         'tipo'    => 'DANGER',
                         'mensaje' => 'El usuario ' . $_SESSION['user_name'] . ' ha eliminado el registro de la tabla ' . $table . ' con id ' . $id,
@@ -343,6 +373,9 @@ class Clientes extends Controller
         }
 
         $_POST = array();
+        } catch (\Throwable $th) {
+          echo $th->getMessage();
+        }
     }
     //--------------------------------------------------------------------------------------CRUD Cliente
 
@@ -961,120 +994,124 @@ class Clientes extends Controller
 
     public function SaveInvClie()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $exc = array('observaciones', 'estado', 'referencia', 'pagada');
-            if (is_array($this->formValidator($_POST, $exc))) {
-                if (isset($_POST['numero_item'])) {
-                    $this->cliente = $this->ModelClient->where("id_cliente", $_POST['id_cliente'])->first();
-                    $this->factura = new FacturaCliente;
-                    unset($_POST['id_cliente']);
-                    //enriqueciendo todo lo que viene por post
-                    foreach ($_POST as $key => $value) {
-                        if (!is_array($value)) {
-                            $this->factura->$key = $value;
-                        }
-                    }
-                    unset($this->factura->referenciaInv);
-                    //valores por defecto que no tienen default en DB
-                    $rec                         = array(
-                        //Factura de cliente
-                        'irpf'          => 0,
-                        'netosindto'    => 0,
-                        'neto'          => 0,
-                        'anulada'       => 0,
-                        'tasaconv'      => 1,
-                        'total'         => 0,
-                        'totaleuros'    => 0,
-                        'totalirpf'     => 0,
-                        'totaliva'      => 0,
-                        'dtopor1'       => 0,
-                    );
-                    foreach ($rec as $key => $value) {
-                        $this->factura->$key = $value;
-                    }
-                    $this->factura->codagente    = $_SESSION['user_id'] ?? '1';
-                    $this->factura->codcliente   = $this->cliente->id_cliente;
-                    $this->factura->coddivisa    = $this->cliente->coddivisa;
-                    $this->factura->codejercicio = date("Y");
-                    $this->factura->codigo       = ($this->factura->get()->last() != null ? $this->factura->get()->last()->numero + 1 : 1);
-                    $this->factura->codpago      = $_POST['codpago'];
-                    $this->factura->fp           = $_POST['codpago'];
-                    $this->factura->codserie     = $this->serie;
-                    $this->factura->hora         = date("H:i:s");
-                    $this->factura->ciudad       = $this->cliente->ciudad;
-                    $this->factura->numero       = ($this->factura->get()->last() != null ? $this->factura->get()->last()->numero + 1 : 1);
-                    $this->factura->pagada       = $_POST['pagada'];
-                    $this->factura->estado       = $_POST['pagada'];
-                    $this->factura->referencia   = $_POST['referenciaInv'];
-                    $this->factura->resolution_id = 1;
-                    //Totales
-                    $this->factura->neto = number_format(array_sum($_POST['subtotal']), 2, ".", "");
-                    $this->factura->total = number_format(array_sum($_POST['total']), 2, ".", "");
-                    $this->factura->totaldto = number_format(array_sum($_POST['dto']), 2, ".", "");
-                    $this->factura->totalrecargo = number_format(array_sum($_POST['recargo']), 2, ".", "");
-                    $this->factura->totaliva = number_format(array_sum($_POST['iva']), 2, ".", "");
-                    $this->factura->totalretencion = number_format(array_sum($_POST['RE']), 2, ".", "");
-                    //Acá se inserta la nueva factura con la información del cliente
-                    if ($this->factura->save()) {
-                        $cont    = 0;
-                        for (
-                            $i = 0;
-                            $i < count($_POST['numero_item']);
-                            $i++
-                        ) {
-                            $this->Nlinea                  = new FacturaClienteLines;
-                            $this->Nlinea->referencia      = $_POST['referencia'][$i];
-                            $this->Nlinea->cantidad        = $_POST['cantidad'][$i];
-                            $this->Nlinea->descripcion     = $_POST['ProdNombre'][$i];
-                            $this->Nlinea->dtopor          = $_POST['dto'][$i] ?? 0;
-                            $this->Nlinea->idfactura       = $this->factura->idfactura;
-                            $this->Nlinea->no_linea        = $cont + 1;
-                            $this->Nlinea->recargo         = $_POST['recargo'][$i];
-                            $this->Nlinea->iva             = $_POST['iva'][$i];
-                            $this->Nlinea->neto            = $_POST['subtotal'][$i];
-                            $this->Nlinea->pvpsindto       = $_POST['ProdPrecioVenta'][$i] * $_POST['cantidad'][$i];
-                            $this->Nlinea->pvptotal        = $_POST['total'][$i];
-                            $this->Nlinea->pvpunitario     = $_POST['ProdPrecioVenta'][$i];
-                            $this->Nlinea->retencion       = $_POST['RE'][$i];
-                            $this->Nlinea->codigo_estandar = $_POST['codigo'][$i];
-                        
-                            if ($this->Nlinea->save()) {
-                                $producto = \Models\Producto\Producto::where('CodigoProducto',  $_POST['codigo'][$i])->first();
-                                \Models\Producto\Producto::where('CodigoProducto',  intval($_POST['codigo'][$i]))->update(['Existencias' => $producto->Existencias - intval($_POST['cantidad'][$i])]);
-                                $cont++;
-                            } else {
-                                //acá vuelve a intentarlo
-                                $this->Nlinea->delete();
-                                $this->factura->delete();
-                                echo false;
+        try {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $exc = array('observaciones', 'estado', 'referencia', 'pagada');
+                if (is_array($this->formValidator($_POST, $exc))) {
+                    if (isset($_POST['numero_item'])) {
+                        $this->cliente = $this->ModelClient->where("id_cliente", $_POST['id_cliente'])->first();
+                        $this->factura = new FacturaCliente;
+                        unset($_POST['id_cliente']);
+                        //enriqueciendo todo lo que viene por post
+                        foreach ($_POST as $key => $value) {
+                            if (!is_array($value)) {
+                                $this->factura->$key = $value;
                             }
                         }
-                        //echo $cont.'--'.count( $_POST['numero_item'] );
-                        //Si el contador es igual al numero de lineas, es porque el arreglo
-                        //numero item ha sido recorrido por completo, por lo tanto se debe
-                        //actualizar el total de la factura
-                        if ($cont == count($_POST['numero_item'])) {
-                            //guardó factura
-                            echo true . "-" . $this->factura->idfactura;
-
-
-                            // echo $total;
+                        unset($this->factura->referenciaInv);
+                        //valores por defecto que no tienen default en DB
+                        $rec                         = array(
+                            //Factura de cliente
+                            'irpf'          => 0,
+                            'netosindto'    => 0,
+                            'neto'          => 0,
+                            'anulada'       => 0,
+                            'tasaconv'      => 1,
+                            'total'         => 0,
+                            'totaleuros'    => 0,
+                            'totalirpf'     => 0,
+                            'totaliva'      => 0,
+                            'dtopor1'       => 0,
+                        );
+                        foreach ($rec as $key => $value) {
+                            $this->factura->$key = $value;
+                        }
+                        $this->factura->codagente    = $_SESSION['user_id'] ?? '1';
+                        $this->factura->codcliente   = $this->cliente->id_cliente;
+                        $this->factura->coddivisa    = $this->cliente->coddivisa;
+                        $this->factura->codejercicio = date("Y");
+                        $this->factura->codigo       = ($this->factura->get()->last() != null ? $this->factura->get()->last()->numero + 1 : 1);
+                        $this->factura->codpago      = $_POST['codpago'];
+                        $this->factura->fp           = $_POST['codpago'];
+                        $this->factura->codserie     = $this->serie;
+                        $this->factura->hora         = date("H:i:s");
+                        $this->factura->ciudad       = $this->cliente->ciudad;
+                        $this->factura->numero       = ($this->factura->get()->last() != null ? $this->factura->get()->last()->numero + 1 : 1);
+                        $this->factura->pagada       = $_POST['pagada'];
+                        $this->factura->estado       = $_POST['pagada'];
+                        $this->factura->referencia   = $_POST['referenciaInv'];
+                        $this->factura->resolution_id = 1;
+                        //Totales
+                        $this->factura->neto = number_format(array_sum($_POST['subtotal']), 2, ".", "");
+                        $this->factura->total = number_format(array_sum($_POST['total']), 2, ".", "");
+                        $this->factura->totaldto = number_format(array_sum($_POST['dto']), 2, ".", "");
+                        $this->factura->totalrecargo = number_format(array_sum($_POST['recargo']), 2, ".", "");
+                        $this->factura->totaliva = number_format(array_sum($_POST['iva']), 2, ".", "");
+                        $this->factura->totalretencion = number_format(array_sum($_POST['RE']), 2, ".", "");
+                        //Acá se inserta la nueva factura con la información del cliente
+                        if ($this->factura->save()) {
+                            $cont    = 0;
+                            for (
+                                $i = 0;
+                                $i < count($_POST['numero_item']);
+                                $i++
+                            ) {
+                                $this->Nlinea                  = new FacturaClienteLines;
+                                $this->Nlinea->referencia      = $_POST['referencia'][$i];
+                                $this->Nlinea->cantidad        = $_POST['cantidad'][$i];
+                                $this->Nlinea->descripcion     = $_POST['ProdNombre'][$i];
+                                $this->Nlinea->dtopor          = $_POST['dto'][$i] ?? 0;
+                                $this->Nlinea->idfactura       = $this->factura->idfactura;
+                                $this->Nlinea->no_linea        = $cont + 1;
+                                $this->Nlinea->recargo         = $_POST['recargo'][$i];
+                                $this->Nlinea->iva             = $_POST['iva'][$i];
+                                $this->Nlinea->neto            = $_POST['subtotal'][$i];
+                                $this->Nlinea->pvpsindto       = $_POST['ProdPrecioVenta'][$i] * $_POST['cantidad'][$i];
+                                $this->Nlinea->pvptotal        = $_POST['total'][$i];
+                                $this->Nlinea->pvpunitario     = $_POST['ProdPrecioVenta'][$i];
+                                $this->Nlinea->retencion       = $_POST['RE'][$i];
+                                $this->Nlinea->codigo_estandar = $_POST['codigo'][$i];
+    
+                                if ($this->Nlinea->save()) {
+                                    $producto = \Models\Producto\Producto::where('CodigoProducto',  $_POST['codigo'][$i])->first();
+                                    \Models\Producto\Producto::where('CodigoProducto',  intval($_POST['codigo'][$i]))->update(['Existencias' => $producto->Existencias - intval($_POST['cantidad'][$i])]);
+                                    $cont++;
+                                } else {
+                                    //acá vuelve a intentarlo
+                                    $this->Nlinea->delete();
+                                    $this->factura->delete();
+                                    echo false;
+                                }
+                            }
+                            //echo $cont.'--'.count( $_POST['numero_item'] );
+                            //Si el contador es igual al numero de lineas, es porque el arreglo
+                            //numero item ha sido recorrido por completo, por lo tanto se debe
+                            //actualizar el total de la factura
+                            if ($cont == count($_POST['numero_item'])) {
+                                //guardó factura
+                                echo true . "-" . $this->factura->idfactura;
+    
+    
+                                // echo $total;
+                            } else {
+                                //Si no es exitoso el proceso de creación de la factura
+                                //Se elimina la factura y las lineas alcanzadas
+                                echo false;
+                            }
                         } else {
-                            //Si no es exitoso el proceso de creación de la factura
-                            //Se elimina la factura y las lineas alcanzadas
+                            //Error al crear la factura, no se pudo crear la factura
+                            //intentar de nuevo
                             echo false;
                         }
                     } else {
-                        //Error al crear la factura, no se pudo crear la factura
-                        //intentar de nuevo
-                        echo false;
+                        echo "No se pueden guardar facturas sin lineas";
                     }
                 } else {
-                    echo "No se pueden guardar facturas sin lineas";
+                    echo 'Faltan Campos por llenar';
                 }
-            } else {
-                echo 'Faltan Campos por llenar';
             }
+        } catch (\Throwable $th) {
+           echo $th->getMessage();
         }
         $_POST = array();
     }
@@ -1535,5 +1572,10 @@ class Clientes extends Controller
         } else {
             echo "Datos incorrectos";
         }
+    }
+
+    public function TestBar70()
+    {
+      
     }
 }
