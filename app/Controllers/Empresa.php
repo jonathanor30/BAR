@@ -65,8 +65,7 @@ class Empresa extends Controller
             /*Inicia validacion del lado del servidor*/
             if ($this->formValidator($_POST)) {
                 //Color empresarial
-                $_POST['moneda'] = $_POST['favcolor'];
-                unset($_POST['favcolor']);
+               
                 //Ejecución de actualización
                 $base = new Base;
                 switch ($base->Update($_POST, 'perfil', 'id_perfil', 1)) {

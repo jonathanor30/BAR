@@ -241,26 +241,14 @@
                         <input class="form-control form-control-sm" type="text" id="numero_cuenta" name="numero_cuenta" value="<?php echo $datos['empresa']->numero_cuenta; ?>" placeholder="Ingrese el número de la cuenta...">
                      </div>
                   </div>
-                  <div class="form-group col-md-6">
-                     <label for="favcolor">Seleccione su color favorito:</label>
-                     <div class="input-group">
-                        <span class="input-group-prepend">
-                           <span class="input-group-text">
-                              <i class="fas fa-fill-drip" aria-hidden="true"></i>
-                           </span>
-                        </span>
-                        <input class="form-control form-control-sm" type="color" id="favcolor" name="favcolor" value="<?php echo $datos['empresa']->moneda; ?>">
-                     </div>
-                  </div>
+                  
                </div>
                <button type="submit" id="guardar_datos" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
             </form>
             <hr>
             <br>
             <!-- Button trigger modal -->
-            <button type="button" title="Configuración de correo electronico para envio de alertas y documentos." class="btn btn-sm btn-primary" data-toggle="modal" data-target="#CorreoModal">
-               <i class="fas fa-server fa-fw" aria-hidden="true"></i> Servidor de correo
-            </button>
+            
             <!-- Modal -->
             <div class="modal fade" id="CorreoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                <div class="modal-dialog" role="document">
@@ -299,49 +287,7 @@
             </div>
             <br>
             <hr>
-            <div class="row">
-               <div class="form-group col-md-6">
-                  <div class="col-xs-3">
-                     <div id="load_img_firma">
-                        <a href="#" data-toggle="modal" data-target="#ModalFirma">
-                           <img style="height:48px; width: 150px;" class="img-fluid" src="<?php echo RUTA_URL ?>/Empresa/files?img=<?php echo $datos['empresa']->firma ?>" alt="Foto">
-                        </a>
-                        <h4>Firma representante</h4>
-                        <small>alto 223px, ancho 700px;</small>
-                        <!-- Modal Imagen licencia -->
-                        <div class="modal fade" id="ModalFirma" role="dialog">
-                           <div class="modal-dialog">
-                              <!-- Modal content-->
-                              <div class="modal-content">
-                                 <div class="modal-header">
-                                    <h4 class="modal-title">Firma</h4>
-                                    <button type="button" class="btn close" data-dismiss="modal">&times;</button>
-                                 </div>
-                                 <div class="modal-body">
-                                    <img class="img-fluid" src="<?php echo RUTA_URL ?>/Empresa/files?img=<?php echo $datos['empresa']->firma ?>">
-                                 </div>
-                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-rojo-claro" data-dismiss="modal">Cerrar</button>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <br>
-                     <div class="row">
-                        <div class="col-md-8">
-                           <div class="form-group">
-                              <div id="respuesta"></div>
-                              <form action="" id="guardar_imagen" enctype="multipart/form-data">
-                                 <input class='filestyle' data-buttonText="Foto" type="file" name="image_firma" id="image_firma" onchange="upload_image_firma();">
-                                 <br>
-                              </form>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
+            
          </div>
       </div>
    </div>

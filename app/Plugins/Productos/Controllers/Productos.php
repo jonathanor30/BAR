@@ -26,11 +26,35 @@ class Productos extends Controller
         );
         $this->vista('ListadoProductos', $datos, 'Productos', true);
     }
+    public function test($id = 2)
+    {
+        $this->pagina404($id);
+        $producto = $this->model->ObtenerUno("IdProducto", $id);
+        $datos =  array(
+            'titulo' => $producto->NombreProducto,
+            'producto' => $producto,
+        );
 
+        $this->vista('test', $datos, 'Productos');
+    }
+
+
+    public function detalleProducto($id = null)
+    {
+        
+        $this->pagina404($id);
+        $producto = $this->model->ObtenerUno("IdProducto", $id);
+        $datos =  array(
+            'titulo' => $producto->NombreProducto,
+            'producto' => $producto,
+        );
+
+        $this->vista('detalleProducto', $datos, 'Productos');
+    }
 
     public function VerProducto($id = null)
     {
-
+        
         $this->pagina404($id);
         $producto = $this->model->ObtenerUno("IdProducto", $id);
         $datos =  array(
@@ -253,10 +277,37 @@ class Productos extends Controller
 
     public function ObtenerTiposDeProductos()
     {
-        //Validar datos recibido mediante POST
-        if ($_SERVER['REQUEST_METHOD']) :
+         //Validar datos recibido mediante POST
+         if ($_SERVER['REQUEST_METHOD']) :
             header('Content-Type: application/json');
-            echo json_encode($this->model->ObtenerTiposDeProductos(), JSON_PRETTY_PRINT);
+          echo json_encode($this->model->ObtenerTiposDeProductos(), JSON_PRETTY_PRINT);
+        endif;
+    }
+
+    public function ObtenerPresentacion()
+    {
+         //Validar datos recibido mediante POST
+         if ($_SERVER['REQUEST_METHOD']) :
+            header('Content-Type: application/json');
+          echo json_encode($this->model->ObtenerPresentacion(), JSON_PRETTY_PRINT);
+        endif;
+    }
+
+    public function ObtenerMarca()
+    {
+         //Validar datos recibido mediante POST
+         if ($_SERVER['REQUEST_METHOD']) :
+            header('Content-Type: application/json');
+          echo json_encode($this->model->ObtenerMarca(), JSON_PRETTY_PRINT);
+        endif;
+    }
+
+    public function ObtenerUnidadMedida()
+    {
+         //Validar datos recibido mediante POST
+         if ($_SERVER['REQUEST_METHOD']) :
+            header('Content-Type: application/json');
+          echo json_encode($this->model->ObtenerUnidadMedida(), JSON_PRETTY_PRINT);
         endif;
     }
 
@@ -271,4 +322,60 @@ class Productos extends Controller
             }
         endif;
     }
+
+    public function agregar()
+    {
+
+    //Validamos si los datos fueron enviados por el metodo POST de php
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+        //Validacion de posible campo vacio: nombres
+        $exc = array();
+        $dat = $this->formValidator($_POST, $exc);
+        if (is_array($dat)) {
+            //Evaluamos si  el usuario a editar es de tipo 3 = afiliado, lo cual debe enviar el valor de vigencia capturado del formulario por metodo post
+          
+        
+            //preparamos los datos en un array en la variable datos.
+            $datos = [
+                'CodigoProducto' => $_POST["CodigoProducto"],
+                'NombreProducto' => $_POST["NombreProducto"],
+                'IdTipoProducto' => $_POST["IdTipoProducto"],
+                'IdPresentacion' => $_POST["IdPresentacion"],
+                'IdMarca'        => $_POST["IdMarca"],
+                'Contenido'      => $_POST["Contenido"],
+                'IdUnidadMedida' => $_POST["IdUnidadMedida"],
+                'Existencias'    => $_POST["Existencias"],
+                'PrecioSugerido' => $_POST["PrecioSugerido"],
+                'StockMinimo'    => $_POST["StockMinimo"],
+                'StockMaximo'    => $_POST["StockMaximo"],
+               
+               
+                
+    
+            ];
+            //Estructura de control, para evaluar el query de agregar usuario
+            switch ($this->model->agregarProducto($datos)) {
+                case 1:
+                    echo true;
+                    break;
+                case 2:
+                    //Redireccionamos de nuevo al formulario
+                    echo "Hubo un error al guardar el registro, por favor vuelva a intenter";
+                    break;
+                case 3:
+                    //Redireccionamos a usuarios
+                    echo "El producto que quiere registrar ya existe";
+                    break;
+            }
+
+            exit();
+        } else {
+            echo "Faltan datos por completar";
+        }
+    } else {
+
+        redireccionar('/Productos');
+    }
+}
 }

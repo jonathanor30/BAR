@@ -1,11 +1,16 @@
 var ruta = document.getElementById("ruta").value;
 
 // se ejecuta automaticamente la funcion de obtener tipo producto
-window.onload=Autoload();
+window.onload = Autoload();
 
-function Autoload(){
+function Autoload() {
   ObtenerTipoDeProducto();
+  ObtenerPresentacion();
+  ObtenerMarca();
+  ObtenerUnidadMedida();
+
 }
+
 //Mostrar nombre de producto de manera dinamica
 document
   .getElementById("NombreProducto")
@@ -13,6 +18,7 @@ document
     document.getElementById("TituloProducto").innerText = "";
     document.getElementById("TituloProducto").innerText = this.value;
   });
+
 
 //Editar Producto
 document
@@ -71,10 +77,77 @@ function ObtenerTipoDeProducto() {
       }
       //Definimos el tipo de producto actual
       x.value = parseInt(document.getElementById("TipoProductoActual").value);
-      
+
     },
   });
 }
+
+function ObtenerPresentacion() {
+  $.ajax({
+    url: ruta + `/Productos/ObtenerPresentacion`,
+    type: "POST",
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (resultado) {
+      var x = document.getElementById("IdPresentacion");
+      //Acá estamos pintando las presentaciones
+      for (var r in resultado) {
+        var option = document.createElement("option");
+        option.text = resultado[r].Nombre;
+        option.value = resultado[r].IdPresentacion;
+        x.add(option);
+      }
+      //Definimos el tipo de producto actual
+      x.value = parseInt(document.getElementById("TipoPresentacionActual").value);
+    },
+  });
+}
+
+function ObtenerMarca() {
+  $.ajax({
+    url: ruta + `/Productos/ObtenerMarca`,
+    type: "POST",
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (resultado) {
+      var x = document.getElementById("IdMarca");
+      //Acá estamos pintando las presentaciones
+      for (var r in resultado) {
+        var option = document.createElement("option");
+        option.text = resultado[r].Nombre;
+        option.value = resultado[r].IdMarca;
+        x.add(option);
+      }
+      //Definimos el tipo de producto actual
+      x.value = parseInt(document.getElementById("TipoMarcaActual").value);
+    },
+  });
+}
+
+function ObtenerUnidadMedida() {
+  $.ajax({
+    url: ruta + `/Productos/ObtenerUnidadMedida`,
+    type: "POST",
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (resultado) {
+      var x = document.getElementById("IdUnidadMedida");
+      //Acá estamos pintando las presentaciones
+      for (var r in resultado) {
+        var option = document.createElement("option");
+        option.text = resultado[r].NombreUnidad;
+        option.value = resultado[r].IdMarca;
+        x.add(option);
+      }
+      //Definimos el tipo de producto actual
+      x.value = parseInt(document.getElementById("TipoUnidadActual").value);
+    },
+  });
+}
+
 function upload_image() {
   var inputFileImage = document.getElementById("ImagenProducto");
   var file = inputFileImage.files[0];
@@ -85,8 +158,7 @@ function upload_image() {
     $.ajax({
       url:
         ruta +
-        `/Productos/ImagenProducto/${
-          document.getElementById("IdProducto").value
+        `/Productos/ImagenProducto/${document.getElementById("IdProducto").value
         }`,
       type: "POST",
       data: data,
@@ -105,3 +177,5 @@ function upload_image() {
     });
   }
 }
+
+

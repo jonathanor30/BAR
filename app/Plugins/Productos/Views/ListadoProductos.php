@@ -68,7 +68,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
          </div>
          <div class="modal-body">
-            <form class="form-horizontal" action="" id="guardar_usuario" method="POST" autocomplete="off">
+            <form class="form-horizontal" action="" id="guardar_producto" method="POST" autocomplete="off">
                <div class="row">
                   <div class="col-sm">
                      <label for="CodigoProducto" class="col-form-label">Código<b style="color:gray;">*</b></label>
@@ -82,32 +82,23 @@
                <div class="row">
                   <div class="col-sm">
                   <label for="IdTipoProducto" class="col-form-label">Tipo producto<b style="color:gray;">*</b></label>
-                     <select class="form-control form-control-sm" name="IdTipoProducto" required="">
-                        <option disabled="" selected="">Selecciona tipo de producto</option>
-                        <option value="1">licor</option>
-                        <option value="2">mecato</option>
-                        <option value="3">cigarrillos</option>
-                     </select>
+                     <select class="form-control form-control-sm" name="IdTipoProducto" id="IdTipoProducto">
+                           <option disable>--Seleccione tipo producto--</option>
+                        </select>
                   </div>
                   <div class="col-sm">
                   <label for="IdPresentacion" class="col-form-label">Presentacion<b style="color:gray;">*</b></label>
-                     <select class="form-control form-control-sm" name="IdPresentacion" required="">
-                        <option disabled="" selected="">Selecciona tipo de presentacion</option>
-                        <option value="1">caja</option>
-                        <option value="2">botella vidrio</option>
-                        <option value="3">lata</option>
-                     </select>
+                  <select class="form-control form-control-sm" name="IdPresentacion" id="IdPresentacion">
+                           <option disable>--Seleccione la presentacion--</option>
+                        </select>
                   </div>
                </div>   
                <div class="row">
                   <div class="col-sm">
                   <label for="IdMarca" class="col-form-label">Marca<b style="color:gray;">*</b></label>
-                     <select class="form-control form-control-sm" name="IdMarca" required="">
-                        <option disabled="" selected="">Selecciona el tipo de marca</option>
-                        <option value="1">postobon</option>
-                        <option value="2">aguardiente medellin</option>
-                        <option value="3">ron 8 años</option>
-                     </select>
+                        <select class="form-control form-control-sm" name="IdMarca" id="IdMarca">
+                           <option disable>--Seleccione la marca--</option>
+                        </select>
                   </div>
                   <div class="col-sm">
                      <label for="Contenido" class="col-form-label">Medida<b style="color:gray;">*</b></label>
@@ -116,13 +107,12 @@
                </div>
                <div class="row">
                   <div class="col-sm">
-                  <label for="mod_type_user" class="col-form-label">Unidad medida<b style="color:gray;">*</b></label>
-                     <select class="form-control form-control-sm" name="user_type" required="">
-                        <option disabled="" selected="">Selecciona el tipo de unidad medida</option>
-                        <option value="1">litros</option>
-                        <option value="2">unidad</option>
-                        <option value="3">mililitros</option>
-                     </select>
+                  <label for="IdUnidadMedida" class="col-form-label">Unidad medida<b style="color:gray;">*</b></label>
+                        <select class="form-control form-control-sm" name="IdUnidadMedida" id="IdUnidadMedida">
+                           <option >--Seleccione la unidad de medida--</option>
+                           <option value="1">Cedula</option>
+                        <option value="2">Cedula extrajera</option>
+                        </select>
                   </div>
                   <div class="col-sm">
                      <label for="Existencias" class="col-form-label">Existencia<b style="color:gray;">*</b></label>
@@ -144,12 +134,6 @@
                      <label for="StockMaximo" class="col-form-label">Sctok máximo<b style="color:gray;">*</b></label>
                      <input type="" class="form-control form-control-sm" id="StockMaximo" name="StockMaximo" placeholder="Stock máximo"  required="">
                   </div>
-                  <div class="col-sm">
-                     <label for="ImagenProducto" class="col-form-label">Imagen producto<b style="color:gray;">*</b></label> 
-							<input  id="fileUpload" name="ImagenProducto" type="file" onchange="upload_image();" accept=".jpg,.png,.jpeg">
-							<div class="contenedorImagen">
-                        <div class="imagen" id="image-holder"></div>
-                     </div>   
                </div>
                <div id="vigencia_usuario2"></div>
          </div>
@@ -164,4 +148,5 @@
 <!-- Modal -->
 
 <script src="<?php echo RUTA_URL; ?>/Productos/files?js=recursos/js/Productos.js"></script>
+<script src="<?php echo RUTA_URL; ?>/Productos/files?js=recursos/js/Producto.js"></script>
 <?php require RUTA_APP . '/Views/inc/footer.php'; ?>

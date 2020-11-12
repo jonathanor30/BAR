@@ -13,6 +13,8 @@ $(document).ready(function() {
       }
     },
     columns: [
+      { data: "IdTipoDocumento" },
+      { data: "Numero_Documento" },
       { data: "firstname" },
       { data: "user_name" },
       { data: "user_email" },
@@ -41,12 +43,12 @@ $(document).ready(function() {
               var clase = "badge badge-success";
               break;
             case "2":
-              var estado = "Desvinculado";
-              var clase = "badge badge-warning";
-              break;
-            case "0":
               var estado = "Inactivo";
               var clase = "badge badge-danger";
+              break;
+            case "0":
+              var estado = "Desvinculado";
+              var clase = "badge badge-warning";
               break;
           }
           $(nTd).html("<span class='" + clase + "'>" + estado + "</span>");

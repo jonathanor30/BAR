@@ -46,6 +46,8 @@
       <table style="font-size: 12px;" id="<?php echo $datos['titulo']; ?>" class="table table-hover">
          <thead>
             <tr>
+               <th class="text-left">Tipo documento</th>
+               <th class="text-left">Numero documento</th>
                <th class="text-left">Nombres</th>
                <th class="text-left">Usuario</th>
                <th class="text-left">Email</th>
@@ -99,7 +101,7 @@
                </div>
                <div class="row">
                   <div class="col-sm">
-                  <label for="mod_type_user" class="col-form-label">Tipo usuario</label>
+                     <label for="mod_type_user" class="col-form-label">Tipo usuario</label>
                      <select class="form-control form-control-sm" name="user_type" required="">
                         <option disabled="" selected="">Selecciona el tipo de usuario</option>
                         <option value="1">Empleado</option>
@@ -113,6 +115,20 @@
                         <option value="1" selected="">Activo</option>
                         <option value="0">Inactivo</option>
                      </select>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-sm">
+                     <label for="IdTipoDocumento" class="col-form-label">Tipo documento<b style="color:gray;">*</b></label>
+                     <select class="form-control form-control-sm" name="IdTipoDocumento" required="">
+                        <option disabled="" selected="">Selecciona tipo de documento</option>
+                        <option value="1">Cedula</option>
+                        <option value="2">Cedula extrajera</option>
+                     </select>
+                  </div>
+                  <div class="col-sm">
+                     <label for="Numero_Documento" class="col-form-label">Número documento<b style="color:gray;">*</b></label>
+                     <input type="text" class="form-control form-control-sm" id="Numero_Documento" name="Numero_Documento" placeholder="Número documento" required="">
                   </div>
                </div>
 

@@ -12,8 +12,7 @@ $("#guardar_datos").click(function() {
       data: parametros,
       beforeSend: function(objeto) {
         //$("#resultados_ajax").html("Mensaje: Cargando...");
-        button.innerHTML =
-          '<span id="loader" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"> </span> Cargando... ';
+        
       },
       success: function(datos) {
         var result = datos;
@@ -32,6 +31,37 @@ $("#guardar_datos").click(function() {
     });
     //event.preventDefault();
   }
+});
+$("#guardar").click(function() {
+  $("#guardar").attr("disabled", true);
+  var button = document.getElementById("guardar");
+  var form = document.getElementById("edit-form2");
+  var parametros = $(form).serialize();
+  $.ajax({
+    type: "POST",
+    url: ruta + "/usuarios/editar2/" + id_usuario,
+    data: parametros,
+    beforeSend: function(objeto) {
+      //$("#resultados_ajax").html("Mensaje: Cargando...");
+      button.innerHTML =
+        '<span id="loader" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"> </span> Cargando... ';
+    },
+    success: function(datos) {
+      var result = datos;
+      if (datos == "true") {
+        button.innerHTML = '<i class="fas fa-save"></i> Guardar ';
+        $("#guardar").attr("disabled", false);
+        alertify.success(
+          '<h6><i class="fas fa-check"></i> Usuario editado correctamente</h6>'
+        );
+      } else {
+        $("#guardar").attr("disabled", false);
+        alertify.warning(result);
+        console.log(result);
+      }
+    }
+  });
+  //event.preventDefault();
 });
 document.addEventListener("keydown", function(e) {
   var tecla = this ? e.keyCode : e.which;
@@ -59,6 +89,25 @@ function validar_clave() {
     //document.registro
     error.push(1);
   }
+  var er3 = /[0-9]/;
+  var er4 = /[A-Z]/;
+
+  if(!er3.test(cla1))
+  {
+    alertify.warning(
+      "su contraseña debe tener minimo 1 numero."
+    );
+    //document.registro
+    error.push(1);
+  } 
+  if(!er4.test(cla1))
+  {
+    alertify.warning(
+      "su contraseña debe tener minimo 1 letra mayuscula."
+    );
+    //document.registro
+    error.push(1);
+  } 
   if (cla1.length < caract_longitud) {
     alertify.warning(
       "Tu clave debe constar de minimo " + caract_longitud + " carácteres."
@@ -211,3 +260,4 @@ function Developer() {
   x.add(option);
   alertify.success("<i class='fas fa-check'></i> Categoría desbloqueada");
 }
+ 

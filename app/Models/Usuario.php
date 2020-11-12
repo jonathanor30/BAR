@@ -1,31 +1,15 @@
 <?php
 
-/**
- * This file is part of Elephant Framework
- * Copyright (C) 2018-2019 Juan Bautista <soyjuanbautista0@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-/**
- * Vehicle model to manage driver's inquiries Vehicles
- *
- * @author Juan Bautista <soyjuanbautista0@gmail.com>
- */
-class Usuario
+use Mini\Models\Log;
+use Mini\Lib\Helper;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+class Usuario extends Base
 {
     private $db; //Manejador de la base de datos
     private $comprobator; //Comprobador de elementos
+    private $comprobator2; //Comprobador de elementos
     private $result; //
 
     public function __construct()
@@ -42,6 +26,16 @@ class Usuario
         //Instancia del metodo registros, que retorna el resultado del query
         return $this->db->registros();
     }
+
+    public function ObtenerUno(string $campo = '', $id = null)
+    {
+
+        $this->db->query("SELECT * FROM home WHERE {$campo}=:id");
+
+        $this->db->bind(":id", $id);
+        return $this->db->registro();
+    }
+
     //Obtener toda la incormación de x u
     public function obtenerUsuario($id, string $campo = null)
     {
@@ -63,18 +57,41 @@ class Usuario
         }
         //Instancia del metodo registro, que retorna el resultado del query
     }
+
+    public function Obtenerdatos($datos)
+    {
+        $datos = $this->db->query("SELECT * FROM home WHERE IdHome=1");
+        return $this->db->registros();
+
+        return $datos;
+    }
+
+    
+
     //Método para Insertar nuevo vehiculo a la base de datos
     public function agregarUsuario($datos = [])
     {
         $this->comprobator = $this->comprobarUsuario($datos['user_name']);
-        if ($this->comprobator == true) {
-            //El usuario ya existe
-            return 3;
-        } else {
-            $this->db->query('INSERT INTO users (user_type, firstname, lastname, user_name, user_password_hash, user_email, vigencia, estado_usuario, date_added) VALUES(:user_type, :firstname, :lastname, :user_name, :user_password_hash, :user_email,:user_vigencia, :user_status , :date_added)');
+        $this->comprobator2 = $this->comprobarCorreo($datos['user_email']);
+        $this->comprobator3 = $this->comprobardocumento($datos['Numero_Documento']);
 
-            //Vincular valores
-            /*
+        if ($this->comprobator3 == true) {
+            return 5;
+            exit();
+        }
+
+        if ($this->comprobator == true) {
+            return 3;
+            exit();
+        } else {
+            if ($this->comprobator2 == true) {
+                //El usuario ya existe
+                return 4;
+            } else {
+                $this->db->query('INSERT INTO users (user_type, firstname, lastname, user_name, user_password_hash, user_email, estado_usuario, date_added, IdTipoDocumento, Numero_Documento) VALUES(:user_type, :firstname, :lastname, :user_name, :user_password_hash, :user_email, :user_status , :date_added, :IdTipoDocumento, :Numero_Documento)');
+
+                //Vincular valores
+                /*
             $this->db->bind(':user_type', $datos['user_type']);
             $this->db->bind(':firstname', $datos['firstname']);
             $this->db->bind(':lastname', $datos['lastname']);
@@ -84,21 +101,24 @@ class Usuario
             $this->db->bind(':user_vigencia', $datos['user_vigencia']);
             $this->db->bind(':user_status', $datos['user_status']);
             $this->db->bind(':date_added', $datos['date_added']);
+            $this->db->bind(':IdTipoDocumento', $datos['IdTipoDocumento']);
+            $this->db->bind(':Numero_Documento', $datos['Numero_Documento']);
              */
-            //Algoritmo para vincular valores de las columnas a la consulta preparada
-            //Requisito: los seudo campos de las columna en VALUE() de la consulta, debe ser iguales a los nombres
-            //de los indices en la variable datos que son recibidos desde el controlador
-            foreach ($datos as $campo => $valor) {
-                //Iteración en el método  bind() de la clase Base, donde se agrega el indice y valor
-                $this->db->bind(":{$campo}", $valor);
-            }
+                //Algoritmo para vincular valores de las columnas a la consulta preparada
+                //Requisito: los seudo campos de las columna en VALUE() de la consulta, debe ser iguales a los nombres
+                //de los indices en la variable datos que son recibidos desde el controlador
+                foreach ($datos as $campo => $valor) {
+                    //Iteración en el método  bind() de la clase Base, donde se agrega el indice y valor
+                    $this->db->bind(":{$campo}", $valor);
+                }
 
-            //Ejecutar consulta
-            if ($this->db->execute()) {
-                return 2;
-            } else {
+                //Ejecutar consulta
+                if ($this->db->execute()) {
+                    return 2;
+                } else {
 
-                return 1;
+                    return 1;
+                }
             }
         }
     }
@@ -106,22 +126,65 @@ class Usuario
     public function editarUsuario($datos = [])
     {
 
-        $this->db->query('UPDATE users SET user_type=:user_type, firstname=:firstname, lastname=:lastname, user_name=:user_name, user_password_hash=:user_password_hash, user_email=:user_email, vigencia=:user_vigencia, estado_usuario=:user_status, telegram_id=:telegram_id, telegram_verification=:telegram_verification, email_verification=:email_verification   WHERE user_id=:user_id');
+        $this->comprobator = $this->comprobarUsuario2($datos['user_name'],$datos['Numero_Documento']);
+        $this->comprobator2 = $this->comprobarCorreo2($datos['user_email'],$datos['Numero_Documento']);
+
+    
+        if(strlen($datos['user_password_hash']) <= 7)
+        { 
+        return 7;
+        exit();
+        }
+        if(strlen($datos['user_name']) <=5 )
+        {
+            return 8;
+            exit();
+        }
+    
+        if($this->comprobator == true)
+        {
+            return 3;
+            exit();
+        }else{
+        if ($this->comprobator2 == true) {
+            //El usuario ya existe
+            return 4;
+        } else {
+            $this->db->query('UPDATE users SET user_type=:user_type, firstname=:firstname, lastname=:lastname, user_name=:user_name, user_password_hash=:user_password_hash, user_email=:user_email, estado_usuario=:user_status WHERE user_id=:user_id');
+
+            //Vincular valores
+            $this->db->bind(':user_id', $datos['user_id']);
+            $this->db->bind(':user_type', $datos['user_type']);
+            $this->db->bind(':firstname', $datos['firstname']);
+            $this->db->bind(':lastname', $datos['lastname']);
+            $this->db->bind(':user_name', $datos['user_name']);
+            $this->db->bind(':user_password_hash', $datos['user_password_hash']);
+            $this->db->bind(':user_email', $datos['user_email']);
+            $this->db->bind(':user_status', $datos['user_status']);
+           
+    
+     
+    
+            //Ejecutar consulta
+            if ($this->db->execute()) {
+                return 2;
+            } else {
+    
+                return 1;
+            }
+        }
+    }
+    }
+
+    public function editarUsuario2($datos = [])
+    {
+
+        $this->db->query('UPDATE users SET estado_usuario=:user_status  WHERE user_id=:user_id');
 
         //Vincular valores
-        $this->db->bind(':user_id', $datos['user_id']);
-        $this->db->bind(':user_type', $datos['user_type']);
-        $this->db->bind(':firstname', $datos['firstname']);
-        $this->db->bind(':lastname', $datos['lastname']);
-        $this->db->bind(':user_name', $datos['user_name']);
-        $this->db->bind(':user_password_hash', $datos['user_password_hash']);
-        $this->db->bind(':user_email', $datos['user_email']);
-        $this->db->bind(':user_vigencia', $datos['user_vigencia']);
+        $this->db->bind(':user_id', $datos['user_id']);      
         $this->db->bind(':user_status', $datos['user_status']);
-        $this->db->bind(':telegram_id', $datos['telegram_id']);
-        $this->db->bind(':telegram_verification', $datos['verification']);
-        $this->db->bind(':email_verification', $datos['em_verification']);
-
+ 
         //Ejecutar consulta
         if ($this->db->execute()) {
             return 2;
@@ -176,22 +239,93 @@ class Usuario
             }
         }
     }
-    //Generar ficha técnica
-    public function ficha($id)
+    public function comprobarCorreo($correo)
     {
-        if (isset($id) && !empty($id)) {
-            //Preparamos consulta
-            $this->db->query('SELECT * FROM users where id_vehiculo=:id');
-            //Vinculamos valores
-            $this->db->bind(':id', $id);
-            //Ejecutamos consulta
+        //verificamos que exista y no este vacio el campo placa vehiculo
+        if (isset($correo) && !empty($correo)) {
+
+            //preparamos consulta
+            $this->db->query("SELECT * FROM users WHERE user_email=:correo");
+            //Vinculamos consulta
+            $this->db->bind(':correo', $correo);
             $this->db->execute();
-            //Obtener registros
-            $this->db->registro();
-        } else {
-            return false;
+            $this->result = $this->db->rowCount();
+            if ($this->result == 1) {
+                //Existe
+                return true;
+            } else {
+                //No existe
+                return false;
+            }
         }
     }
+
+    public function comprobardocumento($cc)
+    {
+        //verificamos que exista y no este vacio el campo placa vehiculo
+        if (isset($cc) && !empty($cc)) {
+
+            //preparamos consulta
+            $this->db->query("SELECT * FROM users WHERE Numero_Documento=:cc");
+            //Vinculamos consulta
+            $this->db->bind(':cc', $cc);
+            $this->db->execute();
+            $this->result = $this->db->rowCount();
+            if ($this->result == 1) {
+                //Existe
+                return true;
+            } else {
+                //No existe
+                return false;
+            }
+        }
+    }
+
+    public function comprobarUsuario2($usuario,$documento)
+    {
+        //verificamos que exista y no este vacio el campo placa vehiculo
+        if (isset($usuario) && !empty($usuario)) {
+
+            //preparamos consulta
+            $this->db->query("SELECT * FROM users WHERE Numero_Documento !=:documento AND user_name=:usuario");
+            //Vinculamos consulta
+            $this->db->bind(':usuario', $usuario);
+            $this->db->bind(':documento', $documento);
+            $this->db->execute();
+            $this->result = $this->db->rowCount();
+            if ($this->result == 1) {
+                //Existe
+                return true;
+            } else {
+                //No existe
+                return false;
+            }
+        }
+    }
+
+    public function comprobarCorreo2($correo,$documento)
+    {
+        //verificamos que exista y no este vacio el campo placa vehiculo
+        if (isset($correo) && !empty($correo)) {
+
+            //preparamos consulta
+            $this->db->query("SELECT * FROM users WHERE Numero_Documento !=:documento AND user_email=:correo");
+            //Vinculamos consulta
+            $this->db->bind(':correo', $correo);
+            $this->db->bind(':documento', $documento);
+            $this->db->execute();
+            $this->result = $this->db->rowCount();
+            if ($this->result == 1) {
+                //Existe
+                return true;
+            } else {
+                //No existe
+                return false;
+            }
+        }
+    }
+
+
 
     public function autocompletarUsuarios($datos = [])
     {
@@ -202,124 +336,8 @@ class Usuario
         return $this->db->registrosrow();
     }
 
-    //Método para eliminar contrato asignado a Usuario
-    public function eliminarContrato($datos = [])
-    {
-        //Se prepara la consulta SQL
-        $this->db->query('DELETE FROM contratos_asignados WHERE id_contrato_asignado=:id');
-        //Ejecutamos consulta
-        $this->db->bind(':id', $datos['id']);
 
-        if ($this->db->execute()) {
-            return 2;
-        } else {
-            return 1;
-        }
-    }
 
-    //Método para asignar contratos
-    public function asignarContrato($datos = [])
-    {
-        //Se prepara la consulta SQL
-        $this->db->query('INSERT INTO contratos_asignados (id_contrato, numero_contrato, usuario_asignado, user_id, fecha_inicial, fecha_final, objeto_contrato, nit_contratante, contratante, nit_responsable, responsable, telefono_responsable, direccion_responsable, estado_contrato, date_added) VALUES(:id_contrato,:numero_contrato,:usuario_asignado,:user_id,:fecha_inicial,:fecha_final,:objeto_contrato,:nit_contratante,:contratante,:nit_responsable,:responsable,:telefono_responsable,:direccion_responsable,:estado_contrato,:date_added)');
-        //Vincular valores
-        $this->db->bind(':id_contrato', $datos['id_contrato']);
-        $this->db->bind(':numero_contrato', $datos['numero_contrato']);
-        $this->db->bind(':usuario_asignado', $datos['usuario_asignado']);
-        $this->db->bind(':user_id', $datos['user_id']);
-        $this->db->bind(':fecha_inicial', $datos['fecha_inicial']);
-        $this->db->bind(':fecha_final', $datos['fecha_final']);
-        $this->db->bind(':objeto_contrato', $datos['objeto_contrato']);
-        $this->db->bind(':nit_contratante', $datos['nit_contratante']);
-        $this->db->bind(':contratante', $datos['contratante']);
-        $this->db->bind(':nit_responsable', $datos['nit_responsable']);
-        $this->db->bind(':responsable', $datos['responsable']);
-        $this->db->bind(':telefono_responsable', $datos['telefono_responsable']);
-        $this->db->bind(':direccion_responsable', $datos['direccion_responsable']);
-        $this->db->bind(':estado_contrato', $datos['estado_contrato']);
-        $this->db->bind(':date_added', $datos['date_added']);
-        //Ejecutamos consulta
-        if ($this->db->execute()) {
-            return 2;
-        } else {
-            return 1;
-        }
-    }
-
-    //Método para comprobar contrato asignado
-    public function comprobarContrato($numero_contrato, $user_id)
-    {
-        //Preparamos consulta
-        $this->db->query('SELECT * FROM contratos_asignados WHERE numero_contrato=:numero_contrato AND user_id=:user_id');
-        //Vinculamos valores
-        $this->db->bind(':numero_contrato', $numero_contrato);
-        $this->db->bind(':user_id', $user_id);
-        //Ejecutar consulta
-        $this->db->execute();
-        $this->result = $this->db->rowCount();
-        if ($this->result == 1) {
-            //Existe
-            return true;
-        } else {
-            //No existe
-            return false;
-        }
-    }
-
-    //Método para asignar rutas
-    public function asignarRuta($datos = [])
-    {
-        //Se prepara la consulta SQL
-        $this->db->query('INSERT INTO rutas_asignadas (id_ruta, usuario_asignado, user_id, nombre_ruta, descripccion, status_ruta, date_added) VALUES(:id_ruta,:usuario_asignado,:user_id,:nombre_ruta,:descripccion,:status_ruta,:date_added)');
-        //Vincular valores
-        $this->db->bind(':id_ruta', $datos['id_ruta']);
-        $this->db->bind(':usuario_asignado', $datos['usuario_asignado']);
-        $this->db->bind(':user_id', $datos['user_id']);
-        $this->db->bind(':nombre_ruta', $datos['nombre_ruta']);
-        $this->db->bind(':descripccion', $datos['descripccion']);
-        $this->db->bind(':status_ruta', $datos['status_ruta']);
-        $this->db->bind(':date_added', $datos['date_added']);
-        //Ejecutamos consulta
-        if ($this->db->execute()) {
-            return 2;
-        } else {
-            return 1;
-        }
-    }
-    //Método para comprobar contrato asignado
-    public function comprobarRuta($id_ruta, $user_id)
-    {
-        //Preparamos consulta
-        $this->db->query('SELECT * FROM rutas_asignadas WHERE id_ruta=:id_ruta AND user_id=:user_id');
-        //Vinculamos valores
-        $this->db->bind(':id_ruta', $id_ruta);
-        $this->db->bind(':user_id', $user_id);
-        //Ejecutar consulta
-        $this->db->execute();
-        $this->result = $this->db->rowCount();
-        if ($this->result == 1) {
-            //Existe
-            return true;
-        } else {
-            //No existe
-            return false;
-        }
-    }
-
-    //Método para eliminar ruta asignada
-    public function borrarRuta($datos = [])
-    {
-        //Preparamos consulta:
-        $this->db->query('DELETE FROM rutas_asignadas WHERE id_ruta_asignada=:id');
-        //Vinculamos valores:
-        $this->db->bind(':id', $datos['id']);
-        //Ejecutamos la consulta:
-        if ($this->db->execute()) {
-            return 2;
-        } else {
-            return 1;
-        }
-    }
 
     //Método para obtener Módulos de usuario
     public function obtenerModulos($id)
@@ -328,6 +346,8 @@ class Usuario
         $this->db->bind(':id', $id);
         return $this->db->registros();
     }
+
+
 
     //Método par asignar modulo a usuarios
     public function asignarModulo($datos = [])
@@ -381,6 +401,184 @@ class Usuario
             return false;
         } else {
             return true;
+        }
+    }
+
+    public function getUserWithEmail1($p_correoElectronico)
+    {
+
+        if (isset($p_correoElectronico) && !empty($p_correoElectronico)) {
+
+            //preparamos consulta
+            $this->db->query("SELECT * FROM users WHERE user_email=:correo");
+            //Vinculamos consulta
+            $this->db->bind(':correo', $p_correoElectronico);
+            $this->db->execute();
+            $this->result = $this->db->rowCount();
+            if ($this->result == 1) {
+                //Existe
+                return true;
+            } else {
+                //No existe
+                return false;
+            }
+        }
+    }
+
+    public function recoverPassword($p_correoElectronico)
+    {
+
+        $sql = "UPDATE users  WHERE user_email = :p_correoElectronico";
+        $parameters = array(
+            ':p_correoElectronico' => $p_correoElectronico
+        );
+
+        try {
+
+            $query = $this->db->query($sql);
+            return $this->execute($parameters);
+        } catch (PDOException $e) {
+
+            $logModel = new Log();
+            $sql = Helper::debugPDO($sql, $parameters);
+            $logModel->addLog($sql, 'Usuario', $e->getCode(), $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+
+            $logModel = new Log();
+            $sql = Helper::debugPDO($sql, $parameters);
+            $logModel->addLog($sql, 'Usuario', $e->getCode(), $e->getMessage());
+            return false;
+        }
+    }
+
+
+    public function generateRandomString($length = 10)
+    {
+        return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
+    }
+
+
+    public function sendMail($mailer)
+    {
+
+        $token = $this->generateRandomString(8);
+        $horavencimiento = date("Y-m-d H:i:s", strtotime('+20 minutes'));
+        $this->db->query("UPDATE users SET token=:token, fecha_expiracion=:fecha_expiracion WHERE user_email=:correo");
+        $this->db->bind(':token', $token);
+        $this->db->bind(':fecha_expiracion', $horavencimiento);
+        $this->db->bind(':correo', $mailer);
+        $this->db->execute();
+
+        $template = file_get_contents(RUTA_APP . '/Views/Login/template.php');
+        $template = str_replace("{{year}}", date('Y'), $template);
+        $template = str_replace("{{action_url_1}}", 'http://localhost/Bar70/Login/password/?token=' . $token . '', $template);
+        $template = str_replace("{{operating_system}}", Helper::getOS(), $template);
+        $template = str_replace("{{browser_name}}", Helper::getBrowser(), $template);
+
+        $mail = new PHPMailer(true);
+        $mail->CharSet = "UTF-8";
+
+
+        $mail->isSMTP();
+        $mail->Host = 'smtp.googlemail.com';  //gmail SMTP server
+        $mail->SMTPAuth = true;
+        $mail->Username = 'pruebasproyecto1907@gmail.com';   //username
+        $mail->Password = '123456789+4';   //password
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port = 465;                    //smtp port
+
+        $correo = "brayitan2018@hotmail.com";
+        $mail->setFrom('pruebasproyecto1907@gmail.com', 'Bar la 70');
+        $mail->addAddress($mailer);
+
+        $mail->isHTML(true);
+
+        $mail->Subject = 'Recuperación de contraseña - Bar70';
+        $mail->Body    = $template;
+
+        if (!$mail->send()) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
+    public function recuperarpass($datos = [])
+    {
+
+        $comprobator = $this->getUserWithEmail1($datos['txtCorreoElectronico']);
+        if ($comprobator == false) {
+            return 2;
+            exit();
+        } else {
+            $check = $this->sendMail($datos['txtCorreoElectronico']);
+            if ($check == 1) {
+                return 1;
+            } else {
+                return 3;
+            }
+        }
+    }
+
+    public function validarfecha($token)
+    {
+        $this->db->query("SELECT * FROM users WHERE token=:token");
+        $this->db->bind(":token", $token);
+        return $this->db->registro();
+    }
+
+    public function cambiarcontraseña($datos = [])
+    {
+        if ($datos['txtContrasena'] != $datos['txtRepetirContrasena']) {
+            return 2;
+            exit();
+        }
+        if (!preg_match('`[A-Z]`', $datos['txtContrasena'])) {
+            return 3;
+            exit();
+        }
+        if (!preg_match('`[0-9]`', $datos['txtContrasena'])) {
+            return 3;
+            exit();
+        }
+        if (strlen($datos['txtContrasena']) < 8) {
+            return 4;
+            exit();
+        }
+        $user_password = $datos['txtContrasena'];
+        $user_password_hash = password_hash($user_password, PASSWORD_DEFAULT);
+        $fecha = date("Y-m-d H:i:s");
+        $this->db->query("UPDATE users SET user_password_hash=:user_password_hash,fecha_expiracion=:fecha WHERE token=:token");
+        $this->db->bind(":user_password_hash",$user_password_hash);
+        $this->db->bind(":fecha",$fecha);
+        $this->db->bind(":token",$datos['token']);
+        
+        if ($this->db->execute()) {
+            return 5;
+        } else {
+            return 1;
+        }
+    }
+
+    public function autovalidacion($token)
+    {
+        $this->db->query("SELECT token FROM users WHERE token=:token");
+        $this->db->bind(':token', $token);
+        $this->db->execute();
+        $this->result = $this->db->rowCount();
+
+        $resultado = $this->validarfecha($token);
+        if ($this->result == 1) {
+
+            $fecha = date("Y-m-d H:i:s");
+            if ($fecha >= $resultado->fecha_expiracion) {
+                return 3;
+            } else {
+                return 2;
+            }
+        } else {
+            return 1;
         }
     }
 }

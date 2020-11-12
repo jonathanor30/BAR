@@ -1,12 +1,8 @@
 <?php
 
 /**
- * This file is part of myGTEP
- * Copyright (C) 2018-2019 Juan Bautista <soyjuanbautista0@gmail.com>
 
- * Main Functions for MVC framework
  *
- * @author Juan Bautista <soyjuanbautista0@gmail.com>
  */
 
 //Para redireccionar pagina
@@ -41,17 +37,21 @@ function getExistingPlugins($ruta)
     $folder = opendir($ruta);
     $i      = 0;
     while ($file = readdir($folder)) {
-        if ($file != "." && $file != ".." && !is_dir($file) && $file != ".htaccess" && $file != "Login.php" && $file != "Api.php" && $file != "Email.php" && $file != "Cron.php") {
+        if ($file != "." && $file != ".." && $file != ".htaccess" && $file != "Login.php" && $file != "Api.php" && $file != "Email.php" && $file != "Cron.php") {
             $plugs[$i++] = str_replace($ruta, "", $file);
         }
         if ($i == 0) {
-            //Aun no hay plugins cargados en el sistema
+            //Aun no hay plugins cargados en el sistema yo pense que era desde aca en el condicional de arriba 
             $plugs = [];
         }
     }
 
     return $plugs;
 }
+
+
+
+    
 
 //Minify HTML code
 function comprimir_pagina($html)

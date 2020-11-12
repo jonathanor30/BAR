@@ -37,7 +37,7 @@
             <div class="card card-signin my-5">
                <div class="card-body">
                   <div align="center">
-                     <img class="img-fluid" id="logo" src="<?php echo RUTA_URL; ?>/public/img/logo.png"><br><br>
+                     <img class="img-fluid" id="logo" src="<?php echo RUTA_URL; ?>/public/img/logonegro.png"><br><br>
                   </div>
                   <?php
                   // show potential errors / feedback (from login object)
@@ -76,6 +76,9 @@
                         <label for="inputPassword"><i class="fas fa-key icon"></i> Contraseña</label>
                      </div>
                      <button id="start" class="btn btn-lg btn-login btn-block" onclick="Search()" type="button">Login</button>
+                     <div id="formFooter"><br>
+                     <center><a class="underlineHover" href="<?php echo RUTA_URL; ?>/Login/recover">¿Olvidaste la contraseña?</a></center>
+                     </div>
                      <hr class="my-4">
                      <p class="text-center"><small><?php echo " &copy  2019 - " . date("Y") . " " . NOMBRE_APP; ?><br></small></p>
                </div>

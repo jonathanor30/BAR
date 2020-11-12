@@ -291,7 +291,7 @@ class Controller extends Core
     public function adminProtector()
     {
         if (isset($_SESSION['user_type'])) {
-            if ($_SESSION["user_type"] != 1 && $_SESSION["user_type"] != 99) {
+            if ($_SESSION["user_type"] != 1 && $_SESSION["user_type"] != 2) {
                 return $this->vista('directiva', array(
                     'titulo'   => 'Upps!',
                     'mensaje'  => ' No tiene privilegios suficientes para acceder a ésta funcionalidad.',
@@ -303,7 +303,7 @@ class Controller extends Core
     //Método para validar acceso a Módulos/plugins
     public function modulesValidator($datos, $plugin = false)
     {
-        if (isset($_SESSION['user_type']) && $_SESSION['user_type'] != 1 &&  $_SESSION['user_type'] != 99) {
+        if (isset($_SESSION['user_type']) && $_SESSION['user_type'] != 1 &&  $_SESSION['user_type'] != 2) {
             $this->counter = 0;
             foreach ($datos as $key => $value) {
                 if ($value->nombre_modulo == ucwords($this->getUrl()[0])) {

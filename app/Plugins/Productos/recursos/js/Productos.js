@@ -42,7 +42,7 @@ $(document).ready(function () {
               break;
             case "2":
               var estado = "Inactivo";
-              var clase = "badge badge-primary";
+              var clase = "badge badge-danger";
               break;
             case "3":
               var estado = "Agotado";
@@ -66,11 +66,11 @@ $(document).ready(function () {
               oData.IdProducto +
               "," +
               oData.Estado_P +
-              ");'><i class='fas fa-exchange-alt'></i></a><a title='Actualizar' href='#' class='btn btn-sm btn-outline-secondary' onclick='Eliminar(" +
+              ");'><i class='fas fa-exchange-alt'></i></a><a title='Actualizar' class='btn btn-sm btn-outline-secondary' href='" +
+              ruta +
+              "/Productos/detalleProducto/" +
               oData.IdProducto +
-              "," +
-              oData.Estado_P +
-              ");'><i class='fas fa-trash-alt'></i></a></div>"
+              ");'><i class='fas fa-eye'></i></a></div>"
           );
         },
       },
@@ -131,7 +131,7 @@ function reloadTable() {
       document.getElementById("filter").className = "btn btn-success";
       break;
     case "2":
-      document.getElementById("filter").className = "btn btn-warning";
+      document.getElementById("filter").className = "btn btn-danger";
       break;
     case "3":
       document.getElementById("filter").className = "btn btn-danger";
@@ -199,3 +199,33 @@ function Eliminar(id) {
     }
   );
 }
+$("#guardar_producto").submit(function(event) {
+  $("#guardar_datos").attr("disabled", true);
+  var parametros = $(this).serialize();
+  $.ajax({
+    type: "POST",
+    url: ruta + "/Productos/agregar",
+    data: parametros,
+    beforeSend: function(objeto) {
+      //$("#resultados_ajax").html("Mensaje: Cargando...");
+    },
+    success: function(datos) {
+      var result = datos;
+      if (datos == true) {
+        $("#Productos")
+          .DataTable()
+          .ajax.reload();
+        $("#exampleModal").modal("hide");
+        $("#guardar_producto")[0].reset();
+        $("#guardar_datos").attr("disabled", false);
+        alertify.success(
+          '<h6><i class="fas fa-check"></i> Producto creado correctamente</h6>'
+        );
+      } else {
+        $("#guardar_datos").attr("disabled", false);
+        alertify.warning(result);
+      }
+    }
+  });
+  event.preventDefault();
+});

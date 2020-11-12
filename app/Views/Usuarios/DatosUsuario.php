@@ -165,7 +165,7 @@ $(document).ready(function() {
 
           },function(){
 
-              alertify.error('<i class="fas fa-ban"></i> Cencelado');
+              alertify.error('<i class="fas fa-ban"></i> Cancelado');
           })
    }
 $(document).ready(function() {

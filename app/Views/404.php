@@ -45,7 +45,7 @@
     <footer class="bg-white">
         <div class="container my-auto">
             <div class="copyright text-center my-auto">
-                <span>&copy; Copyright 2017 - <?php echo date("Y"); ?> | myGTEP Negocio, reescrito por software.</span>
+                <span>&copy; Copyright 2019 - <?php echo date("Y"); ?> | Bar70 Negocio, reescrito por software.</span>
             </div>
         </div>
     </footer>

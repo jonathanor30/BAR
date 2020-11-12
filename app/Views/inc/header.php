@@ -43,7 +43,7 @@
       <ul class="navbar-nav bg-bar70 sidebar sidebar-dark accordion toggled" id="accordionSidebar">
          <!--Barra Lateral - Marca -->
          <br>
-         <?php if ($_SESSION['user_type'] != 1 && $_SESSION['user_type'] != 99) { ?>
+         <?php if ($_SESSION['user_type'] != 1 && $_SESSION['user_type'] != 2) { ?>
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo RUTA_URL . SEPARATOR . $_SESSION['modulos'][0]->nombre_modulo ?>">
                <img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png">
                <div class="sidebar-brand-text mx-3"><img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png"></div>
@@ -58,11 +58,11 @@
          <br>
          <hr class="sidebar-divider my-0">
          <!-- Nav Item - Dashboard -->
-        
+
          <li class="nav-item active">
             <a class="nav-link">
 
-               <span ><?php echo $datos['titulo']; ?></span></a>
+               <span><?php echo $datos['titulo']; ?></span></a>
          </li>
          <!-- Divider -->
          <hr class="sidebar-divider">
@@ -78,9 +78,9 @@
             </a>
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                <div class="bg-white py-2 collapse-inner rounded">
-                  <h6 class="collapse-header">Utilidades personalizadas:</h6>
+                  <h6 class="collapse-header">MODULOS :</h6>
                   <?php $modulos = getExistingPlugins(RUTA_PLUGINS); ?>
-                  <?php if ($_SESSION['user_type'] != 1 && $_SESSION['user_type'] != 99) : ?>
+                  <?php if ($_SESSION['user_type'] != 1 && $_SESSION['user_type'] != 2) : ?>
                      <?php foreach ($modulos as $plugins) : ?>
                         <?php $i = parse_ini_file(RUTA_PLUGINS . $plugins . SEPARATOR . 'info.ini'); ?>
                         <?php foreach ($_SESSION['modulos'] as $allow) : ?>
@@ -92,8 +92,20 @@
                   <?php else : ?>
                      <?php foreach ($modulos as $plugins) : ?>
                         <?php $i = parse_ini_file(RUTA_PLUGINS . $plugins . SEPARATOR . 'info.ini'); ?>
-                        <?php if ($i["estado"] != "inactivo") : ?>
-                           <a class="collapse-item row  <?php echo (isset($i['mant_mode']) && $i['mant_mode'] == true ? "text-danger" : "") ?>" href="<?php echo RUTA_URL . "/" . $i['nombre']; ?>" <?php echo (isset($i['mant_mode']) && $i['mant_mode'] == true ? "target='_blank' title='Módulo en mantenimiento'" : "") ?>><?php echo $i['nombre'] . (isset($i['mant_mode']) && $i['mant_mode'] == true ? "<i style='float:right;' class='fas fa-wrench text-danger'></i>" : " <i style='float:right;' class='" . $i['icon'] . "'></i>") ?></a>
+                        <?php if ($_SESSION['user_type'] == 1) : ?>
+                           <?php $exceptions = ['Productos', 'Compras']; ?>
+                           <?php if ($i["estado"] != "inactivo" && !in_array($i['nombre'], $exceptions)) : ?>
+                              <a class="collapse-item row  <?php echo (isset($i['mant_mode']) && $i['mant_mode'] == true ? "text-danger" : "") ?>" href="<?php echo RUTA_URL . "/" . $i['nombre']; ?>" <?php echo (isset($i['mant_mode']) && $i['mant_mode'] == true ? "target='_blank' title='Módulo en mantenimiento'" : "") ?>><?php echo $i['nombre'] . (isset($i['mant_mode']) && $i['mant_mode'] == true ? "<i style='float:right;' class='fas fa-wrench text-danger'></i>" : " <i style='float:right;' class='" . $i['icon'] . "'></i>") ?></a>
+                           <?php endif ?>
+
+                        <?php endif ?>
+
+                        <?php if ($_SESSION['user_type'] == 2) : ?>
+
+                           <?php if ($i["estado"] != "inactivo") : ?>
+                              <a class="collapse-item row  <?php echo (isset($i['mant_mode']) && $i['mant_mode'] == true ? "text-danger" : "") ?>" href="<?php echo RUTA_URL . "/" . $i['nombre']; ?>" <?php echo (isset($i['mant_mode']) && $i['mant_mode'] == true ? "target='_blank' title='Módulo en mantenimiento'" : "") ?>><?php echo $i['nombre'] . (isset($i['mant_mode']) && $i['mant_mode'] == true ? "<i style='float:right;' class='fas fa-wrench text-danger'></i>" : " <i style='float:right;' class='" . $i['icon'] . "'></i>") ?></a>
+                           <?php endif ?>
+
                         <?php endif ?>
                      <?php endforeach ?>
                   <?php endif; ?>
@@ -101,22 +113,28 @@
             </div>
          </li>
          <!-- Nav Item - Pages Collapse Menu -->
+         <?php if ($_SESSION['user_type'] == 2) : ?>
          <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                <i class="fas fa-fw fa-cog"></i>
                <span>Admin</span>
             </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-               <div class="bg-white py-2 collapse-inner rounded">
-                  <h6 class="collapse-header">Custom Components:</h6>
-                  <?php $admin  = getExistingPlugins(RUTA_APP . SEPARATOR . 'Controllers'); ?>
-                  <?php foreach ($admin as $controllers) : ?>
-                     <?php $listControllers = explode('.php', $controllers) ?>
-                     <a class="collapse-item" href="<?php echo RUTA_URL . "/" . $listControllers[0]; ?>"><?php echo $listControllers[0]; ?> <i style='float:right' class="fas fa-copy fa-fw"></i></a>
-                  <?php endforeach ?>
+           
+
+
+               <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                  <div class="bg-white py-2 collapse-inner rounded">
+                     <h6 class="collapse-header">Custom Components:</h6>
+                     <?php $admin  = getExistingPlugins(RUTA_APP . SEPARATOR . 'Controllers'); ?>
+                     <?php foreach ($admin as $controllers) : ?>
+                        <?php $listControllers = explode('.php', $controllers) ?>
+                        <a class="collapse-item" href="<?php echo RUTA_URL . "/" . $listControllers[0]; ?>"><?php echo $listControllers[0]; ?> <i style='float:right' class="fas fa-copy fa-fw"></i></a>
+                     <?php endforeach ?>
+                  </div>
                </div>
-            </div>
+           
          </li>
+         <?php endif ?>
          <!-- Divider 
          <hr class="sidebar-divider">
          <li class="nav-item">
@@ -192,11 +210,13 @@
                      </a>
                      <!-- Dropdown - User Information -->
                      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <!--
-                     <a class="dropdown-item" href="#">
+                     <input type="hidden"<?php echo  $sesion= $_SESSION['user_id']?>>
+                     <a class="dropdown-item" href="<?PHP echo RUTA_URL ?>/Usuarios/editar/<?PHP echo $sesion ?>">
+
                      <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                     Profile
+                     Perfil
                      </a>
+                     <!--
                      <a class="dropdown-item" href="#">
                      <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                      Settings

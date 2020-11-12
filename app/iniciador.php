@@ -44,29 +44,6 @@ if (file_exists('../vendor/autoload.php')) {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| Register The Auto Loader Genesis
-|--------------------------------------------------------------------------
-|
-| (EN) Genesis Automatic class loader
-| (ES) Cargador de clases automatico de genesis 
-|
-*/
-spl_autoload_register(function ($className) {
-
-    //Instantiated by the new statement 
-    if (file_exists('../app/Lib/' . str_replace('\\', '/', $className) .  '.php')) :
-        require_once '../app/Lib/' . str_replace('\\', '/', $className) .  '.php';
-    else :
-        $class = explode('\\', $className);
-        if (file_exists(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . str_replace('\\', '/',  join("\\", array_unique($class))) .  '.php')) :
-            //Instance by namespace
-            if ($className != 'int') :  
-                require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . str_replace('\\', '/',  join("\\", array_unique($class))) .  '.php';
-            endif;
-        endif;
-
-    endif;
-
+spl_autoload_register(function ($nombreClase) {
+    require_once 'Lib/' . $nombreClase . '.php';
 });

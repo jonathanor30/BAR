@@ -1,0 +1,32 @@
+/*========= Importando hojas de estilo =========*/
+/* Bootstrap 3.3.7 */
+@import url('./bootstrap.min.css');
+/* Material desing for Bootstrap */
+/* Sweet Alert 2 */
+@import url('./sweetalert2.css');
+/* Malihu jQuery custom content scroller 3.1.5 */
+/* Material Design Iconic Font 2.2.0 */
+/*============ Fonts */
+@font-face {
+    font-family: 'RobotoCondensedLight';
+    src: url('../fonts/robotocondensed-light.eot');
+    src: url('../fonts/robotocondensed-light.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/robotocondensed-light.woff2') format('woff2'),
+         url('../fonts/robotocondensed-light.woff') format('woff'),
+         url('../fonts/robotocondensed-light.ttf') format('truetype'),
+         url('../fonts/robotocondensed-light.svg#roboto_condensedlight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'RobotoCondensed';
+    src: url('../fonts/robotocondensed-regular.eot');
+    src: url('../fonts/robotocondensed-regular.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/robotocondensed-regular.woff2') format('woff2'),
+         url('../fonts/robotocondensed-regular.woff') format('woff'),
+         url('../fonts/robotocondensed-regular.ttf') format('truetype'),
+         url('../fonts/robotocondensed-regular.svg#roboto_condensedregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/*============ Estilos generales*/

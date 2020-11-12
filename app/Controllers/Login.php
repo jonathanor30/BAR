@@ -12,18 +12,23 @@
  * @author
  * @package Controllers
  */
+
+
+
 class Login extends Controller
 {
     public $errors   = array();
     public $messages = array();
     private $modeloUsuario;
     public  $writeLog;
-    public $defaultModule = 'Productos';
+    public $defaultModule = 'Clientes';
     public function __construct()
     {
         //Así instanciamos los modelos al controlador
+        //Así instanciamos los modelos al controlador
         $this->loginModelo   = $this->modelo('Sesion');
         $this->modeloUsuario = $this->modelo('Usuario');
+        $this->PluginName  = 'Login';
     }
 
     /**
@@ -32,19 +37,58 @@ class Login extends Controller
      * @access public
      * @param array $datos
      */
-    public function index()
+    public function index($id = 1)
     {
         session_start();
         if (isset($_SESSION['user_login_status']) && $_SESSION['user_login_status'] == 1) {
-            redireccionar('/'.$this->defaultModule);
+            redireccionar('/' . $this->defaultModule);
         } else {
-            $datos = [
-                'titulo' => 'Bar70',
-            ];
+            $home = $this->modeloUsuario->ObtenerUno("IdHome", $id);
+            $datos =  array(
+                'titulo' => 'home',
+                'home' => $home,
+            );
             //Acá instancio la vista del controlador Login
-            $this->vista("Login/Login", $datos, null, true);
+            $this->vista("Login/inicio", $datos, null, true);
         }
     }
+    public function home()
+    {
+        $datos = [
+            'titulo' => 'Bar70',
+        ];
+        $this->vista("Login/login", $datos, null, true);
+    }
+    public function Obtenerdatos()
+    {
+        //Validar datos recibido mediante POST
+        //Validar datos recibido mediante POST
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') :
+            header('Content-Type: application/json');
+            echo json_encode($this->Modelo->Obtenerdatos(), JSON_PRETTY_PRINT);
+        endif;
+    }
+
+    public function files()
+    {
+        if (isset($_GET['img']) || isset($_GET['js']) || isset($_GET['css']) || isset($_GET['pdf'])) {
+            if (isset($_GET['img'])) {
+                return $this->filesGTEP($_GET['img'], false, 'img');
+            }
+            if (isset($_GET['pdf'])) {
+                return $this->filesGTEP($_GET['pdf'], false, 'pdf');
+            }
+            if (isset($_GET['js'])) {
+                return $this->filesGTEP($this->PluginName, $_GET['js'], 'js');
+            }
+            if (isset($_GET['css'])) {
+                return $this->filesGTEP($this->PluginName, $_GET['css'], 'css');
+            }
+        } else {
+            $this->pagina404(false);
+        }
+    }
+
 
     /**
      * Método login()
@@ -73,16 +117,8 @@ class Login extends Controller
 
                         //Traemos datos del usuario
                         $usuario = $this->loginModelo->obtenerUsuario($_POST['user_name']);
-                        if (isset($usuario->vigencia) && $usuario->vigencia != "") {
-                            if ($usuario->vigencia < date('Y-m-d')) {
-                                $this->loginModelo->LockUser($usuario->user_id);
-                                $data = array(
-                                    'titulo'   => 'Upps!',
-                                    'mensaje'  => 'Tu cuenta está suspendida, para seguir disfrutando de Bar70 contáctanos.',
-                                    'problema' => 'su usuario'
-                                );
-                                exit($this->vista('directiva', $data));
-                            } else {
+                        if (isset($usuario->estado_usuario) && $usuario->estado_usuario != 2) {
+                            if ($usuario->estado_usuario == 1) {
                                 //Iniciamos la sesión
 
                                 session_start();
@@ -105,10 +141,10 @@ class Login extends Controller
                                     if ($_SESSION['modulos'] != false || $_SESSION['modulos'] != null) {
                                         redireccionar('/' . $_SESSION['modulos'][0]->nombre_modulo);
                                     } else {
-                                        redireccionar('/Productos');
+                                        redireccionar('/Clientes');
                                     }
                                 } else if ($_SESSION['user_type'] == 1) {
-                                    redireccionar('/Productos');
+                                    redireccionar('/Clientes');
                                 }
                             }
                         }
@@ -226,15 +262,10 @@ class Login extends Controller
                         //si existe verificamos que tenga la clave dinamica habilitada
                         $user = $this->modeloUsuario->obtenerUsuario($_POST['user_name'], 'user_name');
                         if (is_object($user)) {
-                            if ($user->telegram_verification == 1) {
-                                //mandamos clave a telegram
-                                $email->telegramAlert($user->telegram_id, NOMBRE_APP . ' le informa su clave dinámica: ' . $password);
-                                echo true . '-verification';
-                            } else if ($user->email_verification == 1) {
-                                echo true . '-verification';
-                                $email->emailVerification($user->user_email, $password, 1);
-                            } else {
+                            if ($user->estado_usuario == 1) {
                                 echo true . '-no_verification';
+                            } else {
+                                echo 'El usuario esta inhabilitado';
                             }
                         } else {
                             echo 'No es un usuario válido';
@@ -248,4 +279,167 @@ class Login extends Controller
             redireccionar('');
         }
     }
+
+    public function recover()
+    {
+        $this->vista('Login/recover', 'Recuperar Contraseña', null, false);
+    }
+
+    public function Password()
+    {
+        $this->vista('Login/newPassword', 'Cambiar Contraseña', null, false);
+    }
+
+    public function template()
+    {
+        $this->vista('Login/template', '', null, false);
+    }
+
+    public function Expiracion()
+    {
+        $this->vista('Login/PaginaExpiracion', '', null, false);
+    }
+
+    public function sendRecoveryCode()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            //Validacion de posible campo vacio: nombres
+   
+            $dat = $this->formValidator($_POST);
+            if (is_array($dat)) {
+                //preparamos los datos en un array en la variable datos.
+                $datos = [
+                    
+                    'txtCorreoElectronico' => $_POST["txtCorreoElectronico"],
+                ];
+                //Estructura de control, para evaluar el query de agregar usuario
+                switch ($this->modeloUsuario->recuperarpass($datos)) {
+                    case 1:
+                        echo true;
+                        break;
+                    case 2:
+                        //Redireccionamos de nuevo al formulario
+                        echo "El correo no existe";
+                        break;
+                    case 3:
+                        echo "no funciono sorry";
+                    break;
+                    case 4:
+                        echo "no esta vacio";
+                    break;
+                    case 5:
+                        echo "si esta vacio";
+                        case 6:
+                            echo "si esta vacio 2";
+                        break;
+                            case 7:
+                                echo "no esta vacio 2";
+                            break;
+                }
+
+                exit();
+            } else {
+                echo "Faltan datos por completar";
+            }
+        } else {
+
+            redireccionar('/usuarios');
+        }
+    }
+
+    public function createRandomCode()
+    {
+        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789";
+        srand((double)microtime()*1000000);
+        $i = 0;
+        $pass = '' ;
+    
+        while ($i <= 7) {
+            $num = rand() % 33;
+            $tmp = substr($chars, $num, 1);
+            $pass = $pass . $tmp;
+            $i++;
+        }
+    
+        return time().$pass;
+    }
+ 
+    public function updatePasswordWithCode()
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            //Validacion de posible campo vacio: nombres
+   
+            $dat = $this->formValidator($_POST);
+            if (is_array($dat)) {
+                //preparamos los datos en un array en la variable datos.
+                $datos = [
+                    'token' => $_POST["token"],
+                    'txtContrasena' => $_POST["txtContrasena"],
+                    'txtRepetirContrasena' => $_POST["txtRepetirContrasena"],
+
+                ];
+                //Estructura de control, para evaluar el query de agregar usuario
+                switch ($this->modeloUsuario->cambiarcontraseña($datos)) {
+                    case 1:
+                        echo true;
+                        break;
+                    case 2:
+                        //Redireccionamos de nuevo al formulario
+                        echo "las contraseñas no coinciden";
+                        break;
+                    case 3:
+                        echo "la contraseña debe contener 1 mayuscula y 1 numero";
+                    break;
+                    case 4:
+                        echo "debe ser mayor o igual a 8 caracteres";
+                    break;
+                    case 5:
+                        echo "hubo un error";
+                    break;
+                }
+
+                exit();
+            } else {
+                echo "Faltan datos por completar";
+            }
+        } else {
+
+            redireccionar('/usuarios');
+        }
+    }
+    
+    public function autovalidacion(){
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            //Validacion de posible campo vacio: nombres
+   
+           
+                //preparamos los datos en un array en la variable datos.
+               
+                //Estructura de control, para evaluar el query de agregar usuario
+                switch ($this->modeloUsuario->autovalidacion($_POST['token'])) {
+                    case 1:
+                        echo true;
+                        break;
+                    case 2:
+                            echo "no funciono";
+                    break;
+                    case 3:
+                        echo false;
+                    break;
+                
+                }
+
+                exit();
+            } else {
+                echo "Faltan datos por completar";
+            }
+        } 
+       
+    
+
 }

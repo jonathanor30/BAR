@@ -1,29 +1,7 @@
 <?php
 
-/**
- * This file is part of Elephant Framework
- * Copyright (C) 2018-2019 Juan Bautista <soyjuanbautista0@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. If not, see <http: //www.gnu.org/licenses/>.
- */
 
-/**
- * Users controller of the Elephant framework
- *
- * @author Juan Bautista <soyjuanbautista0@gmail.com>
- *
- */
+
 class Usuarios extends Controller
 {
     public $nombrePlugin;
@@ -71,6 +49,7 @@ class Usuarios extends Controller
         $this->vista("Usuarios/ListUsuarios", $datos, $this->nombrePlugin);
     }
 
+
     /**
      * Método index() método por defecto del cotrolador
      * se encarga de agregar un nuevo usuario a la base de datos
@@ -88,12 +67,7 @@ class Usuarios extends Controller
             $dat = $this->formValidator($_POST, $exc);
             if (is_array($dat)) {
                 //Evaluamos si  el usuario a editar es de tipo 3 = afiliado, lo cual debe enviar el valor de vigencia capturado del formulario por metodo post
-                if (isset($_POST["vigencia"])) {
-                    $user_vigencia = $_POST["vigencia"];
-                } else {
-                    //De lo contrario asignaremos la siguiente fecha
-                    $user_vigencia = date('9999-12-31');
-                }
+               
                 $user_password = $_POST['user_password_new'];
 
                 $user_password_hash = password_hash($user_password, PASSWORD_DEFAULT);
@@ -106,8 +80,9 @@ class Usuarios extends Controller
                     'user_password_hash' => $user_password_hash,
                     'user_type'          => $_POST["user_type"],
                     'user_status'        => $_POST["estado"],
-                    'user_vigencia'      => $user_vigencia,
                     'date_added'         => date("Y-m-d H:i:s"),
+                    'IdTipoDocumento'    => $_POST["IdTipoDocumento"],
+                    'Numero_Documento'   => $_POST["Numero_Documento"],
 
                 ];
                 //Estructura de control, para evaluar el query de agregar usuario
@@ -117,12 +92,18 @@ class Usuarios extends Controller
                         break;
                     case 2:
                         //Redireccionamos de nuevo al formulario
-                        echo "Hubo un error al guardar el registro, por favor vuelva a intenter";
+                        echo "Hubo un error al guardar el registro, por favor vuelva a intentar";
                         break;
                     case 3:
                         //Redireccionamos a usuarios
                         echo "El usuario que quiere registrar ya existe";
                         break;
+                    case 4:
+                        echo "El correo que ingreso ya se encuentra vinculado a un usuario";
+                        break;
+                    case 5:
+                        echo "El documento de identidad ingresado ya se encuentra vinculado a  un usuario";
+                    break;
                 }
 
                 exit();
@@ -150,38 +131,13 @@ class Usuarios extends Controller
 
         //Validamos si los datos fueron enviados por el metodo POST de php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $exceptions = array('estado', 'telegram_id');
+            $exceptions = array('estado');
 
             //Validar campos del formulario
             if ($this->formValidator($_POST, $exceptions)) {
 
                 //Evaluamos si  el usuario a editar es de tipo 3 = afiliado, lo cual debe enviar el valor de vigencia capturado del formulario por metodo post
-                if (isset($_POST["vigencia"])) {
-                    $user_vigencia = $_POST["vigencia"];
-                } else {
-                    //De lo contrario asignaremos la siguiente fecha
-                    $user_vigencia = date('9999-12-31');
-                }
-                if (isset($_POST['2-step'])) {
-                    $verification = 1;
-                    require_once RUTA_APP . SEPARATOR . 'Controllers' . SEPARATOR . 'Email.php';
-                    $emailAlert = new Email();
-                    $emailAlert->telegramAlert($_POST['telegram_id'], 'Haz activado la verificación en 2 pasos para iniciar sesión en ' . NOMBRE_APP . ' con Telegram');
-                } else {
-                    $verification = 0;
-                }
-                if (isset($_POST['2-step-email'])) {
-
-                    $em_verification = 1;
-                    require RUTA_APP . SEPARATOR . 'Controllers' . SEPARATOR . 'Email.php';
-                    $emailAlertC = new Email();
-                    if ($emailAlertC->emailVerification($_POST['user_email']) == true) {
-                    } else {
-                        exit('Error');
-                    }
-                } else {
-                    $em_verification = 0;
-                }
+              
 
                 $user_password = $_POST['user_password_new'];
 
@@ -197,12 +153,8 @@ class Usuarios extends Controller
                     'user_email'         => $_POST["user_email"],
                     'user_password_hash' => $user_password_hash,
                     'user_type'          => $_POST["user_type"],
-                    'user_status'        => $_POST["estado"],
-                    'user_vigencia'      => $user_vigencia,
-                    'telegram_id'        => $_POST['telegram_id'],
-                    'verification'       => $verification,
-                    'em_verification'    => $em_verification,
-
+                    'user_status'        => $_POST["estado"], 
+                    'Numero_Documento'   => $_POST["Numero_Documento"], 
                 ];
                 //Estructura de control, para evaluar el query de agregar usuarios
                 switch ($this->usuarioModelo->editarUsuario($datos)) {
@@ -216,9 +168,27 @@ class Usuarios extends Controller
                         //error
                         echo "Hubo un error al guardar el registro, por favor vuelva a intentar";
                         break;
-                    case 3:
-                        //error
-                        echo "El usuario que quiere renombrar ya existe";
+                        case 3:
+                            //Redireccionamos a usuarios
+                            echo "El usuario que quiere registrar ya existe";
+                            break;
+                        case 4:
+                            echo "El correo que ingreso ya se encuentra vinculado a un usuario";
+                            break;
+                        case 5:
+                            echo "El documento de identidad ingresado ya se encuentra vinculado a  un usuario";
+                        break;
+                        case 6:
+                            echo "su contraseña debe tener minimo 1 letra mayuscula y 1 numero";
+                        break;
+                        case 7:
+                            echo "su contraseña debe ser mayor o igual a 8 digitos";
+                        break;
+                        case 8:
+                            echo "el nombre de usuario debe ser mayor o igual a 6 caracteres";
+                        break;
+                        case 9:
+                            echo "no puede ingresar caracteres especiales";
                         break;
                 }
             }
@@ -342,6 +312,8 @@ class Usuarios extends Controller
                     'lastname'   => $value['lastname'],
                     'user_name'  => $value['user_name'],
                     'user_email' => $value['user_email'],
+                    'IdTipoDocumento'    => $_POST["IdTipoDocumento"],
+                    'Numero_Documento'   => $_POST["Numero_Documento"],
                 );
             }
 
@@ -371,7 +343,9 @@ class Usuarios extends Controller
                 array('db' => 'user_type', 'dt' => 'user_type'),
                 array('db' => 'estado_usuario', 'dt' => 'estado_usuario'),
                 array('db' => 'user_id', 'dt' => 'user_id'),
-
+                array('db' => 'IdTipoDocumento', 'dt' => 'IdTipoDocumento'),
+                array('db' => 'Numero_Documento', 'dt' => 'Numero_Documento'),
+               
             );
 
             //Información del servidor de base de datos
@@ -676,6 +650,67 @@ class Usuarios extends Controller
             }
         } else {
             $this->pagina404(false);
+        }
+    }
+
+    public function editar2($id = null)
+    {
+        if (!isset($id) && $id == null) {
+            //Redireccionamos a usuarios
+            exit(redireccionar('/usuarios'));
+        }
+
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $exceptions = array('estado');
+
+            //Validar campos del formulario
+            if ($this->formValidator($_POST, $exceptions)) {
+
+                //Evaluamos si  el usuario a editar es de tipo 3 = afiliado, lo cual debe enviar el valor de vigencia capturado del formulario por metodo post
+              
+                $id_set = $id;
+                //preparamos los datos en un array en la variable datos.
+                $datos = [
+                    'user_id'            => $id_set,
+                    'user_status'        => $_POST["estado"],   
+                ];
+                //Estructura de control, para evaluar el query de agregar usuarios
+                switch ($this->usuarioModelo->editarUsuario2($datos)) {
+                    case 1:
+                        //Usuario editado correctamente
+                        echo "true";
+                        //$_POST = array();
+
+                        break;
+                    case 2:
+                        //error
+                        echo "Hubo un error al guardar el registro, por favor vuelva a intentar";
+                        break;
+                    case 3:
+                        //error
+                        echo "El usuario que quiere renombrar ya existe";
+                        break;
+                }
+            }
+        } else {
+            //Obtenemos usaurio
+            $usuario = $this->usuarioModelo->obtenerUsuario($id);
+            $modulos = $this->usuarioModelo->obtenerModulos($id);
+
+            //Comprobador 404
+            $this->pagina404($usuario);
+
+            $datos = [
+                'titulo'            => 'Editar Usuario',   //Titulo de la pagina
+                'usuario'           => $usuario,           //Aśi pasamos datos del controlador a la vista
+                'icon'              => "fas fa-users",
+                'modulos_asignados' => $modulos,
+
+            ];
+
+            //Así cargamos la vista
+            $this->vista('Usuarios/EditarUsuario', $datos);
         }
     }
 }

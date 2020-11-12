@@ -22,10 +22,10 @@ class Perfil
     public function editarPerfil($datos)
     {
         //Preparacion de consulta SQL
-        $this->db->query('UPDATE perfil SET nombre_empresa=:nombre_empresa, direccion_territorial=:direccion_territorial, resolucion_empresa=:resolucion_empresa, numero_habilitacion=:numero_habilitacion, telefono=:telefono, email=:email,  email_alerta=:email_alerta, id_telegram=:id_telegram, servidor_verificacion=:servidor_verificacion,moneda=:favcolor, direccion=:direccion, ciudad=:ciudad, nit_empresa=:nit_empresa, representante_legal=:representante_legal, estado=:estado, nombre_banco=:nombre_banco, tipo_cuenta=:tipo_cuenta, numero_cuenta=:numero_cuenta  WHERE id_perfil=:id_perfil');
+        $this->db->query('UPDATE perfil SET nombre_empresa=:nombre_empresa, direccion_territorial=:direccion_territorial, resolucion_empresa=:resolucion_empresa, numero_habilitacion=:numero_habilitacion, telefono=:telefono, email=:email,  email_alerta=:email_alerta, id_telegram=:id_telegram, servidor_verificacion=:servidor_verificacion, direccion=:direccion, ciudad=:ciudad, nit_empresa=:nit_empresa, representante_legal=:representante_legal, estado=:estado, nombre_banco=:nombre_banco, tipo_cuenta=:tipo_cuenta, numero_cuenta=:numero_cuenta  WHERE id_perfil=:id_perfil');
         //Vincular valores a la consulta
         $this->db->bind(':nombre_empresa', $datos['nombre_empresa']);
-        $this->db->bind(':favcolor', $datos['favcolor']);
+        
         $this->db->bind(':direccion_territorial', $datos['direccion_territorial']);
         $this->db->bind(':resolucion_empresa', $datos['resolucion_empresa']);
         $this->db->bind(':numero_habilitacion', $datos['numero_habilitacion']);

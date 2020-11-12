@@ -1,5 +1,27 @@
 {
-    "require": {
-        "firebase/php-jwt": "^5.2"
+        "name": "panique/mini3",
+        "description": "MINI3 - an extremely simple naked PHP application",
+        "type": "project",
+        "license": "MIT",
+        "authors": [
+            {
+                "name": "bar70",
+                "email": "pruebasproyecto1907@gmail.com"
+            },
+            {
+                "name": "pruebas proyecto",
+                "email": "pruebasproyecto1907@gmail.com"
+            }
+        ],
+        "minimum-stability": "dev",
+        "require": {
+            "phpmailer/phpmailer": "dev-master"
+        },
+        "autoload":
+        {
+            "psr-4":
+            {
+                "Mini\\" : "app/"
+            }
+        }
     }
-}
