@@ -61,6 +61,9 @@ class Configuracion extends Controller
      * @return void
      */
     public function editarHome()
+
+
+     
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             /*Inicia validacion del lado del servidor*/
