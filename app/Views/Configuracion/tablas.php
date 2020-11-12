@@ -789,7 +789,7 @@ document.getElementById("IdHome").value
               $(nTd).html(
                 "<div class='btn-group'> <a title='Editar' class='btn btn-sm btn-outline-secondary' href='" +
                 ruta +
-                "/Productos/VerProducto/" +
+                "/Configuracion/vertipoproducto/" +
                 oData.IdTipoProducto +
                 "'>" +
                 "<i class='fas fa-edit'></i>" +

@@ -1,81 +1,73 @@
 <?php require RUTA_APP . '/Views/inc/header.php'; ?>
 <div class="container">
-  <div class="card">
-    <div class="card-header">
-      <h4 id="TituloProducto"><?php echo $datos['home']->IdHome ?></h4>
-    </div>
-    <div class="card-body">
-      <div class="row" title="<?php echo $datos['home']->IdHome ?> $<?php echo $datos['home']->IdHome ?>">
-        <div class="col-sm-auto">
-          <?php if ($datos['home']->ImagenMision != NULL || $datos['home']->ImagenMision != '') : ?>
-            <div id="IMGProductoCargado">
-              <img style="width: -50%;" class="img-fluid img-producto" src="<?php echo RUTA_URL ?>/Configuracion/files?img=<?php echo $datos['home']->ImagenMision; ?>" alt="Configuracion">
-            </div>
-          <?php else : ?>
-            <h5>El producto no tiene una imagen cargada</h5>
-          <?php endif; ?>
-          <br>
-          <div class="input-group mb-3">
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" id="ImagenMision" name="ImagenMision" onchange="upload_image();" accept=".jpg,.png,.jpeg">
-              <label class="custom-file-label" for="ImagenMision" aria-describedby="inputGroupFileAddon02">Seleccione una imagen <i class="fas fa-image"></i></label>
-            </div>
-            <div id="LoadImgProducto"></div>
-          </div>
-          <br><br>
+    <div class="card">
+        <div class="card-header">
+            <h4 id="TituloProducto"><?php echo $datos['home']->Nombre ?></h4>
         </div>
-      </div>
-
-
-      <input type="hidden" id="IdHome" name="IdHome" value="<?php echo $datos['home']->IdHome ?>">
-
-
-
-
+        <div class="card-body">
+            
+            <form id="FormEditarProducto" action="" method="POST">
+                <div class="row">
+                    <div class="col-sm">
+                        <input type="text" value="<?php echo $datos ['home']->Nombre?>" class="form-control form-control-sm" id="IdTipoProducto" name="IdTipoProducto"  required="">
+                        <input type="hidden" id="IdTipoProducto" name="IdTipoProducto" value="<?php echo $datos['home']->IdTipoProducto ?>">
+                    </div>
+                    
+                </div>
+                
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-sm">
+                    <button type="submit" id="BtnEditProducto" class="btn btn-sm btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
     </div>
-
-  </div>
-
+    </form>
 </div>
 <script>
   var ruta = document.getElementById("ruta").value;
 
 
-  function upload_image() {
-    var inputFileImage = document.getElementById("ImagenMision");
-    var file = inputFileImage.files[0];
-    if (typeof file === "object" && file !== null) {
-      document.getElementById("LoadImgProducto").innerText = "Cargando...";
+  document
+  .getElementById("FormEditarProducto")
+  .addEventListener("submit", function (e) {
+    $("#BtnEditProducto").attr("disabled", true);
+    //Prevenir
+    e.preventDefault();
+    var form = this; //Acá se obtienen todo los campos del formulario
+    var parametros = $(form).serialize(); //Acá se serializa o se identifica varaibles y sus valores (Campos del formulario)
+    var button = document.getElementById("BtnEditProducto");
+    /**
+     * Petición ajax al controlador y el método editar producto
+     */
+    $.ajax({
+      type: "POST",
+      url: ruta + "/Configuracion/EditarTipoProducto",
+      data: parametros,
+      beforeSend: function (objeto) {
+        //$("#resultados_ajax").html("Mensaje: Cargando...");
+        button.innerHTML =
+          '<span id="loader" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"> </span> Cargando... ';
+      },
+      success: function (datos) {
+        var result = datos;
+        if (datos == "true") {
+          button.innerHTML = '<i class="fas fa-save"></i> Guardar ';
+          $("#BtnEditProducto").attr("disabled", false);
+          alertify.success(
+            '<h6><i class="fas fa-check"></i> Tipo de Producto editado correctamente</h6>'
+          );
+        } else {
+          $("#BtnEditProducto").attr("disabled", false);
+          alertify.warning(result);
+          console.log(result);
+        }
+      },
+    });
+  });
 
-
-      var data = new FormData();
-      data.append("ImagenMision", file);
-      $.ajax({
-        url: ruta +
-          `/Configuracion/ImagenMision/${
-          document.getElementById("IdHome").value
-        }`,
-        type: "POST",
-        data: data,
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function(resultado) {
-          if (resultado != false) {
-            var img = `
-              <img style="width: -50%;" id="IMGProductoCargado" class="img-fluid img-producto" alt="Configuracion" src="${ruta}/Configuracion/files?img=${resultado}">
-              `;
-            document.getElementById("IMGProductoCargado").innerHTML = img;
-          }
-          document.getElementById("LoadImgProducto").innerText = "";
-
-
-          location.reload(true);
-        },
-
-      });
-    }
-  }
 </script>
 
 <?php require RUTA_APP . '/Views/inc/footer.php'; ?>

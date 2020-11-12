@@ -32,8 +32,15 @@ class Configuracion1
         $this->db->bind(":id", $id);
         return $this->db->registro();
     }
-
-
+    
+    public function ObtenerUnoTipoProducto(string $campo = '', $id = null)
+    {
+        
+            $this->db->query("SELECT * FROM tipo_producto WHERE {$campo}=:id");
+        
+        $this->db->bind(":id", $id);
+        return $this->db->registro();
+    }
     public function editarHome($datos)
     {
         //Preparacion de consulta SQL

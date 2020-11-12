@@ -41,19 +41,42 @@ class Configuracion extends Controller
         
         $this->vista("Configuracion/tablas", $datos, null, true); 
     }
-    public function test($id = 1)
+
+
+    public function vertipoproducto($id = null)
     {
-        $this->pagina404($id);
-        $home = $this->Modelo->ObtenerUno("IdHome", $id);
-        $datos =  array(
-            'titulo' => 'EDITAR INICIO',
-            'home' => $home,
-            
-        );
         
-        $this->vista("Login/inicio", $datos, null, true); 
+        $this->pagina404($id);
+        $home = $this->Modelo->ObtenerUnoTipoProducto("IdTipoProducto", $id);
+        $datos =  array(
+            'titulo' => 'Configuracion',
+            'home' => $home,
+        );
+
+        $this->vista("Configuracion/test1", $datos, null, true); 
     }
     
+
+     /**
+     * Editar
+     * (ES) Este método se encarga de editar un producto
+     * @access public
+     * @return void
+     */
+    public function EditarTipoProducto()
+    {
+        //Validar que el método sea accedido mediante POST
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' &&   $this->formValidator($_POST)) :
+            //Ingresa y guarda
+            if ($this->Modelo->db->Update($_POST, 'tipo_producto', 'Nombre', intval($_POST['IdTipoProducto']))) {
+                echo "true";
+            } else {
+                echo "false";
+            }
+        else :
+            redireccionar("/");
+        endif;
+    }
     /**
      * Editar
      * (ES) Este método se encarga de editar un producto
