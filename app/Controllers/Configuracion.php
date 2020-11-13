@@ -49,15 +49,63 @@ class Configuracion extends Controller
         $this->pagina404($id);
         $home = $this->Modelo->ObtenerUnoTipoProducto("IdTipoProducto", $id);
         $datos =  array(
-            'titulo' => 'Configuracion',
+            'titulo' => $home->Nombre,
             'home' => $home,
         );
 
         $this->vista("Configuracion/EditarTipoProducto", $datos, null, true); 
     }
 
+    public function VerUnidadMedida($id = null)
+    {
+        
+        $this->pagina404($id);
+        $home = $this->Modelo->ObtenerUnidadMedida("IdUnidadMedida", $id);
+        $datos =  array(
+            'titulo' => $home->NombreUnidad,
+            'home' => $home,
+        );
+
+        $this->vista("Configuracion/EditarUnidadMedida", $datos, null, true); 
+    }
+    public function VerMarca($id = null)
+    {
+        
+        $this->pagina404($id);
+        $home = $this->Modelo->ObtenerMarca("IdMarca", $id);
+        $datos =  array(
+            'titulo' => $home->Nombre,
+            'home' => $home,
+        );
+
+        $this->vista("Configuracion/EditarMarca", $datos, null, true); 
+    }
+
+    public function VerPresentacion($id = null)
+    {
+        
+        $this->pagina404($id);
+        $home = $this->Modelo->ObtenerPresentacion("IdPresentacion", $id);
+        $datos =  array(
+            'titulo' => $home->Nombre,
+            'home' => $home,
+        );
+
+        $this->vista("Configuracion/EditarPresentacion", $datos, null, true); 
+    }
     
-    
+    public function VerTipoDocumento($id = null)
+    {
+        
+        $this->pagina404($id);
+        $home = $this->Modelo->ObtenerTipoDocumento("IdTipoDocumento", $id);
+        $datos =  array(
+            'titulo' => $home->Nombre_Documento,
+            'home' => $home,
+        );
+
+        $this->vista("Configuracion/EditarTipoDocumento", $datos, null, true); 
+    }
 
      /**
      * Editar
@@ -79,6 +127,90 @@ class Configuracion extends Controller
             redireccionar("/");
         endif;
     }
+
+     /**
+     * Editar
+     * (ES) Este método se encarga de editar un producto
+     * @access public
+     * @return void
+     */
+    public function EditarUnidadMedida()
+    {
+        //Validar que el método sea accedido mediante POST
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' &&   $this->formValidator($_POST)) :
+            //Ingresa y guarda
+            if ($this->Modelo->db->Update($_POST, 'unidad_medida', 'IdUnidadMedida', intval($_POST['IdUnidadMedida']))) {
+                echo "true";
+            } else {
+                echo "false";
+            }
+        else :
+            redireccionar("/");
+        endif;
+    }
+      /**
+     * Editar
+     * (ES) Este método se encarga de editar un producto
+     * @access public
+     * @return void
+     */
+    public function EditarMarca()
+    {
+        //Validar que el método sea accedido mediante POST
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' &&   $this->formValidator($_POST)) :
+            //Ingresa y guarda
+            if ($this->Modelo->db->Update($_POST, 'marca', 'IdMarca', intval($_POST['IdMarca']))) {
+                echo "true";
+            } else {
+                echo "false";
+            }
+        else :
+            redireccionar("/");
+        endif;
+    }
+      /**
+     * Editar
+     * (ES) Este método se encarga de editar un producto
+     * @access public
+     * @return void
+     */
+    public function EditarPresentacion()
+    {
+        //Validar que el método sea accedido mediante POST
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' &&   $this->formValidator($_POST)) :
+            //Ingresa y guarda
+            if ($this->Modelo->db->Update($_POST, 'presentacion', 'IdPresentacion', intval($_POST['IdPresentacion']))) {
+                echo "true";
+            } else {
+                echo "false";
+            }
+        else :
+            redireccionar("/");
+        endif;
+    }
+       /**
+     * Editar
+     * (ES) Este método se encarga de editar un producto
+     * @access public
+     * @return void
+     */
+    public function EditarTipoDocumento()
+    {
+        //Validar que el método sea accedido mediante POST
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' &&   $this->formValidator($_POST)) :
+            //Ingresa y guarda
+            if ($this->Modelo->db->Update($_POST, 'tipo_documento', 'IdTipoDocumento', intval($_POST['IdTipoDocumento']))) {
+                echo "true";
+            } else {
+                echo "false";
+            }
+        else :
+            redireccionar("/");
+        endif;
+    }
+
+
+    
     /**
      * Editar
      * (ES) Este método se encarga de editar un producto
@@ -117,17 +249,17 @@ class Configuracion extends Controller
      * @access public
      * @return void
      */
-    public function ImagenQuienes($id)
+    public function ImagenPrincipal($id)
     {
         //validación para cargar una imagen
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES["ImagenQuienes"]) && !empty($_FILES["ImagenQuienes"])) {
-            if (isset($_FILES["ImagenQuienes"])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES["ImagenPrincipal"]) && !empty($_FILES["ImagenPrincipal"])) {
+            if (isset($_FILES["ImagenPrincipal"])) {
                 //$target_dir    = RUTA_PLUGINS .  $this->PluginName . SEPARATOR . "assets" . SEPARATOR . "img" . SEPARATOR;
                 $target_dir    = $this->imgFolder;
-                $image_name    = time() . "_" . basename($_FILES["ImagenQuienes"]["name"]);
+                $image_name    = time() . "_" . basename($_FILES["ImagenPrincipal"]["name"]);
                 $target_file   = $target_dir . $image_name;
                 $ImagenProductoType = pathinfo($target_file, PATHINFO_EXTENSION);
-                $ImagenProductoZise = trim($_FILES["ImagenQuienes"]["size"]);
+                $ImagenProductoZise = trim($_FILES["ImagenPrincipal"]["size"]);
                 //$image         = $_POST['ImagenProducto'];
 
                 /* Inicio Validacion*/
@@ -150,21 +282,21 @@ class Configuracion extends Controller
 
                     ///* Fin Validacion*/
                     if ($ImagenProductoZise > 0) {
-                        move_uploaded_file($_FILES["ImagenQuienes"]["tmp_name"], $target_file);
+                        move_uploaded_file($_FILES["ImagenPrincipal"]["tmp_name"], $target_file);
                         $foto_updated = "Configuracion/img/{$image_name}";
                     } else {
                         $foto_updated = "";
                     }
 
                     $datos = [
-                        'ImagenQuienes' => $foto_updated,
+                        'ImagenPrincipal' => $foto_updated,
                     ];
 
                     $home = $this->Modelo->ObtenerUno("IdHome", $id);
                     //validar si existe una imagen que será actualizada
-                    if ($home->ImagenQuienes != "" || $home->ImagenQuienes != NULL) {
+                    if ($home->ImagenPrincipal != "" || $home->ImagenPrincipal != NULL) {
                         //Si es así, elimino la que esta actualmente
-                        unlink(RUTA_UPLOAD . SEPARATOR . $home->ImagenQuienes);
+                        unlink(RUTA_UPLOAD . SEPARATOR . $home->ImagenPrincipal);
                     }
 
                     //Actualizar campo de la imagen del producto en la base de datos

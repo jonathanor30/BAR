@@ -49,9 +49,9 @@
 
 			<div class="carousel-inner" role="listbox">
 				<div class="carousel-item active">
-					<?php if ($datos['home']->ImagenMision != NULL || $datos['home']->ImagenMision != '') : ?>
+					<?php if ($datos['home']->ImagenPrincipal != NULL || $datos['home']->ImagenPrincipal != '') : ?>
 
-						<div id="" class="first-section" style="background-image:url('<?php echo RUTA_URL ?>/Login/files?img=<?php echo $datos['home']->ImagenMision; ?>');">
+						<div id="" class="first-section" style="background-image:url('<?php echo RUTA_URL ?>/Login/files?img=<?php echo $datos['home']->ImagenPrincipal; ?>');">
 						<?php else : ?>
 							<h5>El producto no tiene una imagen cargada</h5>
 

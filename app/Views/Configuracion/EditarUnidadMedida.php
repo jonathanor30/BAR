@@ -2,19 +2,21 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <h4 id="TituloProducto"><?php echo $datos['home']->Nombre ?>
+            <h4 id="TituloProducto"><?php echo $datos['home']->NombreUnidad ?></h4>
+        </div>
         <div class="card-body">
             
             <form id="FormEditarProducto" action="" method="POST">
                 <div class="row">
                     <div class="col-sm">
-                        <label>Tipo Producto</label>
+                        <label>Nombre Unidad</label>
                         <br>
                         <br>
-                        <input class="form-control form-control-sm" type="text" name="Nombre" id="Nombre" value="<?php echo $datos['home']->Nombre ?>" />
-                        <input type="hidden" id="IdTipoProducto" name="IdTipoProducto" value="<?php echo $datos['home']->IdTipoProducto ?>">
+                        <input class="form-control form-control-sm" type="text" name="NombreUnidad" id="NombreUnidad" value="<?php echo $datos['home']->NombreUnidad ?>" />
+                        <input type="hidden" id="IdUnidadMedida" name="IdUnidadMedida" value="<?php echo $datos['home']->IdUnidadMedida ?>">
                     </div>
                     </div>
+                     
         </div>
         <div class="card-footer">
             <div class="row">
@@ -33,14 +35,14 @@ var ruta = document.getElementById("ruta").value;
 // se ejecuta automaticamente la funcion de obtener tipo producto
 
 
-
-    //Mostrar nombre de producto de manera dinamica
-    document
-        .getElementById("Nombre")
+  //Mostrar nombre de producto de manera dinamica
+  document
+        .getElementById("NombreUnidad")
         .addEventListener("keyup", function(e) {
             document.getElementById("TituloProducto").innerText = "";
             document.getElementById("TituloProducto").innerText = this.value;
         });
+
 
 //Editar Producto
 document
@@ -57,7 +59,7 @@ document
      */
     $.ajax({
       type: "POST",
-      url: ruta + "/Configuracion/EditarTipoProducto",
+      url: ruta + "/Configuracion/EditarUnidadMedida",
       data: parametros,
       beforeSend: function (objeto) {
         //$("#resultados_ajax").html("Mensaje: Cargando...");
@@ -70,7 +72,7 @@ document
           button.innerHTML = '<i class="fas fa-save"></i> Guardar ';
           $("#BtnEditProducto").attr("disabled", false);
           alertify.success(
-            '<h6><i class="fas fa-check"></i> Producto editado correctamente</h6>'
+            '<h6><i class="fas fa-check"></i> Unidad de medida  editada  correctamente</h6>'
           );
         } else {
           $("#BtnEditProducto").attr("disabled", false);

@@ -41,6 +41,46 @@ class Configuracion1
         $this->db->bind(":id", $id);
         return $this->db->registro();
     }
+
+    public function ObtenerUnidadMedida(string $campo = '', $id = null)
+    {
+        
+            $this->db->query("SELECT * FROM unidad_medida WHERE {$campo}=:id");
+        
+        $this->db->bind(":id", $id);
+        return $this->db->registro();
+    }
+    
+    public function ObtenerMarca(string $campo = '', $id = null)
+    {
+        
+            $this->db->query("SELECT * FROM marca WHERE {$campo}=:id");
+        
+        $this->db->bind(":id", $id);
+        return $this->db->registro();
+    }
+    
+
+    public function ObtenerPresentacion(string $campo = '', $id = null)
+    {
+        
+            $this->db->query("SELECT * FROM presentacion WHERE {$campo}=:id");
+        
+        $this->db->bind(":id", $id);
+        return $this->db->registro();
+    }
+
+    
+    public function ObtenerTipoDocumento(string $campo = '', $id = null)
+    {
+        
+            $this->db->query("SELECT * FROM tipo_documento WHERE {$campo}=:id");
+        
+        $this->db->bind(":id", $id);
+        return $this->db->registro();
+    }
+
+    
     public function editarHome($datos)
     {
         //Preparacion de consulta SQL
