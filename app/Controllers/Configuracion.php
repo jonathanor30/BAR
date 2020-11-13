@@ -53,8 +53,10 @@ class Configuracion extends Controller
             'home' => $home,
         );
 
-        $this->vista("Configuracion/test1", $datos, null, true); 
+        $this->vista("Configuracion/EditarTipoProducto", $datos, null, true); 
     }
+
+    
     
 
      /**
@@ -68,7 +70,7 @@ class Configuracion extends Controller
         //Validar que el método sea accedido mediante POST
         if ($_SERVER['REQUEST_METHOD'] == 'POST' &&   $this->formValidator($_POST)) :
             //Ingresa y guarda
-            if ($this->Modelo->db->Update($_POST, 'tipo_producto', 'Nombre', intval($_POST['IdTipoProducto']))) {
+            if ($this->Modelo->db->Update($_POST, 'tipo_producto', 'IdTipoProducto', intval($_POST['IdTipoProducto']))) {
                 echo "true";
             } else {
                 echo "false";

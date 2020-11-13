@@ -2,19 +2,18 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <h4 id="TituloProducto"><?php echo $datos['home']->Nombre ?></h4>
+            <!--<h4 id="TituloProducto"><?php echo $datos['home']->NombreProducto ?></h4>-->
         </div>
         <div class="card-body">
             
             <form id="FormEditarProducto" action="" method="POST">
                 <div class="row">
                     <div class="col-sm">
-                        <input type="text" value="<?php echo $datos ['home']->Nombre?>" class="form-control form-control-sm" id="IdTipoProducto" name="IdTipoProducto"  required="">
+                        <label>Nombre</label>
+                        <input class="form-control form-control-sm" type="text" name="Nombre" id="Nombre" value="<?php echo $datos['home']->Nombre ?>" />
                         <input type="hidden" id="IdTipoProducto" name="IdTipoProducto" value="<?php echo $datos['home']->IdTipoProducto ?>">
                     </div>
                     
-                </div>
-                
         </div>
         <div class="card-footer">
             <div class="row">
@@ -27,10 +26,17 @@
     </form>
 </div>
 <script>
-  var ruta = document.getElementById("ruta").value;
+
+var ruta = document.getElementById("ruta").value;
+
+// se ejecuta automaticamente la funcion de obtener tipo producto
 
 
-  document
+//Mostrar nombre de producto de manera dinamica
+
+
+//Editar Producto
+document
   .getElementById("FormEditarProducto")
   .addEventListener("submit", function (e) {
     $("#BtnEditProducto").attr("disabled", true);
@@ -57,7 +63,7 @@
           button.innerHTML = '<i class="fas fa-save"></i> Guardar ';
           $("#BtnEditProducto").attr("disabled", false);
           alertify.success(
-            '<h6><i class="fas fa-check"></i> Tipo de Producto editado correctamente</h6>'
+            '<h6><i class="fas fa-check"></i> Producto editado correctamente</h6>'
           );
         } else {
           $("#BtnEditProducto").attr("disabled", false);
@@ -68,6 +74,8 @@
     });
   });
 
-</script>
 
-<?php require RUTA_APP . '/Views/inc/footer.php'; ?>
+
+
+
+</script>
