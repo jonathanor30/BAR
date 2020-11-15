@@ -49,7 +49,7 @@
                <div class="sidebar-brand-text mx-3"><img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png"></div>
             </a>
          <?php } else { ?>
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo RUTA_URL; ?>/Productos">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo RUTA_URL; ?>/Clientes">
                <img class="logo img-fluid marigin-top" src="<?php echo RUTA_URL; ?>/public/img/logo.png">
                <div class="sidebar-brand-text mx-3"><img class="logo img-fluid" src="<?php echo RUTA_URL; ?>/public/img/logo.png"></div>
             </a>
