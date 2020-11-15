@@ -19,6 +19,8 @@ class Usuarios extends Controller
         $this->usuarioModelo = $this->modelo('Usuario', $this->nombrePlugin);
     }
 
+
+
     /**
      * Método index() método por defecto del cotrolador
      * se encarga de mostrar la vista del listado de usuarios.
@@ -49,6 +51,20 @@ class Usuarios extends Controller
         $this->vista("Usuarios/ListUsuarios", $datos, $this->nombrePlugin);
     }
 
+
+    public function Perfilactual($id = null)
+    {
+        
+        $this->pagina404($id);
+        $perfil = $this->usuarioModelo->obtenerperfil("user_id", $id);
+        $datos =  array(
+            'titulo' => 'Perfil',
+            'icon'       => "fas fa-users",
+            'perfil' => $perfil,
+        );
+
+        $this->vista("Configuracion/Perfil", $datos, null, true); 
+    }
 
     /**
      * Método index() método por defecto del cotrolador

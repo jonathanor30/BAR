@@ -292,6 +292,8 @@ class Controller extends Core
             }
         }
     }
+
+    
     //Método para validar acceso a Módulos/plugins
     public function modulesValidator($datos, $plugin = false)
     {
