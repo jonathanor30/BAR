@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Auth Class
- * @author Juan Bautista main developer
- * @package Lib
+ * 
+ 
  */
 
 use Firebase\JWT\JWT;

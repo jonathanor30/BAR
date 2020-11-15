@@ -1,23 +1,6 @@
 <?php
 /**
- * This file is part of myGTEP softwware
- * Copyright (C) 2018-2019 Juan Bautista <soyjuanbautista0@gmail.com>
- *
- *This program is not free software, therefore it should not be modified or shared its logic.
- */
-/***************************************
-Mapeo de Url ingresada en el navegador
-0 = Controller
-1 = Method
-2 = Param
-Ejemplo:
-project/Controller/Method/Param
-project/Vehiculos/actualizar/1
- ***************************************/
-/**
- * Core of the Bar 70
- *
- * @author
+
  */
 class Core
 {

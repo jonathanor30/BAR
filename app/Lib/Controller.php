@@ -1,15 +1,7 @@
 <?php
 
 /**
- * This file is part of myGTEP softwware
- * Copyright (C) 2018-2019 Juan Bautista <soyjuanbautista0@gmail.com>
- *
- *This program is not free software, therefore it should not be modified or shared its logic.
- */
-/**
- * Main controller of the myGTEP software
- *
- * @author Juan Bautista <soyjuanbautista0@gmail.com>
+
  */
 
 

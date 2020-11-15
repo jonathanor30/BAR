@@ -26,12 +26,7 @@ $(document).ready(function() {
         data: "IdVenta",
         fnCreatedCell: function(nTd, sData, oData, iRow, iCol) {
           $(nTd).html(
-            "<div class='btn-group'> <a title='Editar' class='btn btn-sm btn-outline-secondary' href='" +
-              ruta +
-              "/Productos/VerProducto/" +
-              oData.IdVenta +
-              "'>" +
-              "<i class='fas fa-edit'></i>" +
+            "<div class='btn-group'>" +
               "</a><a title='Eliminar' href='#' class='btn btn-sm btn-outline-secondary' onclick='actualizar(" +
                oData.IdVenta+
               "," +

@@ -9,10 +9,9 @@
  * Permite el envio a multiples destinatarios
  * Formato JSON = RFC 8259
  *
- * @author Juan Bautista
- * @author http://mygtep.com
+ 
  *
- * @package @myGTEP
+ 
  */
 class Api extends Controller
 {

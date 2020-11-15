@@ -1,10 +1,6 @@
 <?php
 
-/**
- * Logs myGTEP
- *
- * @author Juan Bautista
- */
+
 
 class LogManager
 {

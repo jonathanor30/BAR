@@ -1,12 +1,7 @@
 <?php
 
 /**
- * This file is part of myGTEP software
- * Copyright (C) 2018-2019 Juan Bautista <soyjuanbautista0@gmail.com>
- *
- * Class for Manage creation,reading and export information in Excel Format
- *
- * @author Juan Bautista <soyjuanbautista0@gmail.com>
+ 
  */
 
 class Excel extends Controller

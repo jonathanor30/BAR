@@ -2,7 +2,8 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <h4 id="TituloProducto"><?php echo $datos['home']->Nombre ?>
+            <h4 id="TituloProducto"><?php echo $datos['home']->Nombre ?></h4>
+        </div>
         <div class="card-body">
             
             <form id="FormEditarProducto" action="" method="POST">
@@ -15,6 +16,7 @@
                         <input type="hidden" id="IdTipoProducto" name="IdTipoProducto" value="<?php echo $datos['home']->IdTipoProducto ?>">
                     </div>
                     </div>
+                     
         </div>
         <div class="card-footer">
             <div class="row">
@@ -33,14 +35,14 @@ var ruta = document.getElementById("ruta").value;
 // se ejecuta automaticamente la funcion de obtener tipo producto
 
 
-
-    //Mostrar nombre de producto de manera dinamica
-    document
+  //Mostrar nombre de producto de manera dinamica
+  document
         .getElementById("Nombre")
         .addEventListener("keyup", function(e) {
             document.getElementById("TituloProducto").innerText = "";
             document.getElementById("TituloProducto").innerText = this.value;
         });
+
 
 //Editar Producto
 document
@@ -70,7 +72,7 @@ document
           button.innerHTML = '<i class="fas fa-save"></i> Guardar ';
           $("#BtnEditProducto").attr("disabled", false);
           alertify.success(
-            '<h6><i class="fas fa-check"></i> Producto editado correctamente</h6>'
+            '<h6><i class="fas fa-check"></i>  Tipo de producto editada  correctamente</h6>'
           );
         } else {
           $("#BtnEditProducto").attr("disabled", false);
@@ -80,6 +82,7 @@ document
       },
     });
   });
+
 
 
 
