@@ -25,31 +25,49 @@ $(document).ready(function () {
         data: "observaciones",
       },
       {
+        data: "IdEstado",
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+          switch (oData.IdEstado) {
+            case "1":
+              var estado = "Completada";
+              var clase = "badge badge-success";
+              break;
+            case "2":
+              var estado = "procesando";
+              var clase = "badge badge-warning";
+              break;
+            case "3":
+              var estado = "cancelada";
+              var clase = "badge badge-danger";
+              break;
+          }
+          $(nTd).html("<span class='" + clase + "'>" + estado + "</span>");
+        },
+      },
+      {
         data: "IdCompra",
         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-          $(nTd).html(
+          if(oData.IdEstado==2){$(nTd).html(
+            "<div class='btn-group'> <a title='Cancelar' href='#' class='btn btn-sm btn-outline-secondary' onclick='actualizar(" +
+            oData.IdCompra +
+            ");'><i class='fas fa-check-circle'></i></a></a><a title='Cancelar' href='#' class='btn btn-sm btn-outline-secondary' onclick='Eliminar(" +
+              oData.IdCompra +
+              ");'><i class='fas fa-times-circle'></i></a></div>"
+          )}else
+          {$(nTd).html(
             "<div class='btn-group'> <a title='Editar' class='btn btn-sm btn-outline-secondary' href='" +
-              ruta +
-              "/Productos/VerProducto/" +
-              oData.IdProducto +
-              "'>" +
-              "<i class='fas fa-edit'></i>" +
-              "</a><a title='Actualizar' href='#' class='btn btn-sm btn-outline-secondary' (" +
-              oData.IdProducto +
-              "," +
-              oData.Estado_P +
-              ");'><i class='fas fa-eye'></i></a><a title='Actualizar' href='#' class='btn btn-sm btn-outline-secondary' onclick='Eliminar(" +
-              oData.IdProducto +
-              "," +
-              oData.Estado_P +
-              ");'><i class='fas fa-trash-alt'></i></a></div>"
-          );
+            ruta +
+            "/Compras/VerCompra/" +
+            oData.IdCompra +
+            "'>" +
+            "<i class='fas fa-eye'></i></a></div>" 
+          )};
         },
       },
     ],
   });
 });
-function actualizar(id, type) {
+function actualizar(id) {
   var q = id;
   var pre = document.createElement("H5");
   //custom style.
@@ -60,7 +78,7 @@ function actualizar(id, type) {
   pre.style.textAlign = "center";
 
   pre.appendChild(
-    document.createTextNode("Realmente desea actualizar este producto")
+    document.createTextNode("Realmente desea completar esta compra")
   );
 
   alertify.confirm(
@@ -68,8 +86,8 @@ function actualizar(id, type) {
     function () {
       $.ajax({
         type: "POST",
-        url: ruta + "/productos/actualizar",
-        data: "id=" + id + "&type=" + type,
+        url: ruta + "/compras/actualizar",
+        data: "id=" + id,
         q: q,
         beforeSend: function (objeto) {
           //$("#resultados").html("Mensaje: Cargando...");
@@ -77,14 +95,14 @@ function actualizar(id, type) {
         success: function (datos) {
           var result = datos;
           if (datos == "true") {
-            $("#Productos").DataTable().ajax.reload();
+            $("#Compras").DataTable().ajax.reload();
             alertify.success(
-              '<h6><i class="fas fa-check"></i> producto actualizado correctamente</h6>'
+              '<h6><i class="fas fa-check"></i> Compra completada correctamente</h6>'
             );
           } else {
             console.log(datos);
             alertify.warning(
-              '<i class="fas fa-ban"></i> Error al actualizar producto'
+              '<i class="fas fa-ban"></i> Error al completar compra'
             );
           }
         },
@@ -112,7 +130,7 @@ function reloadTable() {
       break;
   }
 
-  $("#Productos").DataTable().ajax.reload();
+  $("#Compras").DataTable().ajax.reload();
 }
 
 function Eliminar(id) {
@@ -126,7 +144,7 @@ function Eliminar(id) {
   pre.style.textAlign = "center";
 
   pre.appendChild(
-    document.createTextNode("Realmente desea eliminar este producto")
+    document.createTextNode("Realmente desea cancelar esta Compra")
   );
 
   alertify.confirm(
@@ -134,7 +152,7 @@ function Eliminar(id) {
     function () {
       $.ajax({
         type: "POST",
-        url: ruta + "/productos/eliminar",
+        url: ruta + "/compras/cancelar",
         data: "id=" + id,
         q: q,
         beforeSend: function (objeto) {
@@ -152,14 +170,14 @@ function Eliminar(id) {
           var result = datos;
           if (datos == "true") {
             $("#ResultadoAjax").html("");
-            $("#Productos").DataTable().ajax.reload();
+            $("#Compras").DataTable().ajax.reload();
             alertify.success(
-              '<h6><i class="fas fa-check"></i> producto actualizado correctamente</h6>'
+              '<h6><i class="fas fa-check"></i> Compra cancelada correctamente</h6>'
             );
           } else {
             console.log(datos);
             alertify.warning(
-              '<i class="fas fa-ban"></i> Error al actualizar producto'
+              '<i class="fas fa-ban"></i> Error al cancelar la compra'
             );
           }
         },

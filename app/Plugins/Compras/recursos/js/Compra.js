@@ -11,7 +11,7 @@ function Autoload(){
   */
  Obtenerproveedor();
   
-  iniciar();
+
 
 }
 /*
@@ -123,11 +123,7 @@ function Obtenerproveedor() {
   });
 }
 
-function iniciar() {
-  var iniciar;
- iniciar = document.getElementById('IdTipoProducto');
- iniciar.addEventListener("click",ObtenerPrecio);
-}
+
 
 function validarstock(id, cantidad) {
   var autorizador;
@@ -150,33 +146,8 @@ function validarstock(id, cantidad) {
     return autorizador;
 }
 
-function ObtenerPrecio() {
 
-  var valorproducto;
-  valorproducto = document.getElementById('IdTipoProducto').value;
-  $.ajax({
-    beforesend: function(){
-     
-    },
-    url: ruta + `/Compras/ObtenerPrecios`,
-    type: "POST",
-    data:{producto:valorproducto},
 
-    success: function (resultado) {
-      //Acá estamos pintando los tipos de productos
-
-  
-   for (var r in resultado) {
-    document.getElementById("precio").value=resultado[r].PrecioSugerido;
-    document.getElementById("nombrep").value=resultado[r].NombreProducto;
-    document.getElementById("marcap").value=resultado[r].Nombre;
-      }
-      
-      //Definimos el tipo de producto actual
-
-    },
-  });
-}
 function validaritem()
 {
   var IdTipoProducto = document.getElementById("IdTipoProducto").value;

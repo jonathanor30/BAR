@@ -90,6 +90,7 @@ class Compras extends Controller
                 array('db' => 'fecha', 'dt' => 'fecha'),
                 array('db' => 'hora', 'dt' => 'hora'),
                 array('db' => 'observaciones', 'dt' => 'observaciones'),
+                array('db' => 'IdEstado', 'dt' => 'IdEstado'),
                 array('db' => 'IdCompra', 'dt' => 'IdCompra'),
 
             );
@@ -257,5 +258,71 @@ class Compras extends Controller
                 echo "false";
             }
         }
+    }
+
+    public function actualizar()
+    {
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $compra = $this->model->obtenerdatos($_POST['id']);
+            foreach ($compra as $key) {
+               
+                $datos = array(
+                                    
+                    'IdProducto'  => $key->IdProducto,
+                    'cantidad'        => $key->cantidad,
+                );
+            }
+            $probar = $this->model->actualizarproducto($datos);
+            if($probar == 1){
+            switch ($this->model->actualizarCompra($_POST['id'])) {
+                case 1:
+                    echo "true";
+                    break;
+                case 2:
+                    echo "false";
+                    break;
+            }
+        }else{echo "else";}
+        } else {
+            redireccionar('/Compras');
+        }
+    }
+   public function cancelar()
+    {
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            switch ($this->model->CancelarCompra($_POST['id'])) {
+                case 1:
+                    echo "true";
+                    break;
+                case 2:
+                    echo "false";
+                    break;
+            }
+        } else {
+            redireccionar('/Compras');
+        }
+    }
+
+    public function VerCompra($id)
+    {
+
+        $compra = $this->model->pruebaxd($id);
+            //Comprobador 404
+            $this->pagina404($compra);
+
+            $total = $this->model->obtenertotal($id);
+
+            $datocompra = $this->model->obtenercompra($id);
+               
+            $datos = array(
+                'titulo' => 'Detalle De la Compra',              
+                'compra'  => $compra,
+                'total'  => $total,
+                'datocompra' => $datocompra,
+            );
+            $this->vista('VerCompra', $datos, 'Compras', true);
+             
     }
 }

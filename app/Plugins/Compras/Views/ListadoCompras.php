@@ -51,6 +51,7 @@
                <th class="text-left">fecha</th>
                <th class="text-left">hora</th>
                <th class="text-left">observaciones</th>
+               <th class="text-left">Estado</th>
                <th class="text-left">Acciones</th>
             </tr>
          </thead>

@@ -63,7 +63,7 @@ class Compra
     public function observacion($dat)
     {
         if (isset($dat['FacObservacion'])) {
-            $this->db->query("INSERT INTO compra(IdProveedor,fecha,observaciones,hora) VALUES (:idproveedor,:fecha,:FacObservacion,:hora)");
+            $this->db->query("INSERT INTO compra(IdProveedor,IdEstado,fecha,observaciones,hora) VALUES (:idproveedor,2,:fecha,:FacObservacion,:hora)");
             $this->db->bind(':idproveedor', $dat['idproveedor']);
             $this->db->bind(':FacObservacion', $dat['FacObservacion']);
             $this->db->bind(':fecha', date('Y-m-d'));
@@ -86,13 +86,8 @@ class Compra
             $this->db->bind(':iva', $datos['iva']);
             $this->db->bind(':total', $datos['total']);
             if ($this->db->execute()) {
-
                 return false;
             } else {
-                $this->db->query('UPDATE producto SET Existencias = Existencias+:cantidad WHERE IdProducto=:IdTipoProducto');
-                $this->db->bind(':cantidad', $datos['cantidad']);
-                $this->db->bind(':IdTipoProducto', $datos['IdTipoProducto']);
-                $this->db->execute();
                 return true;
             }
         }
@@ -126,5 +121,79 @@ class Compra
         $this->db->execute();
         //Retornamos valor
         return $this->db->registrosrow();
+    }
+    public function actualizarCompra($id)
+    {
+
+        $this->db->query('UPDATE compra SET IdEstado= 1 WHERE IdCompra=:id');
+            $this->db->bind(':id', $id);
+       
+        if ($this->db->execute()) {
+          return 2;
+        } else {
+            return 1;
+        }
+             
+    }
+
+    public function actualizarproducto($datos)
+    {
+        $this->db->query('UPDATE producto SET Existencias = Existencias +:cantidad WHERE IdProducto=:IdProducto');
+            $this->db->bind(':cantidad', $datos['cantidad']);
+            $this->db->bind(':IdProducto', $datos['IdProducto']);
+            if ($this->db->execute()) {
+                return 2;
+            } else {
+                return 1;
+            }
+    }
+    public function CancelarCompra($id)
+    {
+
+                $this->db->query('UPDATE compra SET IdEstado= 3 WHERE IdCompra=:id');
+            $this->db->bind(':id', $id);
+            //Ejecutamos la consulta:
+            if ($this->db->execute()) {
+                return 2;
+            } else {
+                return 1;
+            }
+        
+    }
+    public function obtenerdatos($id)
+    {
+        $this->db->query("SELECT * FROM detalle_compra WHERE IdCompra=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    public function pruebaxd($id=null)
+    {
+        $this->db->query("SELECT IdCompra,cantidad,iva,total,NombreProducto,PrecioSugerido,Nombre FROM detalle_compra d INNER JOIN producto p ON  d.IdProducto=p.IdProducto INNER JOIN  marca m ON p.IdMarca = m.IdMarca WHERE IdCompra=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    public function obtenertotal($id=null)
+    {
+        $this->db->query("SELECT SUM(total) as suma,total FROM `detalle_compra` WHERE  IdCompra=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    public function obtenercompra($id=null)
+    {
+        $this->db->query("SELECT * FROM compra c INNER JOIN proveedor p ON c.IdProveedor = p.IdProveedor WHERE  IdCompra=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registro();
     }
 }
