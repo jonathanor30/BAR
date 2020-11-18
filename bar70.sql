@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-11-2020 a las 19:46:18
+-- Tiempo de generación: 18-11-2020 a las 02:25:25
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.4.10
 
@@ -56,16 +56,16 @@ CREATE TABLE `compra` (
   `IdProveedor` int(11) NOT NULL,
   `fecha` date NOT NULL,
   `observaciones` varchar(255) NOT NULL,
-  `hora` time NOT NULL
+  `hora` time NOT NULL,
+  `IdEstado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `compra`
 --
 
-INSERT INTO `compra` (`IdCompra`, `IdProveedor`, `fecha`, `observaciones`, `hora`) VALUES
-(74, 1, '2020-11-09', 'jajaja ya', '19:57:16'),
-(75, 2, '2020-11-09', 'yaaa', '19:59:09');
+INSERT INTO `compra` (`IdCompra`, `IdProveedor`, `fecha`, `observaciones`, `hora`, `IdEstado`) VALUES
+(79, 1, '2020-11-17', 'ola', '19:54:38', 1);
 
 -- --------------------------------------------------------
 
@@ -87,7 +87,7 @@ CREATE TABLE `detalle_compra` (
 --
 
 INSERT INTO `detalle_compra` (`IdDetalleCompra`, `IdProducto`, `IdCompra`, `cantidad`, `iva`, `total`) VALUES
-(51, 5, 75, 4, 0, 12800);
+(52, 5, 79, 5, 0, 16000);
 
 -- --------------------------------------------------------
 
@@ -124,6 +124,26 @@ CREATE TABLE `estado` (
   `IdEstado` int(11) NOT NULL,
   `Nombre` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estado_compra`
+--
+
+CREATE TABLE `estado_compra` (
+  `IdEstado` int(11) NOT NULL,
+  `Estado` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `estado_compra`
+--
+
+INSERT INTO `estado_compra` (`IdEstado`, `Estado`) VALUES
+(1, 'Completado'),
+(2, 'Procesando'),
+(3, 'Cancelado');
 
 -- --------------------------------------------------------
 
@@ -340,7 +360,7 @@ CREATE TABLE `producto` (
 
 INSERT INTO `producto` (`IdProducto`, `IdMarca`, `IdPresentacion`, `IdTipoProducto`, `CodigoProducto`, `IdUnidadMedida`, `NombreProducto`, `PrecioSugerido`, `StockMaximo`, `StockMinimo`, `Existencias`, `Contenido`, `Estado_P`, `ImagenProducto`) VALUES
 (4, 1, 1, 1, 4, 1, 'Cerveza Heiniken', 6500, 6, 2, 1251, '375 ml', 4, 'Productos/img/1599849442_80c0af_5aa936de83034f308e642e2778a91c3b_mv2.jpg'),
-(5, 1, 1, 1, 20245, 1, 'cerveza', 3200, 10, 5, 26, '255', 1, 'Productos/img/1605285406_WhatsApp Image 2020-11-05 at 2.14.01 PM.jpeg'),
+(5, 1, 1, 1, 20245, 1, 'cerveza', 3200, 10, 5, 31, '255', 1, 'Productos/img/1605285406_WhatsApp Image 2020-11-05 at 2.14.01 PM.jpeg'),
 (14, 1, 1, 2, 444, 1, 'zsdjh', 2000, 10, 5, 5, '500', 4, 'Productos/img/1601309048_aguardiente-antioqueno.jpg'),
 (15, 3, 1, 1, 2545, 3, 'ron', 200, 10, 5, 5, '500', 4, ''),
 (16, 2, 1, 1, 254, 1, 'aguardiente', 3000, 10, 5, 5, '500', 4, 'Productos/img/1601309460_aguardiente-antioqueno.jpg'),
@@ -428,7 +448,7 @@ INSERT INTO `tipo_producto` (`IdTipoProducto`, `Nombre`) VALUES
 (1, 'Licorres'),
 (2, 'mecato'),
 (3, 'fgbgh'),
-(4, 'cigarrillos');
+(4, 'cigarrillosssssskjkj');
 
 -- --------------------------------------------------------
 
@@ -479,7 +499,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_type`, `firstname`, `lastname`, `user_name`, `user_password_hash`, `user_email`, `estado_usuario`, `date_added`, `IdTipoDocumento`, `Numero_Documento`, `token`, `fecha_expiracion`) VALUES
-(1, 2, 'Melisa', 'Montoya', 'Melisa', '$2y$10$Mc.6.kfod61xaY/gjs5y9O9P6lAgbooTxOolDmrs1vBf/c40ToCcK', 'melisamontoya.200014@gmail.com', 1, '2016-05-21 15:06:00', 0, '', 'jnXwULtx', '2020-11-05 04:40:31'),
+(1, 2, 'Melisa', 'Montoyaaaa', 'Melisa', '$2y$10$QjoeTrDleqQ9hPyS/3Yg8u.hB.CLFmJtSrjbwF4R6j.3gAsCIOJcW', 'melisamontoya.200014@gmail.com', 1, '2016-05-21 15:06:00', 0, '', 'jnXwULtx', '2020-11-15 23:22:25'),
 (15, 1, 'Brahian', 'agurd', 'zaico', '$2y$10$65m.3/QirkDMfcT0p7NkLeumGcYChnayUBm/uaoLwA2JO473UKQxq', 'brayitan@gmail.com', 2, '2020-09-24 19:37:17', 0, '', '0', '0000-00-00 00:00:00'),
 (16, 1, 'Brahian', 'dlfdl', 'dfldl', '$2y$10$k/nIIS52RsFkD/oCqew/POIt8H1cQVzj3R5mAPxkqsQhnwLyBTb6S', 'ldfldl@gslls.com', 0, '2020-09-24 19:38:32', 0, '', '0', '0000-00-00 00:00:00'),
 (17, 2, 'brayitan', 'kfdkdk', 'perez', '$2y$10$D9.sMqGtOMeFXfHE.GF4puc.ccnW1P2TslbJ.Un0pv5kua7Mj95Ym', 'dlfldl@flfglfl.com', 2, '2020-09-24 19:50:31', 0, '', '0', '0000-00-00 00:00:00'),
@@ -488,7 +508,7 @@ INSERT INTO `users` (`user_id`, `user_type`, `firstname`, `lastname`, `user_name
 (23, 2, 'niun', 'peroe', 'oe', '$2y$10$7i8IwBbji9AO12DAsuHmEOhIwXPx9jkmLGHtPwYkTyCDtKqy0cTFG', 'peru@gmail.com', 1, '2020-10-27 21:41:25', 1, '123456789', '0', '0000-00-00 00:00:00'),
 (24, 1, 'maria', 'gonzales', 'meloo', '$2y$10$PHZUrg3qPX5BKHAPFm8F6eMKAv6UZlAgwhrbf2mG0y9oWTNfiqFL.', 'melisalo@gmail.com', 1, '2020-11-03 21:01:00', 1, '20254512', '', '0000-00-00 00:00:00'),
 (25, 1, 'pedro', 'jaime', 'jaime', '$2y$10$TD1snzbr6QjzKQl.jh5txu5srBi7LaBs8H8i.MrupzxbZZE.gIQUm', 'jaime@gmail.com', 1, '2020-11-03 21:01:42', 1, '45451245', '', '0000-00-00 00:00:00'),
-(26, 1, 'Jonathan', 'Ortizz', 'Jonathanor30', '$2y$10$g5pG5PCCBpQtD6CZyvKeJ.Hvc0QeYsLHGd/PfqFpdXmdsjVndfYha', 'jonathanor9808@gmail.com', 1, '2020-11-09 18:47:17', 1, '1020487157', 'ylbFGJ5e', '2020-11-12 23:38:32');
+(26, 1, 'jonathanaaaa', 'ortizaz', 'Jonathanor30', '$2y$10$DDELpW.7emSBVk9.XYrTc.5.LT/FyKYWPTQSX5p.Af1zhQl6IhTsm', 'jonathanor9808@gmail.com', 1, '2020-11-09 18:47:17', 1, '1020487157', 'ylbFGJ5e', '2020-11-15 23:33:15');
 
 -- --------------------------------------------------------
 
@@ -530,7 +550,8 @@ ALTER TABLE `cliente`
 --
 ALTER TABLE `compra`
   ADD PRIMARY KEY (`IdCompra`),
-  ADD KEY `IdProveedor` (`IdProveedor`);
+  ADD KEY `IdProveedor` (`IdProveedor`),
+  ADD KEY `IdEstado` (`IdEstado`);
 
 --
 -- Indices de la tabla `detalle_compra`
@@ -553,6 +574,12 @@ ALTER TABLE `detalle_venta`
 -- Indices de la tabla `estado`
 --
 ALTER TABLE `estado`
+  ADD PRIMARY KEY (`IdEstado`);
+
+--
+-- Indices de la tabla `estado_compra`
+--
+ALTER TABLE `estado_compra`
   ADD PRIMARY KEY (`IdEstado`);
 
 --
@@ -670,13 +697,13 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `IdCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `IdCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
-  MODIFY `IdDetalleCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `IdDetalleCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
@@ -689,6 +716,12 @@ ALTER TABLE `detalle_venta`
 --
 ALTER TABLE `estado`
   MODIFY `IdEstado` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `estado_compra`
+--
+ALTER TABLE `estado_compra`
+  MODIFY `IdEstado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `estado_venta`
@@ -794,7 +827,8 @@ ALTER TABLE `cliente`
 -- Filtros para la tabla `compra`
 --
 ALTER TABLE `compra`
-  ADD CONSTRAINT `IdProveedor` FOREIGN KEY (`IdProveedor`) REFERENCES `proveedor` (`IdProveedor`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `IdProveedor` FOREIGN KEY (`IdProveedor`) REFERENCES `proveedor` (`IdProveedor`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `estado` FOREIGN KEY (`IdEstado`) REFERENCES `estado_compra` (`IdEstado`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `detalle_compra`
