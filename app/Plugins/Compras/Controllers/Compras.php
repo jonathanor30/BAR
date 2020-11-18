@@ -310,6 +310,8 @@ class Compras extends Controller
 
         $compra = $this->model->pruebaxd($id);
             //Comprobador 404
+
+            
             $this->pagina404($compra);
 
             $total = $this->model->obtenertotal($id);
