@@ -39,6 +39,19 @@ class Clientes extends Controller
 
         $this->vista('VerClientes', $datos, 'Clientes');
     }
+    public function Perfilactual($id = null)
+    {
+        
+        $this->pagina404($id);
+        $perfil = $this->clienteModelo->obtenerperfil("user_id", $id);
+        $datos =  array(
+            'titulo' => 'Perfil',
+            'icon'       => "fas fa-users",
+            'perfil' => $perfil,
+        );
+
+        $this->vista('Perfil', $datos, 'Clientes');
+    }
 
     /**
      * Método files() método para gestionar archivos propios del Plugin

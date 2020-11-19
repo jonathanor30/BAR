@@ -52,20 +52,7 @@ class Usuarios extends Controller
     }
 
 
-    public function Perfilactual($id = null)
-    {
-        
-        $this->pagina404($id);
-        $perfil = $this->usuarioModelo->obtenerperfil("user_id", $id);
-        $datos =  array(
-            'titulo' => 'Perfil',
-            'icon'       => "fas fa-users",
-            'perfil' => $perfil,
-        );
-
-        $this->vista("Configuracion/Perfil", $datos, null, true); 
-    }
-
+    
     /**
      * Método index() método por defecto del cotrolador
      * se encarga de agregar un nuevo usuario a la base de datos

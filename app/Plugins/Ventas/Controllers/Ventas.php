@@ -91,6 +91,7 @@ class Ventas extends Controller
                 array('db' => 'Fecha', 'dt' => 'Fecha'),
                 array('db' => 'observaciones', 'dt' => 'observaciones'),
                 array('db' => 'hora', 'dt' => 'hora'),
+                array('db' => 'IdEstadoventa', 'dt' => 'IdEstadoVenta'),
 
                 array('db' => 'IdVenta', 'dt' => 'IdVenta'),
 
@@ -132,21 +133,26 @@ class Ventas extends Controller
             redireccionar('');
         }
     }
-
     public function actualizar()
     {
         //Validamos si los datos fueron enviados por el metodo POST de php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $venta = $this->model->obtenerdatos($_POST['id']);
 
-            $plugin = $_POST['id'];
-            $plugin2 = $_POST['type'];
-            $datos  = [
-                'IdProducto' => $plugin,
-                'Estado_P' => $plugin2,
-            ];
+
+            foreach ($venta as $key) {
+               
+                $datos = array(
+                                    
+                    'IdProducto'  => $key->IdProducto,
+                    'cantidad'        => $key->cantidad,
+                );
+            }
             //Instancia del moldelo
 
-            switch ($this->model->actualizarProducto($datos)) {
+            $probar = $this->model->actualizarproductoinventario($datos);
+            if($probar == 1){
+            switch ($this->model->actualizarVenta($_POST['id'])) {
                 case 1:
                     echo "true";
                     break;
@@ -154,10 +160,12 @@ class Ventas extends Controller
                     echo "false";
                     break;
             }
+        }else{echo "else";}
         } else {
-            redireccionar('/Productos');
+            redireccionar('/Ventas');
         }
     }
+   
     public function ObtenerClientes()
     {
         //Validar datos recibido mediante POST
@@ -286,5 +294,44 @@ class Ventas extends Controller
             }
 
         endif;
+    }
+    public function cancelar()
+    {
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            switch ($this->model->CancelarVenta($_POST['id'])) {
+                case 1:
+                    echo "true";
+                    break;
+                case 2:
+                    echo "false";
+                    break;
+            }
+        } else {
+            redireccionar('/Ventas');
+        }
+    }
+
+    public function VerVenta($id)
+    {
+
+        $venta = $this->model->pruebaxd($id);
+            //Comprobador 404
+
+            
+            $this->pagina404($venta);
+
+            $total = $this->model->obtenertotal($id);
+
+            $datoventa = $this->model->obtenerventa($id);
+               
+            $datos = array(
+                'titulo' => 'Detalle De la venta',              
+                'venta'  => $venta,
+                'total'  => $total,
+                'datoventa' => $datoventa,
+            );
+            $this->vista('VerVenta', $datos, 'Ventas', true);
+             
     }
 }

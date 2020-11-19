@@ -211,7 +211,7 @@
                      <!-- Dropdown - User Information -->
                      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                      <input type="hidden"<?php echo  $sesion= $_SESSION['user_id']?>>
-                     <a class="dropdown-item" href="<?PHP echo RUTA_URL ?>/Usuarios/Perfilactual/<?PHP echo $sesion ?>">
+                     <a class="dropdown-item" href="<?PHP echo RUTA_URL ?>/Clientes/Perfilactual/<?PHP echo $sesion ?>">
 
                      <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                      Perfil

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-11-2020 a las 02:25:25
+-- Tiempo de generación: 19-11-2020 a las 00:22:57
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.4.10
 
@@ -65,7 +65,16 @@ CREATE TABLE `compra` (
 --
 
 INSERT INTO `compra` (`IdCompra`, `IdProveedor`, `fecha`, `observaciones`, `hora`, `IdEstado`) VALUES
-(79, 1, '2020-11-17', 'ola', '19:54:38', 1);
+(79, 1, '2020-11-17', 'ola', '19:54:38', 1),
+(80, 2, '2020-11-18', 'ssssssd', '15:50:38', 3),
+(81, 2, '2020-11-18', 'SAS', '16:03:38', 3),
+(82, 2, '2020-11-18', 'a', '16:15:13', 3),
+(83, 1, '2020-11-18', 'as', '17:20:11', 1),
+(84, 1, '2020-11-18', 'plo', '17:23:04', 3),
+(85, 1, '2020-11-18', '123', '17:45:06', 3),
+(86, 2, '2020-11-18', 'asas', '17:52:45', 1),
+(87, 1, '2020-11-18', 'rtrtr', '17:56:10', 1),
+(88, 1, '2020-11-18', 'popopo', '17:57:37', 3);
 
 -- --------------------------------------------------------
 
@@ -87,7 +96,16 @@ CREATE TABLE `detalle_compra` (
 --
 
 INSERT INTO `detalle_compra` (`IdDetalleCompra`, `IdProducto`, `IdCompra`, `cantidad`, `iva`, `total`) VALUES
-(52, 5, 79, 5, 0, 16000);
+(52, 5, 79, 5, 0, 16000),
+(53, 5, 80, 5, 0, 16000),
+(54, 5, 81, 5, 800, 16800),
+(55, 5, 82, 5, 0, 16000),
+(56, 5, 83, 5, 0, 16000),
+(57, 5, 84, 5, 0, 16000),
+(58, 5, 85, 1, 0, 3200),
+(59, 43, 86, 1, 0, 1000),
+(60, 5, 87, 4, 0, 12800),
+(61, 5, 88, 2, 0, 6400);
 
 -- --------------------------------------------------------
 
@@ -111,8 +129,13 @@ CREATE TABLE `detalle_venta` (
 --
 
 INSERT INTO `detalle_venta` (`IdDetalleVenta`, `IdUnidadMedida`, `IdVenta`, `IdProducto`, `Unidad_Medida`, `cantidad`, `iva`, `total`) VALUES
-(1, 1, 1, 1, 1, 5, 0, 20500),
-(2, 1, 2, 1, 1, 5, 0, 20500);
+(15, 1, 15, 5, 1, 5, 0, 16000),
+(16, 1, 16, 5, 1, 2, 0, 6400),
+(17, 1, 17, 5, 1, 4, 0, 12800),
+(18, 1, 18, 5, 1, 1, 0, 3200),
+(19, 1, 19, 5, 1, 2, 0, 6400),
+(20, 1, 20, 5, 1, 5, 0, 16000),
+(21, 1, 21, 5, 1, 4, 0, 12800);
 
 -- --------------------------------------------------------
 
@@ -153,15 +176,17 @@ INSERT INTO `estado_compra` (`IdEstado`, `Estado`) VALUES
 
 CREATE TABLE `estado_venta` (
   `IdEstadoVenta` int(11) NOT NULL,
-  `Pendiente` tinyint(4) NOT NULL
+  `Estado` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `estado_venta`
 --
 
-INSERT INTO `estado_venta` (`IdEstadoVenta`, `Pendiente`) VALUES
-(1, 1);
+INSERT INTO `estado_venta` (`IdEstadoVenta`, `Estado`) VALUES
+(1, 'Completado'),
+(2, 'Procesando'),
+(3, 'Cancelado');
 
 -- --------------------------------------------------------
 
@@ -360,11 +385,11 @@ CREATE TABLE `producto` (
 
 INSERT INTO `producto` (`IdProducto`, `IdMarca`, `IdPresentacion`, `IdTipoProducto`, `CodigoProducto`, `IdUnidadMedida`, `NombreProducto`, `PrecioSugerido`, `StockMaximo`, `StockMinimo`, `Existencias`, `Contenido`, `Estado_P`, `ImagenProducto`) VALUES
 (4, 1, 1, 1, 4, 1, 'Cerveza Heiniken', 6500, 6, 2, 1251, '375 ml', 4, 'Productos/img/1599849442_80c0af_5aa936de83034f308e642e2778a91c3b_mv2.jpg'),
-(5, 1, 1, 1, 20245, 1, 'cerveza', 3200, 10, 5, 31, '255', 1, 'Productos/img/1605285406_WhatsApp Image 2020-11-05 at 2.14.01 PM.jpeg'),
+(5, 1, 1, 1, 20245, 1, 'cerveza', 3200, 10, 5, 18, '255', 1, 'Productos/img/1605285406_WhatsApp Image 2020-11-05 at 2.14.01 PM.jpeg'),
 (14, 1, 1, 2, 444, 1, 'zsdjh', 2000, 10, 5, 5, '500', 4, 'Productos/img/1601309048_aguardiente-antioqueno.jpg'),
 (15, 3, 1, 1, 2545, 3, 'ron', 200, 10, 5, 5, '500', 4, ''),
 (16, 2, 1, 1, 254, 1, 'aguardiente', 3000, 10, 5, 5, '500', 4, 'Productos/img/1601309460_aguardiente-antioqueno.jpg'),
-(43, 1, 1, 1, 25450, 1, 'nmhfg', 1000, 5, 4, 502, '500', 1, ''),
+(43, 1, 1, 1, 25450, 1, 'nmhfg', 1000, 5, 4, 503, '500', 1, ''),
 (45, 1, 1, 1, 21245, 1, 'fghj25', 2000, 5, 2, 500, '500', 1, 'Productos/img/1605217706_calendario2020.png'),
 (46, 1, 1, 1, 58, 1, 'fdgh', 2000, 4, 5, 52, '500', 1, ''),
 (47, 1, 1, 1, 555, 1, 'sopa', 656565, 66, 66, 65, '6565', 1, '');
@@ -531,8 +556,13 @@ CREATE TABLE `venta` (
 --
 
 INSERT INTO `venta` (`IdVenta`, `user_id`, `IdCliente`, `IdEstadoVenta`, `fecha`, `observaciones`, `hora`) VALUES
-(1, 1, 1, 1, '2020-11-10', 'lk', '13:01:31'),
-(2, 1, 2, 1, '2020-11-10', 'do', '13:06:02');
+(15, 1, 2, 3, '2020-11-18', 'aaaaa', '17:48:31'),
+(16, 1, 2, 1, '2020-11-18', 'lolo', '17:49:31'),
+(17, 1, 2, 1, '2020-11-18', 'cdr', '17:53:27'),
+(18, 1, 1, 3, '2020-11-18', 'asaas', '18:01:19'),
+(19, 1, 2, 1, '2020-11-18', 'cefefe', '18:01:45'),
+(20, 1, 1, 1, '2020-11-18', 'uiuiiu', '18:09:56'),
+(21, 1, 2, 1, '2020-11-18', 'sdsdsdsd', '18:19:28');
 
 --
 -- Índices para tablas volcadas
@@ -697,19 +727,19 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `IdCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `IdCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
-  MODIFY `IdDetalleCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `IdDetalleCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `IdDetalleVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `IdDetalleVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `estado`
@@ -722,12 +752,6 @@ ALTER TABLE `estado`
 --
 ALTER TABLE `estado_compra`
   MODIFY `IdEstado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `estado_venta`
---
-ALTER TABLE `estado_venta`
-  MODIFY `IdEstadoVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `home`
@@ -811,7 +835,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `IdVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `IdVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Restricciones para tablas volcadas

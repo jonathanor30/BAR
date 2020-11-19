@@ -18,14 +18,7 @@ class Usuario extends Base
         $this->db = new Base;
     }
 
-    public function obtenerperfil(string $campo = '', $id = null)
-    {
-        
-            $this->db->query("SELECT * FROM users WHERE {$campo}=:id");
-        
-        $this->db->bind(":id", $id);
-        return $this->db->registro();
-    }
+    
     //Obtener todo el listado de usuarios de la base de datos
     public function obtenerUsuarios()
     {

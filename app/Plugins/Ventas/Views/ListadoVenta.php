@@ -46,13 +46,14 @@
       <table style="font-size: 12px;" id="Ventas" class="table table-hover">
          <thead>
             <tr>
-               <th class="text-left">IdVenta</th>
+               <th class="text-left">Usuario que hizo la venta</th>
                <th class="text-left">Cliente</th>
                
                <th class="text-left">Fecha</th>
-               <th class="text-left">Iva</th>
-               <th class="text-left">Total</th>
-               <th class="text-left">Usuario que hizo la venta</th>
+               <th class="text-left">Observaciones</th>
+               <th class="text-left">Hora</th>
+               <th class="text-left">IdVenta</th>
+               <th class="text-left">Estado Venta</th>
                <th class="text-left">Acciones</th>
             </tr>
          </thead>

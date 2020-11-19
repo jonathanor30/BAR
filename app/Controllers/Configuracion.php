@@ -42,6 +42,7 @@ class Configuracion extends Controller
         $this->vista("Configuracion/tablas", $datos, null, true); 
     }
 
+    
 
     public function vertipoproducto($id = null)
     {

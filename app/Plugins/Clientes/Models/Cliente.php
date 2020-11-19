@@ -32,7 +32,14 @@ class Cliente
         $this->db->query("SELECT * FROM cliente");
         return $this->db->registrosrow();
     }
-
+    public function obtenerperfil(string $campo = '', $id = null)
+    {
+        
+            $this->db->query("SELECT * FROM users WHERE {$campo}=:id");
+        
+        $this->db->bind(":id", $id);
+        return $this->db->registro();
+    }
     public function ObtenerUno(string $campo = '', $id = null)
     {
         $join = $this->relacion;

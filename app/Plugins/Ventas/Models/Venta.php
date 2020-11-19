@@ -31,6 +31,69 @@ class Venta
         $this->db->bind(":id", $id);
         return $this->db->registro();
     }
+    public function obtenerdatos($id)
+    {
+        $this->db->query("SELECT * FROM detalle_venta WHERE IdVenta=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+
+    public function CancelarVenta($id)
+    {
+
+                $this->db->query('UPDATE venta SET IdEstadoVenta= 3 WHERE IdVenta=:id');
+            $this->db->bind(':id', $id);
+            //Ejecutamos la consulta:
+            if ($this->db->execute()) {
+                return 2;
+            } else {
+                return 1;
+            }
+        
+    }
+    public function obtenertotal($id=null)
+    {
+        $this->db->query("SELECT SUM(total) as suma,total FROM `detalle_venta` WHERE  IdVenta=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    public function obtenerventa($id=null)
+    {
+        $this->db->query("SELECT * FROM venta c INNER JOIN cliente p ON c.IdCliente = p.IdCliente WHERE  IdVenta=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registro();
+    }
+    public function pruebaxd($id=null)
+    {
+        $this->db->query("SELECT IdVenta,cantidad,iva,total,NombreProducto,PrecioSugerido,Nombre FROM detalle_venta d INNER JOIN producto p ON  d.IdProducto=p.IdProducto INNER JOIN  marca m ON p.IdMarca = m.IdMarca WHERE IdVenta=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    public function actualizarVenta($id)
+    {
+
+        $this->db->query('UPDATE venta SET IdEstadoVenta= 1 WHERE IdVenta=:id');
+            $this->db->bind(':id', $id);
+       
+        if ($this->db->execute()) {
+          return 2;
+        } else {
+            return 1;
+        }
+             
+    }
     //Método para eliminar usuario del sistema
     public function actualizarProducto($datos = [])
     {
@@ -52,6 +115,18 @@ class Venta
         }
     }
 
+    public function actualizarproductoinventario($datos)
+    {
+        $this->db->query('UPDATE producto SET Existencias = Existencias +:cantidad WHERE IdProducto=:IdProducto');
+            $this->db->bind(':cantidad', $datos['cantidad']);
+            $this->db->bind(':IdProducto', $datos['IdProducto']);
+            if ($this->db->execute()) {
+                return 2;
+            } else {
+                return 1;
+            }
+    }
+
     public function ObtenerClientes()
     {
 
@@ -69,7 +144,7 @@ class Venta
     {
         $sesion= $_SESSION['user_id'];
         if(isset($dat['FacObservacion'])){
-            $this->db->query("INSERT INTO venta(user_id,IdCliente,IdEstadoVenta,fecha,observaciones,hora) VALUES ($sesion,:IdCliente,1,:fecha,:FacObservacion,:hora)");
+            $this->db->query("INSERT INTO venta(user_id,IdCliente,IdEstadoVenta,fecha,observaciones,hora) VALUES ($sesion,:IdCliente,2,:fecha,:FacObservacion,:hora)");
                     $this->db->bind(':IdCliente', $dat['IdCliente']);
                     $this->db->bind(':FacObservacion', $dat['FacObservacion']);
                     $this->db->bind(':fecha', date('Y-m-d'));
@@ -98,11 +173,7 @@ class Venta
 
                 return false;
             } else {
-                $this->db->query('UPDATE producto SET Existencias = Existencias-:cantidad WHERE IdProducto=:IdTipoProducto');
-                $this->db->bind(':cantidad', $datos['cantidad']);
-                $this->db->bind(':IdTipoProducto', $datos['IdTipoProducto']);
-                $this->db->execute();
-                return true;
+                return false;
             }
         }
     }
