@@ -73,31 +73,33 @@
                     </div>
                     <div class="col-sm">
                         <label>Unidad medida</label>
-                        <input class="form-control form-control-sm" readonly type="text" name="TipoUnidadActual" id="TipoUnidadActual" value="<?php echo $datos['producto']->IdUnidadMedida ?>" />
+                        <select disabled=»disabled» class="form-control form-control-sm" readonly name="IdUnidadMedida" id="IdUnidadMedida">
+                            <option disable></option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm">
                         <label>Tipo de producto</label>
-                        <select class="form-control form-control-sm" readonly name="IdTipoProducto" id="IdTipoProducto">
+                        <select  disabled=»disabled» class="form-control form-control-sm" readonly name="IdTipoProducto" id="IdTipoProducto">
                             <option disable></option>
                         </select>
                     </div>
                     <div class="col-sm">
                         <label>presentacion</label>
-                        <select class="form-control form-control-sm" readonly name="IdPresentacion" id="IdPresentacion">
+                        <select disabled=»disabled» class="form-control form-control-sm" readonly name="IdPresentacion" id="IdPresentacion">
                             <option disable></option>
                         </select>
                     </div>
                     <div class="col-sm">
                         <label>Marca</label>
-                        <select class="form-control form-control-sm" readonly name="IdMarca" id="IdMarca">
+                        <select disabled=»disabled» class="form-control form-control-sm" readonly name="IdMarca" id="IdMarca">
                             <option disable></option>
                         </select>
                     </div>
                     <div class="col-sm">
                         <label>Estado</label>
-                        <select class="form-control form-control-sm" readonly id="Estado_P">
+                        <select disabled=»disabled» class="form-control form-control-sm" readonly id="Estado_P">
                             <?php if ($datos['producto']->Estado_P == 1) : ?>
                                 <option selected value="<?php $datos['producto']->Estado_P ?>">Activo</option>
                             <?php else : ?>
