@@ -139,7 +139,7 @@ function ObtenerUnidadMedida() {
       for (var r in resultado) {
         var option = document.createElement("option");
         option.text = resultado[r].NombreUnidad;
-        option.value = resultado[r].IdMarca;
+        option.value = resultado[r].IdUnidadMedida;
         x.add(option);
       }
       //Definimos el tipo de producto actual

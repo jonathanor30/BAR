@@ -109,9 +109,7 @@
                   <div class="col-sm">
                   <label for="IdUnidadMedida" class="col-form-label">Unidad medida<b style="color:gray;">*</b></label>
                         <select class="form-control form-control-sm" name="IdUnidadMedida" id="IdUnidadMedida">
-                           <option >--Seleccione la unidad de medida--</option>
-                           <option value="1">Cedula</option>
-                        <option value="2">Cedula extrajera</option>
+                           <option disable>--Seleccione unidad de medida--</option>
                         </select>
                   </div>
                   <div class="col-sm">
