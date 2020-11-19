@@ -117,7 +117,7 @@ class Venta
 
     public function actualizarproductoinventario($datos)
     {
-        $this->db->query('UPDATE producto SET Existencias = Existencias +:cantidad WHERE IdProducto=:IdProducto');
+        $this->db->query('UPDATE producto SET Existencias = Existencias -:cantidad WHERE IdProducto=:IdProducto');
             $this->db->bind(':cantidad', $datos['cantidad']);
             $this->db->bind(':IdProducto', $datos['IdProducto']);
             if ($this->db->execute()) {
