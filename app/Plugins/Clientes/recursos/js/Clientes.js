@@ -40,15 +40,13 @@ $(document).ready(function () {
         data: "IdCliente",
         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
           $(nTd).html(
-            "<div class='btn-group'> <a title='Actualizar' href='#' class='btn btn-sm btn-outline-secondary' (" +
-              oData.IdProducto +
-              "," +
-              oData.Estado_P +
-              ");'><i class='fas fa-eye'></i></a><a title='Actualizar' href='#' class='btn btn-sm btn-outline-secondary' onclick='Eliminar(" +
-              oData.IdProducto +
-              "," +
-              oData.Estado_P +
-              ");</div>"
+            "<div class='btn-group'> <a title='Detalle' class='btn btn-sm btn-outline-secondary' href='" +
+              ruta +
+              "/Clientes/detalleClientes/" +
+              oData.IdCliente +
+              "'>" +
+              "<i class='fas fa-eye'></i>" +
+              "</a></div>"
           );
         },
       },

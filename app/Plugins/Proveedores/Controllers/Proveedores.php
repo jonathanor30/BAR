@@ -8,11 +8,8 @@ class Proveedores extends Controller
     public function __construct()
     {
         $this->sessionValidator(); //Validamos sesion
-        $this->ProveedorModelo = $this->modelo('Proveedor', 'Proveedores');
+        $this->model = $this->modelo('Proveedor', 'Proveedores');
         $this->PluginName = 'Proveedores';
-        $this->folderCreator($this->PluginName);
-        //Directorio de imagenes del plugin
-        $this->imgFolder = RUTA_UPLOAD .  $this->PluginName . SEPARATOR . 'img' . SEPARATOR;
     }
 
     public function index()
@@ -27,17 +24,25 @@ class Proveedores extends Controller
         $this->vista('listadoProveedores', $datos, 'Proveedores', true);
     }
 
-    public function VerClientes($id = null)
+    public function detalleProveedor()
     {
-
-        $this->pagina404($id);
-        $cliente = $this->model->ObtenerUno("IdCliente", $id);
+        $proveedor = $this->model->ObtenerUno();
         $datos =  array(
-            'titulo' => $cliente->Nombre,
-            'Cliente' => $cliente,
+            'titulo' => $proveedor->Nombre,
+            'proveedor' => $proveedor,
         );
 
-        $this->vista('VerClientes', $datos, 'Clientes');
+        $this->vista('detalleProveedor', $datos, 'Proveedores');
+    }
+    public function pruebaxd($id = null)
+    {
+        $this->pagina404($id);
+        $proveedor = $this->model->prueba($id);
+        $datos =  array(
+            'titulo' => $proveedor->Nombre,
+            'proveedor' => $proveedor,
+        );
+       
     }
 
     /**
@@ -96,7 +101,7 @@ class Proveedores extends Controller
          
                 //Retornamos los valores consultados con filtro
                 echo json_encode(
-                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null,)
+                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null)
                 );
            
         } else {
@@ -195,7 +200,7 @@ class Proveedores extends Controller
 
                 ];
                 //Estructura de control, para evaluar el query de agregar usuario
-                switch ($this->ProveedorModelo->agregarProveedor($datos)) {
+                switch ($this->model->agregarProveedor($datos)) {
                     case 1:
                         echo true;
                         break;
@@ -218,4 +223,30 @@ class Proveedores extends Controller
             redireccionar('/Proveedores');
         }
     }
+
+    public function detalleProveedores($id)
+    {
+
+        $proveedor = $this->model->pruebaxd($id);
+            //Comprobador 404
+            $this->pagina404($proveedor);
+
+            $total = $this->model->obtenertotal($id);
+
+            $datoproveedor = $this->model->obtenercompra($id);
+
+            $datospro=$this->model->obtenerdatos($id);
+               
+            $datos = array(
+                'titulo' => 'Detalle Del Proveedor',              
+                'proveedor'  => $proveedor,
+                'total'  => $total,
+                'datoproveedor' => $datoproveedor,
+                'datospro' => $datospro,
+            );
+            $this->vista('detalleProveedor', $datos, 'Proveedores', true);
+             
+    }
+
 }
+

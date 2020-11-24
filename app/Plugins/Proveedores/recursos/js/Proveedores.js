@@ -22,20 +22,11 @@ $(document).ready(function () {
           $(nTd).html(
             "<div class='btn-group'> <a title='Editar' class='btn btn-sm btn-outline-secondary' href='" +
               ruta +
-              "/Productos/VerProducto/" +
-              oData.IdNovedad +
+              "/Proveedores/detalleProveedores/" +
+              oData.IdProveedor +
               "'>" +
               "<i class='fas fa-eye'></i>" +
-              "</a><a(" +
-              oData.IdNovedad +
-              "," +
-              oData.IdTipoNovedad +
-              ");'></a><a (" +
-              oData.IdNovedad +
-              "," +
-              oData.IdTipoNovedad
-               +
-              ");'></a></div>"
+              "</a></div>"
           );
         },
       },

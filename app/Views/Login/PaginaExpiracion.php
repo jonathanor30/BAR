@@ -33,9 +33,9 @@
                     <hr class="my-4">
                     <b>Vuelva hacer el proceso de restablecimiento de contraseña.</b>
                     <br><br>
-                    <a href="<?php echo RUTA_URL.SEPARATOR;?>" class="btn btn-primary">
-                        <i class="fas fa-home fa-fw" aria-hidden="true"></i> Inicio
-                    </a>
+                        <a href="<?php echo RUTA_URL; ?>/Login/Login"><button type="button" 
+                        class="btn btn-primary">
+                        <i class="fas fa-home fa-fw" aria-hidden="true"></i>Inicio</button></a>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
     <footer class="bg-white">
         <div class="container my-auto">
             <div class="copyright text-center my-auto">
-                <span>&copy; Copyright 2017 - <?php echo date("Y"); ?> | Bar70 Negocio, reescrito por software.</span>
+                <span>&copy; Copyright 20199 - <?php echo date("Y"); ?> | Bar70 Negocio, reescrito por software.</span>
             </div>
         </div>
     </footer>

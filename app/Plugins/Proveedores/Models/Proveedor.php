@@ -6,27 +6,25 @@ class Proveedor
      * @var object
      * Instancia de la conexión
      */
-    public $db;
+    private $db;
     /**
      * @var mixed
      * Puede ser lo que queramos ;)
      */
     public $resultado;
 
-    /**
-     * 
-     * @var string
-     * 
-     */
-    private $relacion;
-
     public function __construct()
     {
         //Instancia de la conexión con base de datos
         $this->db = new Base;
-        $this->relacion = (count($this->ObtenerTiposDeProductos()) > 0 ? "INNER JOIN tipo_producto ON tipo_producto.IdTipoProducto=producto.IdTipoProducto" : NULL);
     }
+    public function horaMYSQL()
+    {
+        $hoy  = getdate();
+        $hora = $hoy['hours'] . ':' . $hoy['minutes'] . ':' . $hoy['seconds'];
 
+        return $hora;
+    }
     public function ObtenerTodos(string $ordenar = '')
     {
         $this->db->query("SELECT * FROM proveedor");
@@ -35,13 +33,14 @@ class Proveedor
 
     public function ObtenerUno(string $campo = '', $id = null)
     {
-        $join = $this->relacion;
-        if ($join != NULL) {
-            $this->db->query("SELECT * FROM producto {$join} WHERE {$campo}=:id");
-        } else {
-            $this->db->query("SELECT * FROM producto WHERE {$campo}=:id");
-        }
-        $this->db->bind(":id", $id);
+            $this->db->query("SELECT * FROM proveedor WHERE IdProveedor=1");
+        
+        return $this->db->registro();
+    }
+    public function prueba($id = null)
+    {
+        $this->db->query("SELECT * FROM proveedor WHERE IdProveedor=:id");
+        $this->db->bind(':id', $id);
         return $this->db->registro();
     }
     //Método para eliminar usuario del sistema
@@ -85,6 +84,16 @@ class Proveedor
             $this->db->query("SELECT * FROM tipo_producto");
             return $this->db->registros() ?? new StdClass ;
         }
+    }
+
+    public function obtenerdatos($id)
+    {
+        $this->db->query("SELECT * FROM proveedor WHERE IdProveedor=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
     }
 
     public function agregarProveedor($datos = [])
@@ -139,4 +148,34 @@ class Proveedor
             }
         }
     }
+
+    public function pruebaxd($id=null)
+    {
+        $this->db->query("SELECT c.IdCompra,p.IdProveedor, p.Nombre, p.Telefono, fecha,dc.iva,dc.cantidad, dc.total, pd.NombreProducto FROM detalle_compra dc INNER JOIN compra c on dc.IdCompra=c.IdCompra inner join proveedor p on c.IdProveedor=p.IdProveedor INNER JOIN producto pd on dc.IdProducto=pd.IdProducto  WHERE p.IdProveedor=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    public function obtenertotal($id=null)
+    {
+        $this->db->query("SELECT SUM(total) as suma,total FROM detalle_compra WHERE  IdCompra=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    public function obtenercompra($id=null)
+    {
+        $this->db->query("SELECT * FROM compra c INNER JOIN proveedor p ON c.IdProveedor = p.IdProveedor WHERE  c.IdProveedor=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    
 }
+

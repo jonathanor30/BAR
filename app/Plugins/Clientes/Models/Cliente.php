@@ -6,7 +6,7 @@ class Cliente
      * @var object
      * Instancia de la conexión
      */
-    public $db;
+    private $db;
     /**
      * @var mixed
      * Puede ser lo que queramos ;)
@@ -24,7 +24,7 @@ class Cliente
     {
         //Instancia de la conexión con base de datos
         $this->db = new Base;
-        $this->relacion = (count($this->ObtenerTiposDeProductos()) > 0 ? "INNER JOIN tipo_producto ON tipo_producto.IdTipoProducto=producto.IdTipoProducto" : NULL);
+        $this->relacion = (count($this->ObtenerVentas()) > 0 ? "INNER JOIN venta on cliete.IdCliente=venta.IdCliente" : NULL);
     }
 
     public function ObtenerTodos(string $ordenar = '')
@@ -32,23 +32,11 @@ class Cliente
         $this->db->query("SELECT * FROM cliente");
         return $this->db->registrosrow();
     }
-    public function obtenerperfil(string $campo = '', $id = null)
-    {
-        
-            $this->db->query("SELECT * FROM users WHERE {$campo}=:id");
-        
-        $this->db->bind(":id", $id);
-        return $this->db->registro();
-    }
+
     public function ObtenerUno(string $campo = '', $id = null)
     {
-        $join = $this->relacion;
-        if ($join != NULL) {
-            $this->db->query("SELECT * FROM producto {$join} WHERE {$campo}=:id");
-        } else {
-            $this->db->query("SELECT * FROM producto WHERE {$campo}=:id");
-        }
-        $this->db->bind(":id", $id);
+            $this->db->query("SELECT * FROM cliente WHERE IdCliente=1");
+        
         return $this->db->registro();
     }
     //Método para eliminar usuario del sistema
@@ -82,14 +70,14 @@ class Cliente
         }
     }
 
-    public function ObtenerTiposDeProductos()
+    public function ObtenerVentas()
     {
         $join = $this->relacion;
         if ($join != NULL) {
-            $this->db->query("SELECT * FROM tipo_producto");
+            $this->db->query("SELECT * FROM venta ");
             return $this->db->registros();
         } else {
-            $this->db->query("SELECT * FROM tipo_producto");
+            $this->db->query("SELECT * FROM venta ");
             return $this->db->registros() ?? new StdClass ;
         }
     }
@@ -146,4 +134,95 @@ class Cliente
             }
         }
     }
+
+    public function editarCliente($datos = [])
+    {
+        $this->db->query('UPDATE cliente SET Nombre=:Nombre, IdTipoDocumento=:IdTipoDocumento,  Numero_Documento:=Numero_Documento  WHERE  	IdCliente=:IdCliente');
+
+        //Vincular valores
+        $this->db->bind(':IdCliente', $datos['IdCliente']);
+        $this->db->bind(':IdTipoDocumento', $datos['IdTipoDocumento']);
+        $this->db->bind(':Numero_Documento', $datos['Numero_Documento']);
+
+
+        //Ejecutar consulta
+        if ($this->db->execute()) {
+            return 2;
+        } else {
+
+            return 1;
+        }
+    }    
+
+    public function horaMYSQL()
+    {
+        $hoy  = getdate();
+        $hora = $hoy['hours'] . ':' . $hoy['minutes'] . ':' . $hoy['seconds'];
+
+        return $hora;
+    }
+
+    public function ObtenerPrecios($venta)
+    {
+        $this->db->query("SELECT IdVenta, IdCliente, fecha, hora FROM venta v INNER JOIN cliente c on v.IdCliente = c.IdCliente WHERE IdVenta=:venta");
+        $this->db->bind(':venta', $venta);
+        return $this->db->registros();
+    }
+
+    public function Obtenerventas2()
+    {
+
+        $this->db->query("SELECT * FROM venta");
+        return $this->db->registros();
+    }
+
+    public function obtenerdatos($id)
+    {
+        $this->db->query("SELECT * FROM cliente WHERE IdCliente=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+
+
+    public function pruebaxd($id=null)
+    {
+        $this->db->query("SELECT v.IdVenta, c.IdCliente, c.Nombre, Fecha, dv.total, p.NombreProducto, c.Numero_Documento FROM detalle_venta dv INNER JOIN venta v on dv.IdVenta=v.IdVenta inner join cliente c on v.IdCliente=c.IdCliente INNER JOIN producto p on dv.IdProducto=p.IdProducto WHERE c.IdCliente=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    public function obtenertotal($id=null)
+    {
+        $this->db->query("SELECT SUM(total) as suma,total FROM detalle_venta WHERE IdVenta=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+
+    public function obtenerventa($id)
+    {
+        $this->db->query("SELECT * FROM venta v INNER JOIN cliente c ON v.IdCliente = c.IdCliente WHERE  IdVenta=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+    public function prueba2($id=null)
+    {
+         $this->db->query("SELECT * FROM venta v INNER JOIN cliente c ON v.IdCliente = c.IdCliente WHERE  IdCliente=:id");
+        //Vinculamos el valor del id
+        $this->db->bind(':id', $id);
+        //Ejecutamos la consulta
+        $this->db->execute();
+        return $this->db->registros();
+    }
+
 }

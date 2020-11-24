@@ -8,11 +8,8 @@ class Clientes extends Controller
     public function __construct()
     {
         $this->sessionValidator(); //Validamos sesion
-        $this->clienteModelo = $this->modelo('Cliente', 'Clientes');
+        $this->model = $this->modelo('Cliente', 'Clientes');
         $this->PluginName = 'Clientes';
-        $this->folderCreator($this->PluginName);
-        //Directorio de imagenes del plugin
-        $this->imgFolder = RUTA_UPLOAD .  $this->PluginName . SEPARATOR . 'img' . SEPARATOR;
     }
 
     public function index()
@@ -20,37 +17,41 @@ class Clientes extends Controller
         $dataTables = dataTables();
         $datos =  array(
             'titulo' => 'Listado Clientes',
-            'icon'   => 'fas fa-users',
+            'icon'   => 'fas fa-people-carry',
             'dataTables' => $dataTables
 
         );
-        $this->vista('ListadoClientes', $datos, 'Clientes', true);
+        $this->vista('listadoClientes', $datos, 'Clientes', true);
     }
 
-    public function VerClientes($id = null)
+    public function detalleCliente()
     {
-
-        $this->pagina404($id);
-        $cliente = $this->model->ObtenerUno("IdCliente", $id);
+        $cliente = $this->model->ObtenerUno();
         $datos =  array(
             'titulo' => $cliente->Nombre,
-            'Cliente' => $cliente,
+            'cliente' => $cliente,
         );
 
-        $this->vista('VerClientes', $datos, 'Clientes');
+        $this->vista('detalleCliente', $datos, 'Clientes');
     }
-    public function Perfilactual($id = null)
+    public function pruebaxd($id = null)
     {
-        
         $this->pagina404($id);
-        $perfil = $this->clienteModelo->obtenerperfil("user_id", $id);
+        $proveedor = $this->model->prueba($id);
         $datos =  array(
-            'titulo' => 'Perfil',
-            'icon'       => "fas fa-users",
-            'perfil' => $perfil,
+            'titulo' => $proveedor->Nombre,
+            'proveedor' => $proveedor,
         );
+       
+    }
 
-        $this->vista('Perfil', $datos, 'Clientes');
+    public function Obtenerventas()
+    {
+        //Validar datos recibido mediante POST
+        if ($_SERVER['REQUEST_METHOD']) :
+            header('Content-Type: application/json');
+            echo json_encode($this->model->Obtenerventas2(), JSON_PRETTY_PRINT);
+        endif;
     }
 
     /**
@@ -110,7 +111,7 @@ class Clientes extends Controller
          
                 //Retornamos los valores consultados con filtro
                 echo json_encode(
-                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null,)
+                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null)
                 );
            
         } else {
@@ -130,13 +131,13 @@ class Clientes extends Controller
         //Validar que el método sea accedido mediante POST
         if ($_SERVER['REQUEST_METHOD'] == 'POST' &&   $this->formValidator($_POST)) :
             //Ingresa y guarda
-            if ($this->model->db->Update($_POST, 'producto', 'IdProducto', intval($_POST['IdProducto']))) {
+            if ($this->model->db->Update($_POST, 'cliente', 'IdCliente', intval($_POST['IdCliente']))) {
                 echo "true";
             } else {
                 echo "false";
             }
         else :
-            redireccionar("/");
+            redireccionar("/Clientes");
         endif;
     }
 
@@ -172,7 +173,7 @@ class Clientes extends Controller
          //Validar datos recibido mediante POST
          if ($_SERVER['REQUEST_METHOD']) :
             header('Content-Type: application/json');
-          echo json_encode($this->model->ObtenerTiposDeProductos(), JSON_PRETTY_PRINT);
+          echo json_encode($this->model->ObtenerTiposDeDocumentos(), JSON_PRETTY_PRINT);
         endif;
     }
 
@@ -210,7 +211,7 @@ class Clientes extends Controller
 
                 ];
                 //Estructura de control, para evaluar el query de agregar usuario
-                switch ($this->clienteModelo->agregarCliente($datos)) {
+                switch ($this->model->agregarCliente($datos)) {
                     case 1:
                         echo true;
                         break;
@@ -232,5 +233,74 @@ class Clientes extends Controller
 
             redireccionar('/Clientes');
         }
+    }
+
+    public function ObtenerPrecios()
+    {
+        //Validar datos recibido mediante POST
+        if ($_SERVER['REQUEST_METHOD'] && $_POST['venta'] != "") {
+            header('Content-Type: application/json');
+            echo json_encode($this->model->ObtenerPrecios($_POST['venta']), JSON_PRETTY_PRINT);
+        } else {
+            echo "false";
+        }
+    }
+
+    public function actualizar2()
+    {
+        //Validamos si los datos fueron enviados por el metodo POST de php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $cliente = $this->model->obtenerdatos($_POST['id']);
+            foreach ($cliente as $key) {
+               
+                $datos = array(
+                                    
+                    'IdVenta'  => $key->IdProducto,
+                    'total'        => $key->total,
+                );
+                
+               
+                
+                 
+            switch ($this->model->actualizarCliente($_POST['id'],$datos)) {
+                case 1:
+                    echo "true";
+                    break;
+                case 2:
+                    echo "false";
+                    break;
+            }}
+        } else {
+            redireccionar('/Clientes');
+        }
+    }
+
+    public function detalleClientes($id)
+    {
+
+        $cliente = $this->model->pruebaxd($id);
+            //Comprobador 404
+            $this->pagina404($cliente);
+
+            $total = $this->model->obtenertotal($id);
+
+            $datoventa = $this->model->Obtenerventa($id);
+               
+            $datoscli = $this->model->obtenerdatos($id);
+
+            $datos = array(
+                'titulo' => 'Detalle Del Cliente',              
+                'cliente'  => $cliente,
+                'total'  => $total,
+                'datoventa' => $datoventa,
+                'datoscli' => $datoscli,
+            );
+            $this->vista('detalleCliente', $datos, 'Clientes', true);
+             
+    }
+    public function prueba2($id)
+    {
+        $probar =  $this->model->prueba2($id);
+        print_r($probar);
     }
 }
