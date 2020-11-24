@@ -7,7 +7,7 @@
             <div class="btn-group">
                 <a href="<?php echo RUTA_URL; ?>/Facturacion/page/InvoicesProv" class="btn btn-sm btn-outline-secondary">
                     <i class="fas fa-arrow-left fa-fw" aria-hidden="true"></i>
-                    <span class="d-none d-lg-inline-block">Facturas Proveedor</span>
+                    <span class="d-none d-lg-inline-block">Facturas clientes</span>
                 </a>
                 <a href="<?php echo RUTA_URL; ?>/Facturacion/page/Provfactdetail/<?php echo $datos['datos'][0]->idfactura ?>" class="btn btn-sm btn-outline-secondary">
                     <i class="fas fa-sync" aria-hidden="true"></i>
@@ -25,7 +25,7 @@
                     <input hidden type="number" id="count_recibos" name="count_recibos" value="">
                 </div>
                 <div class="card-body">
-                    <h4> Datos del proveedor</h4>
+                    <h4> Datos del cliente</h4>
                     <br>
                     
                     

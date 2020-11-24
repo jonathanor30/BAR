@@ -125,62 +125,118 @@ class Producto
             return $this->db->registros() ?? new StdClass;
         }
     }
-  
-public function agregarProducto($datos = [])
-{
-    $this->comprobator = $this->comprobarProducto($datos['CodigoProducto']);
-    if ($this->comprobator == true) {
-        //El usuario ya existe
-        return 3;
-    } else {
-        $this->db->query('INSERT INTO producto (IdMarca, IdPresentacion, 
+
+    public function agregarProducto($datos = [])
+    {
+        $this->comprobator = $this->comprobarProducto($datos['CodigoProducto']);
+        $this->comprobator1 = $this->soloLetras($datos['NombreProducto']);
+        $this->comprobator2 = $this->is_negative_number($datos['PrecioSugerido']);
+        $this->comprobator3 = $this->is_negative_number($datos['StockMaximo']);
+        $this->comprobator4 = $this->is_negative_number($datos['StockMinimo']);
+        $this->comprobator5 = $this->is_negative_number($datos['Existencias']);
+        $this->comprobator6 = $this->is_negative_number($datos['Contenido']);
+
+        if ($this->comprobator == true) {
+            //El usuario ya existe
+            return 3;
+        }
+        if ($this->comprobator1 == true) {
+            //solo letras
+            return 4;
+        }
+        if ($this->comprobator2 == true) {
+            //solo letras
+            return 5;
+        }
+        if ($this->comprobator3 == true) {
+            //solo letras
+            return 6;
+        }
+        if ($this->comprobator4 == true) {
+            //solo letras
+            return 7;
+        }
+        if ($this->comprobator5 == true) {
+            //solo letras
+            return 8;
+        }
+        if ($this->comprobator6 == true) {
+            //solo letras
+            return 9;
+        }
+        if($datos['StockMinimo'] <=5 )
+        {
+            return 10;
+            exit();
+        }
+        if($datos['StockMaximo'] >=60 )
+        {
+            return 11;
+            exit();
+        }
+        else {
+            $this->db->query('INSERT INTO producto (IdMarca, IdPresentacion, 
         IdTipoProducto,CodigoProducto,IdUnidadMedida,NombreProducto,PrecioSugerido,
         StockMaximo,StockMinimo,Existencias,Contenido,Estado_P) VALUES(:IdMarca, :IdPresentacion, :IdTipoProducto,:CodigoProducto, 
         :IdUnidadMedida, :NombreProducto,:PrecioSugerido, :StockMaximo,:StockMinimo,:Existencias, :Contenido,1)');
 
-        //Vincular valores
-        /*
+            //Vincular valores
+            /*
         $this->db->bind(':IdTipoDocumento', $datos['IdTipoDocumento']);
         $this->db->bind(':Numero_Documento', $datos['Numero_Documento']);
         $this->db->bind(':Nombre', $datos['Nombre']);
          */
-        //Algoritmo para vincular valores de las columnas a la consulta preparada
-        //Requisito: los seudo campos de las columna en VALUE() de la consulta, debe ser iguales a los nombres
-        //de los indices en la variable datos que son recibidos desde el controlador
-        foreach ($datos as $campo => $valor) {
-            //Iteración en el método  bind() de la clase Base, donde se agrega el indice y valor
-            $this->db->bind(":{$campo}", $valor);
-        }
+            //Algoritmo para vincular valores de las columnas a la consulta preparada
+            //Requisito: los seudo campos de las columna en VALUE() de la consulta, debe ser iguales a los nombres
+            //de los indices en la variable datos que son recibidos desde el controlador
+            foreach ($datos as $campo => $valor) {
+                //Iteración en el método  bind() de la clase Base, donde se agrega el indice y valor
+                $this->db->bind(":{$campo}", $valor);
+            }
 
-        //Ejecutar consulta
-        if ($this->db->execute()) {
-            return 2;
-        } else {
+            //Ejecutar consulta
+            if ($this->db->execute()) {
+                return 2;
+            } else {
 
-            return 1;
+                return 1;
+            }
         }
     }
-}
-public function comprobarProducto($cliente)
-{
-    //verificamos que exista y no este vacio el campo placa vehiculo
-    if (isset($cliente) && !empty($cliente)) {
+    public function comprobarProducto($cliente)
+    {
+        //verificamos que exista y no este vacio el campo placa vehiculo
+        if (isset($cliente) && !empty($cliente)) {
 
-        //preparamos consulta
-        $this->db->query("SELECT * FROM producto WHERE CodigoProducto=:CodigoProducto");
-        //Vinculamos consulta
-        $this->db->bind(':CodigoProducto', $cliente);
-        $this->db->execute();
-        $this->result = $this->db->rowCount();
-        if ($this->result == 1) {
-            //Existe
+            //preparamos consulta
+            $this->db->query("SELECT * FROM producto WHERE CodigoProducto=:CodigoProducto");
+            //Vinculamos consulta
+            $this->db->bind(':CodigoProducto', $cliente);
+            $this->db->execute();
+            $this->result = $this->db->rowCount();
+            if ($this->result == 1) {
+                //Existe
+                return true;
+            } else {
+                //No existe
+                return false;
+            }
+        }
+    }
+
+    function soloLetras($in)
+    {
+        if (preg_match('/^[\pL\s]+$/u', $in)) return false;
+        else return true;
+    }
+
+    function is_negative_number($number=0){
+
+        if( is_numeric($number) AND ($number<0) ){
             return true;
-        } else {
-            //No existe
+        }else{
             return false;
         }
+    
     }
 }
-}
-
-
