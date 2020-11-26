@@ -15,7 +15,7 @@ $(document).ready(function () {
     columns: [
       
       {
-        data: "IdProveedor"
+        data: "Nombre"
       },
       { data: "fecha"},
       {

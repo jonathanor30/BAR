@@ -77,7 +77,21 @@ class Ventas extends Controller
         //Si existe una petición de tipo post a este método se ejecuta el siguiente script
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             //Tabla a usar
-            $table = 'venta';
+            $table = <<<EOT
+            (
+               SELECT 
+                 u.user_name,
+                 a.IdCliente, 
+                 a.Fecha, 
+                 a.hora,
+                 a.observaciones, 
+                 a.IdEstadoVenta,
+                 a.IdVenta,  
+                 b.Nombre AS Nombre
+               FROM venta a
+               INNER JOIN cliente b ON a.IdCliente = b.IdCliente INNER JOIN users u ON a.user_id = u.user_id 
+            ) temp
+           EOT;
 
             //Llave primaria de la tabla
             $primaryKey = 'IdVenta';
@@ -86,14 +100,14 @@ class Ventas extends Controller
             // El parámetro `db` representa el nombre de la columna en la base de datos, mientras que el parámetro` dt` representa el identificador de la columna DataTables. En este caso, el parámetro objeto.
 
             $columns = array(
-                array('db' => 'user_id', 'dt' => 'user_id'),
                 array('db' => 'IdCliente', 'dt' => 'IdCliente'),
+                array('db' => 'user_name', 'dt' => 'user_name'),
                 array('db' => 'Fecha', 'dt' => 'Fecha'),
-                array('db' => 'observaciones', 'dt' => 'observaciones'),
                 array('db' => 'hora', 'dt' => 'hora'),
-                array('db' => 'IdEstadoventa', 'dt' => 'IdEstadoVenta'),
-
+                array('db' => 'observaciones', 'dt' => 'observaciones'),
+                array('db' => 'IdEstadoVenta', 'dt' => 'IdEstadoVenta'),
                 array('db' => 'IdVenta', 'dt' => 'IdVenta'),
+                array('db' => 'Nombre', 'dt' => 'Nombre'),
 
             );
 

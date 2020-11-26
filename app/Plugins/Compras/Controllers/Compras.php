@@ -1,5 +1,6 @@
 <?php
 
+
 class Compras extends Controller
 {
 
@@ -77,7 +78,20 @@ class Compras extends Controller
         //Si existe una petición de tipo post a este método se ejecuta el siguiente script
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             //Tabla a usar
-            $table = 'compra';
+           $table = <<<EOT
+            (
+               SELECT 
+                 a.IdProveedor, 
+                 a.fecha, 
+                 a.hora,
+                 a.observaciones, 
+                 a.IdEstado,
+                 a.IdCompra,  
+                 b.Nombre AS Nombre
+               FROM compra a
+               INNER JOIN proveedor b ON a.IdProveedor = b.IdProveedor
+            ) temp
+           EOT;
 
             //Llave primaria de la tabla
             $primaryKey = 'IdCompra';
@@ -92,6 +106,7 @@ class Compras extends Controller
                 array('db' => 'observaciones', 'dt' => 'observaciones'),
                 array('db' => 'IdEstado', 'dt' => 'IdEstado'),
                 array('db' => 'IdCompra', 'dt' => 'IdCompra'),
+                array('db' => 'Nombre', 'dt' => 'Nombre'),
 
             );
 
@@ -123,7 +138,7 @@ class Compras extends Controller
 
                 //Retornamos los valores consultados si filtro
                 echo json_encode(
-                    SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)
+                   SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)
                 );
             }
         } else {
@@ -272,8 +287,9 @@ class Compras extends Controller
                     'IdProducto'  => $key->IdProducto,
                     'cantidad'        => $key->cantidad,
                 );
+                $probar = $this->model->actualizarproducto($datos);
             }
-            $probar = $this->model->actualizarproducto($datos);
+            
             if($probar == 1){
             switch ($this->model->actualizarCompra($_POST['id'])) {
                 case 1:

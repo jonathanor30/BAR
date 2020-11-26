@@ -14,9 +14,9 @@ $(document).ready(function() {
     },
     columns: [
       
-      { data: "user_id" },
+      { data: "user_name" },
       
-      { data: "IdCliente" },
+      { data: "Nombre" },
       { data: "Fecha" },
       { data: "observaciones" },
       { data: "hora" },
