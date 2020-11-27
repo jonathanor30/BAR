@@ -47,7 +47,7 @@
       <table style="font-size: 12px;" id="Compras" class="table table-hover">
          <thead>
             <tr>
-               <th class="text-left">Proveedor</th>
+               <th class="text-left">IdProveedor</th>
                <th class="text-left">fecha</th>
                <th class="text-left">hora</th>
                <th class="text-left">observaciones</th>

@@ -1,6 +1,5 @@
 <?php
 
-
 class Compras extends Controller
 {
 
@@ -138,7 +137,7 @@ class Compras extends Controller
 
                 //Retornamos los valores consultados si filtro
                 echo json_encode(
-                   SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)
+                    SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)
                 );
             }
         } else {
