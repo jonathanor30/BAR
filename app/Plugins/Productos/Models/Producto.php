@@ -164,16 +164,6 @@ class Producto
             //solo letras
             return 9;
         }
-        if($datos['StockMinimo'] <=5 )
-        {
-            return 10;
-            exit();
-        }
-        if($datos['StockMaximo'] >=60 )
-        {
-            return 11;
-            exit();
-        }
         else {
             $this->db->query('INSERT INTO producto (IdMarca, IdPresentacion, 
         IdTipoProducto,CodigoProducto,IdUnidadMedida,NombreProducto,PrecioSugerido,

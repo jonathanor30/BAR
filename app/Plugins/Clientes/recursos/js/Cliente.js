@@ -1,5 +1,11 @@
 var ruta = document.getElementById("ruta").value;
 
+
+window.onload = Autoload();
+
+function Autoload() {
+  ObtenerTipoDocumento();
+}
 //Mostrar nombre de producto de manera dinamica
 document
   .getElementById("NombreProducto")
@@ -68,6 +74,30 @@ function ObtenerTipoDeProducto() {
     },
   });
 }
+
+function ObtenerTipoDocumento() {
+  $.ajax({
+    url: ruta + `/Clientes/ObtenerTipoDocumento`,
+    type: "POST",
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (resultado) {
+      var x = document.getElementById("IdTipoDocumento");
+      //Acá estamos pintando los tipos de productos
+      for (var r in resultado) {
+        var option = document.createElement("option");
+        option.text = resultado[r].Nombre_Documento;
+        option.value = resultado[r].IdTipoDocumento;
+        x.add(option);
+      }
+      //Definimos el tipo de producto actual
+      x.value = parseInt(document.getElementById("TipoDocumentoActual").value);
+
+    },
+  });
+}
+
 function upload_image() {
   var inputFileImage = document.getElementById("ImagenProducto");
   var file = inputFileImage.files[0];
@@ -97,4 +127,6 @@ function upload_image() {
       },
     });
   }
+
+ 
 }

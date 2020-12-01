@@ -3,6 +3,16 @@
 
 <div class="container-fluid">
     <div class="row">
+        <div class="col-md-4 col-6">
+            <div class="btn-group">
+                <a href="<?php echo RUTA_URL; ?>/Facturacion/page/InvoicesProv" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-arrow-left fa-fw" aria-hidden="true"></i>
+                    <span class="d-none d-lg-inline-block">Facturas Proveedor</span>
+                </a>
+                <a href="<?php echo RUTA_URL; ?>/Facturacion/page/Provfactdetail/<?php echo $datos['datos'][0]->idfactura ?>" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-sync" aria-hidden="true"></i>
+                </a>
+            </div>
         </div>
     </div>
     <br>
@@ -70,6 +80,9 @@
                         <?php } ?>
                     </thead>
                 </table>
+
+
+
             </div>
             <div class="table-responsive-sm">
 
@@ -87,6 +100,9 @@
                 </div>
             </div>
             <div class="card-footer">
+
+                <button type="submit" id="btnsaveinvprov" class="btn btn-sm btn-primary btn-sm" style="float:right"><i class="fas fa-save"></i>&nbsp;Guardar</button>
+
             </div>
 
         </div>
@@ -94,6 +110,9 @@
 
 
 </div>
+
+
+
 
 </div>
 <!--Aca termina-->

@@ -26,17 +26,58 @@ class Novedades extends Controller
         );
         $this->vista('ListadoNovedades', $datos, 'Novedades', true);
     }
-
-
-    public function NewNovedad()
+    public function LossDetail()
     {
      
         $datos =  array(
-            'titulo' => 'NewNovedad',
+            'titulo' => 'Loss Detail',
             
         );
 
-        $this->vista('NewNovedad', $datos, 'Novedades');
+        $this->vista('LossDetail', $datos, 'Novedades');
+    }
+    public function NewDetail($id)
+    {
+        
+
+        $datosnovedad = $this->modelnovedad->obtenerdaton($id);
+
+            $datodetalle = $this->modelnovedad->obtenerdetallen($id);
+            $total = $this->modelnovedad->total($id);
+
+        $datos =  array(
+            'titulo' => 'New Detail',
+            'datosn'  => $datosnovedad,
+            'datosd' => $datodetalle,
+            'total' => $total,
+        );
+
+        $this->vista('NewDetail', $datos, 'Novedades');
+    }
+
+
+   
+
+    public function ReportNews()
+    {
+     
+        $datos =  array(
+            'titulo' => 'Report News',
+            
+        );
+
+        $this->vista('ReportNews', $datos, 'Novedades');
+    }
+
+    public function ReportLoss()
+    {
+     
+        $datos =  array(
+            'titulo' => 'Report Loss',
+            
+        );
+
+        $this->vista('ReportLoss', $datos, 'Novedades');
     }
 
     /**
@@ -80,7 +121,6 @@ class Novedades extends Controller
 
             $columns = array(
                 array('db' => 'IdNovedad', 'dt' => 'IdNovedad'),
-                array('db' => 'Cantidad', 'dt' => 'Cantidad'),
                 array('db' => 'Descripcion', 'dt' => 'Descripcion'),
                 array('db' => 'Fecha', 'dt' => 'Fecha'),
                 array('db' => 'IdTipoNovedad', 'dt' => 'IdTipoNovedad'),
@@ -158,6 +198,10 @@ class Novedades extends Controller
             echo json_encode($this->modelnovedad->ObtenerTiposDeProducto(), JSON_PRETTY_PRINT);
         endif;
     }
+
+
+
+    //////////////crear compra////////////////////////////
     public function ObtenerPrecios()
     {
         //Validar datos recibido mediante POST
@@ -176,31 +220,41 @@ class Novedades extends Controller
             $exc = array('FacObservacion');
             if (is_array($this->formValidator($_POST, $exc))) {
                 if (isset($_POST['numero_item'])) {
-                        //se define el id de la compra
-                        $cont  = 0;
-                        $iva = 0;
-                        $total = 0;
-                    
-                        foreach ($_POST['numero_item'] as $key => $value) {
-                            $dat = array(
-                                'IdTipoProducto'  => $_POST['IdTipoProducto'][$key],
-                                'cantidad'        => $_POST['cantidad'][$key],
-                                'precio' => $_POST['precio'][$key],            
-                                'iva'             => $_POST['iva'][$key],
-                                'total'           => $_POST['total'][$key],
-                                'FacObservacion' => $_POST['FacObservacion'],
-                            );
-                            if ($this->modelnovedad->SaveInvProv($dat)) {
-                              
-                                $cont++;
-                                $total = $total + $dat['total'];
-                                $iva = $iva + $dat['iva'];  
-                            } else {
-                                echo false;
-                            }
+                    //se define el id de la compra
+                    $cont  = 0;
+                    $iva = 0;
+                    $total = 0;
+                    $datos = array(
+                        'FacObservacion' => $_POST['FacObservacion']
+                    );
+                    $this->modelnovedad->observacion($datos,2);
+
+                    foreach ($_POST['numero_item'] as $key => $value) {
+                        $dat = array(
+
+                            'IdTipoProducto'  => $_POST['IdTipoProducto'][$key],
+                            'cantidad'        => $_POST['cantidad'][$key],
+                            'precio' => $_POST['precio'][$key],
+                            'iva'             => $_POST['iva'][$key],
+                            'total'           => $_POST['total'][$key]
+                        );
+
+
+
+                        $producto = $this->modelnovedad->actualizarproducto($dat,2);
+                        if($producto === 1){
+                        if ($this->modelnovedad->SaveInvProv($dat)) {
+
+                            $cont++;
+                            $total = $total + $dat['total'];
+                            $iva = $iva + $dat['iva'];
+                        } else {
+                            echo false;
                         }
-                        //echo $cont."--".count($_POST['numero_item']);
-                    
+                    } else{echo false;}
+                    }
+                    //echo $cont."--".count($_POST['numero_item']);
+
                 } else {
                     echo 'No se pueden guardar facturas sin lineas';
                 }
@@ -211,5 +265,79 @@ class Novedades extends Controller
         $_POST = array();
     }
 
+    
+
+/////////////////////////////////////////////crear venta//////////////////////////////////////////////////////
+
+
+
+ 
+    public function SaveInvProv2()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $exc = array('FacObservacion');
+            if (is_array($this->formValidator($_POST, $exc))) {
+                if (isset($_POST['numero_item'])) {
+                    //se define el id de la compra
+                    $cont  = 0;
+                    $iva = 0;
+                    $total = 0;
+                    $datos = array(
+                        'FacObservacion' => $_POST['FacObservacion']
+                    );
+                    $this->modelnovedad->observacion($datos,1);
+
+                    foreach ($_POST['numero_item'] as $key => $value) {
+                        $dat = array(
+
+                            'IdTipoProducto'  => $_POST['IdTipoProducto'][$key],
+                            'cantidad'        => $_POST['cantidad'][$key],
+                            'precio' => $_POST['precio'][$key],
+                            'iva'             => $_POST['iva'][$key],
+                            'total'           => $_POST['total'][$key]
+                        );
+
+
+
+                        $producto = $this->modelnovedad->actualizarproducto($dat,1);
+                        if($producto === 1){
+                        if ($this->modelnovedad->SaveInvProv($dat)) {
+
+                            $cont++;
+                            $total = $total + $dat['total'];
+                            $iva = $iva + $dat['iva'];
+                        } else {
+                            echo false;
+                        }
+                    } else{echo false;}
+                    }
+                    //echo $cont."--".count($_POST['numero_item']);
+
+                } else {
+                    echo 'No se pueden guardar facturas sin lineas';
+                }
+            } else {
+                echo "Te faltan Campos por llenar";
+            }
+        }
+        $_POST = array();
+    }
+
+    public function validarexistencias():void
+    {
+        if($_SERVER['REQUEST_METHOD'] == true && !empty($_GET)){
+            $producto = $this->modelnovedad->ObtenerRegistro('IdProducto', 'producto', $_GET['IdProducto']);
+            $cantidad = $_GET['cantidad'];
+            if($cantidad < $producto->Existencias){
+                 echo "true";
+            }else{
+                echo "false";
+            }
+        }
+    }
+
+    
+
+    
 }
 

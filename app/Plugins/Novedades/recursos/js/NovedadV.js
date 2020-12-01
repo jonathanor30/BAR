@@ -5,12 +5,6 @@ var contador = Array();
 window.onload=Autoload();
 
 function Autoload(){
-  var p;
-  /*
-  ObtenerTipoDeNovedad();
-  */
-
-  
 
 
 }
@@ -28,33 +22,9 @@ function Autoload(){
 
 });
  */
-$(document).ready(function () {
-  $("#BuscaProveedor").autocomplete({
-      source: ruta + "/Compras/AutoCompletarProveedor/Nombre",
-      minLength: 2,
-      select: function (event, ui) {
-        event.preventDefault();
-
-         document.getElementById("BuscaProveedor").value = ui.item.Proveedor;
-  
-      }
-  });
-});
-
-
-$("#BuscaProveedor").on("keydown", function (event) {
-  if (
-      event.keyCode == $.ui.keyCode.DELETE ||
-      event.keyCode == $.ui.keyCode.BACKSPACE
-  ) {
-  
-    document.getElementById("BuscaProveedor").value = "";
-    
-  }
-});
   $(document).ready(function () {
   $("#BuscaProducto").autocomplete({
-      source: ruta + "/Compras/AutoCompletarProducto/NombreProducto",
+      source: ruta + "../Compras/AutoCompletarProducto/NombreProducto",
       minLength: 2,
       select: function (event, ui) {
         event.preventDefault();
@@ -83,7 +53,7 @@ $("#datos_factura").submit(function(event) {
   var parametros = $(this).serialize();
   $.ajax({
     type: "POST",
-    url: ruta + "/Compras/SaveinvProv",
+    url: ruta + "/Novedades/SaveinvProv2",
     data: parametros,
   
     success: function(datos) {
@@ -95,12 +65,12 @@ $("#datos_factura").submit(function(event) {
           //$("#resultados_ajax").html('<span></span>');
           $("#btnsaveinvprov").attr("disabled", true);
           alertify.success(
-            '<h6><i class="fas fa-check"></i> Compra realizada correctamente</h6>'
+            '<h6><i class="fas fa-check"></i> Novedad realizada correctamente</h6>'
           );
           //Para ir a factura detallada
           setTimeout(function() {
             location.href =
-              ruta + "/Compras";
+              ruta + "/Novedades";
           }, 1000);
         } else {
           alertify.warning(
@@ -121,19 +91,45 @@ $("#datos_factura").submit(function(event) {
 });
 
 
+function ObtenerClientes() {
+  $.ajax({
+    url: ruta + `../Ventas/ObtenerClientes`,
+    type: "POST",
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (resultado) {
+      var x = document.getElementById("IdCliente");
+      //Acá estamos pintando los tipos de productos
+      for (var r in resultado) {
+    var option = document.createElement("option");
+    
+    option.text = resultado[r].Nombre;
+    option.value = resultado[r].IdCliente;
+        
+        x.add(option);
+      }
+      //Definimos el tipo de producto actual
+
+    },
+  });
+
+  
+}
 
 
 
 
 
-function validarstock(id, cantidad) {
+
+function validarexistencias(id, cantidad) {
   var autorizador;
   $.ajax({
     beforesend: function(){
      
     },
     async:false,
-    url: ruta + `/Compras/validarstocks`,
+    url: ruta + `/Novedades/validarexistencias`,
     type: "GET",
     data:`IdProducto=${id}&cantidad=${cantidad}`,
     success: function (resultado) {
@@ -153,8 +149,6 @@ function validaritem()
 {
   var IdTipoProducto = document.getElementById("IdTipoProducto").value;
   var nombre_producto = document.getElementById("nombrep").value;
-  var marca_producto = document.getElementById("marcap").value;
-  var precio = document.getElementById("precio").value;
   var cantidad = document.getElementById("Cantidad").value;
   var tasa_iva = document.getElementById("iva").value;
   if (nombre_producto != "" && cantidad != "") {
@@ -179,9 +173,9 @@ function validaritem()
           alertify.warning("El iva no puede contener numeros negativos");
         }else
         {
-          if(!validarstock(IdTipoProducto, cantidad))
+          if(!validarexistencias(IdTipoProducto,cantidad))
           {
-            alertify.warning("la cantidad supera el Stock máximo");
+            alertify.warning("la cantidad supera las existencias del producto");
           }
           else{
             agregaritem();
@@ -454,8 +448,51 @@ function toggleRowEdit($row, doEdit) {
   }
 }
 
+function actualizar(id, type) {
+  var q = id;
+  var pre = document.createElement("H5");
+  //custom style.
+  pre.style.maxHeight = "400px";
+  pre.style.margin = "0";
+  pre.style.padding = "24px";
+  //pre.style.whiteSpace = "pre-wrap";
+  pre.style.textAlign = "center";
 
+  pre.appendChild(
+    document.createTextNode("Realmente desea actualizar este producto")
+  );
 
-
-
-
+  alertify.confirm(
+    pre,
+    function() {
+      $.ajax({
+        type: "POST",
+        url: ruta + "/ventas/actualizar",
+        data: "id=" + id + "&type=" + type,
+        q: q,
+        beforeSend: function(objeto) {
+          //$("#resultados").html("Mensaje: Cargando...");
+        },
+        success: function(datos) {
+          var result = datos;
+          if (datos == "true") {
+            $("#Ventas")
+              .DataTable()
+              .ajax.reload();
+            alertify.success(
+              '<h6><i class="fas fa-check"></i> producto actualizado correctamente</h6>'
+            );
+          } else {
+            console.log(datos);
+            alertify.warning(
+              '<i class="fas fa-ban"></i> Error al actualizar producto'
+            );
+          }
+        }
+      });
+    },
+    function() {
+      alertify.error('<i class="fas fa-ban"></i> Cancelado');
+    }
+  );
+}

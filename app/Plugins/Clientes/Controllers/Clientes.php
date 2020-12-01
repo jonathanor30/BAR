@@ -34,6 +34,16 @@ class Clientes extends Controller
 
         $this->vista('detalleCliente', $datos, 'Clientes');
     }
+    public function onlydetail()
+    {
+        $only = $this->model->ObtenerUno();
+        $datos =  array(
+            'titulo' => $only->Nombre,
+            'cliente' => $only,
+        );
+
+        $this->vista('onlydetails', $datos, 'Clientes');
+    }
     public function pruebaxd($id = null)
     {
         $this->pagina404($id);
@@ -51,6 +61,15 @@ class Clientes extends Controller
         if ($_SERVER['REQUEST_METHOD']) :
             header('Content-Type: application/json');
             echo json_encode($this->model->Obtenerventas2(), JSON_PRETTY_PRINT);
+        endif;
+    }
+
+    public function ObtenerTipoDocumento()
+    {
+        //Validar datos recibido mediante POST
+        if ($_SERVER['REQUEST_METHOD']) :
+            header('Content-Type: application/json');
+            echo json_encode($this->model->ObtenerTipoDocumento(), JSON_PRETTY_PRINT);
         endif;
     }
 
@@ -119,7 +138,122 @@ class Clientes extends Controller
             redireccionar('');
         }
     }
+    public function tableViews2()
+    {
+        //Si existe una petición de tipo post a este método se ejecuta el siguiente script
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            //Tabla a usar
+            $table = 'venta';
 
+            //Llave primaria de la tabla
+            $primaryKey = 'IdVenta';
+
+            // Conjunto de columnas de la base de datos que se deben leer y enviar a DataTables.
+            // El parámetro `db` representa el nombre de la columna en la base de datos, mientras que el parámetro` dt` representa el identificador de la columna DataTables. En este caso, el parámetro objeto.
+
+            $columns = array(
+                array('db' => 'user_id ', 'dt' => 'user_id '),
+                array('db' => 'IdCliente', 'dt' => 'IdCliente'),
+                array('db' => 'IdEstadoVenta', 'dt' => 'IdEstadoVenta'),
+                array('db' => 'fecha', 'dt' => 'fecha'),
+                array('db' => 'observaciones', 'dt' => 'observaciones'),
+                array('db' => 'hora', 'dt' => 'hora'),
+                array('db' => 'IdVenta', 'dt' => 'IdVenta'),
+
+            );
+
+            //Información del servidor de base de datos
+            $sql_details = array(
+                'user' => DB_USER,
+                'pass' => DB_PASS,
+                'db'   => DB_NAME,
+                'host' => DB_HOST,
+            );
+         
+                //Retornamos los valores consultados con filtro
+                echo json_encode(
+                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null)
+                );
+           
+        } else {
+            //De lo contrario será redireccionado
+            redireccionar('');
+        }
+    }
+    public function tableViews3()
+    {
+        //Si existe una petición de tipo post a este método se ejecuta el siguiente script
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            //Tabla a usar
+            $table = 'producto';
+
+            //Llave primaria de la tabla
+            $primaryKey = 'IdProducto';
+
+            // Conjunto de columnas de la base de datos que se deben leer y enviar a DataTables.
+            // El parámetro `db` representa el nombre de la columna en la base de datos, mientras que el parámetro` dt` representa el identificador de la columna DataTables. En este caso, el parámetro objeto.
+
+            $columns = array(
+                array('db' => 'NombreProducto', 'dt' => 'NombreProducto'),
+                array('db' => 'PrecioSugerido', 'dt' => 'PrecioSugerido'),
+
+            );
+
+            //Información del servidor de base de datos
+            $sql_details = array(
+                'user' => DB_USER,
+                'pass' => DB_PASS,
+                'db'   => DB_NAME,
+                'host' => DB_HOST,
+            );
+         
+                //Retornamos los valores consultados con filtro
+                echo json_encode(
+                    SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null)
+                );
+           
+        } else {
+            //De lo contrario será redireccionado
+            redireccionar('');
+        }
+    }
+
+    public function tableViewsPresentacion()
+    {
+        //Si existe una petición de tipo post a este método se ejecuta el siguiente script
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            //Tabla a usar
+            $table = 'presentacion';
+
+            //Llave primaria de la tabla
+            $primaryKey = 'IdPresentacion';
+
+            // Conjunto de columnas de la base de datos que se deben leer y enviar a DataTables.
+            // El parámetro `db` representa el nombre de la columna en la base de datos, mientras que el parámetro` dt` representa el identificador de la columna DataTables. En este caso, el parámetro objeto.
+
+            $columns = array(
+                array('db' => 'Nombre', 'dt' => 'Nombre'),
+                array('db' => 'IdPresentacion', 'dt' => 'IdPresentacion'),
+
+            );
+
+            //Información del servidor de base de datos
+            $sql_details = array(
+                'user' => DB_USER,
+                'pass' => DB_PASS,
+                'db'   => DB_NAME,
+                'host' => DB_HOST,
+            );
+
+            //Retornamos los valores consultados con filtro
+            echo json_encode(
+                SSP::complex($_POST, $sql_details, $table, $primaryKey, $columns, null)
+            );
+        } else {
+            //De lo contrario será redireccionado
+            redireccionar('');
+        }
+    }
     /**
      * Editar
      * (ES) Este método se encarga de editar un producto
@@ -275,12 +409,36 @@ class Clientes extends Controller
         }
     }
 
+
+    public function detalleprobar($variable)
+    {
+
+        $only = $this->model->ObtenerUno();
+        $datoscli = $this->model->obtenerdatos($variable);
+        $VerV = $this->model->VerVentas($variable);
+        $VerP = $this->model->VerProductos($variable);
+        $ObservarTodo = $this->model->ObservarTodo($variable);
+        $total = $this->model->obtenertotal($variable);
+
+        $datos =  array(
+            'titulo' => $only->Nombre,
+            'only' => $only,
+            'datoscli' => $datoscli,
+            'VerP' => $VerP,
+            'VerV' => $VerV,
+            'ObservarTodo' => $ObservarTodo,
+            'total' => $total,
+        );
+
+        $this->vista('onlydetails', $datos, 'Clientes');
+        
+    }
     public function detalleClientes($id)
     {
 
         $cliente = $this->model->pruebaxd($id);
             //Comprobador 404
-            $this->pagina404($cliente);
+            $this->pagina408($cliente);
 
             $total = $this->model->obtenertotal($id);
 
@@ -303,4 +461,5 @@ class Clientes extends Controller
         $probar =  $this->model->prueba2($id);
         print_r($probar);
     }
+
 }

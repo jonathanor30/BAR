@@ -71,7 +71,7 @@ $("#datos_factura").submit(function(event) {
           //$("#resultados_ajax").html('<span></span>');
           $("#btnsaveinvprov").attr("disabled", true);
           alertify.success(
-            '<h6><i class="fas fa-check"></i> Factura agregada correctamente</h6>'
+            '<h6><i class="fas fa-check"></i> Venta realizada correctamente</h6>'
           );
           //Para ir a factura detallada
           setTimeout(function() {
@@ -80,7 +80,7 @@ $("#datos_factura").submit(function(event) {
           }, 1000);
         } else {
           alertify.warning(
-            "No se puede guardar la factura sin bloquear las lineas"
+            "No se puede guardar la venta sin bloquear las lineas"
           );
           $("#btnsaveinvprov").attr("disabled", false);
         }

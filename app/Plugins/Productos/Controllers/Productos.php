@@ -385,12 +385,6 @@ class Productos extends Controller
                     case 9:
                         echo "No digite numeros negativos en la medida";
                         break;
-                    case 10:
-                        echo "el stock minimo debe ser mayor a 5";
-                        break;
-                    case 11:
-                        echo "el stock maximo debe ser menor a 60";
-                        break;
                 }
 
 

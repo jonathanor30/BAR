@@ -1,4 +1,6 @@
-<?php require RUTA_APP . '/Views/inc/header.php'; ?>
+<?php require RUTA_APP . '/Views/inc/header.php';
+$sesion= $_SESSION['user_type'];?>
+
 <br>
 <div id="ResultadoAjax" class="container"></div>
 <div class="container-fluid d-print-none">
@@ -19,8 +21,8 @@
                   <option value="1">Activos</option>
                   <option value="2">Inactivos</option>
                </select>
-               
-               <a href="<?php echo RUTA_URL; ?>/Novedades/NewNovedad" id="btnnewinv" class="btn btn-success btn-sm "><i class="fa fa-plus" style="color:white"></i>&nbsp; <strong style="color:white">Nueva</strong></a>
+               <a href="<?php echo RUTA_URL; ?>/Novedades/ReportLoss" id="btnnewinv" class="btn btn-success btn-sm "><i class="fa fa-plus" style="color:white"></i>&nbsp; <strong style="color:white">Reportar Perdida</strong></a>
+               <?php if($sesion!=1){?><a href="<?php echo RUTA_URL; ?>/Novedades/ReportNews" id="btnnewinv" class="btn btn-success btn-sm "><i class="fa fa-plus" style="color:white"></i>&nbsp; <strong style="color:white">Reportar renovacion</strong></a><?php } ?>
                <div class="dropdown-menu">
                   <a class="dropdown-item" href="">
                      <i class="fas fa-cubes fa-fw" aria-hidden="true"></i> Products
@@ -49,7 +51,7 @@
          <thead>
             <tr>
             <th class="text-left">numero</th>
-               <th class="text-left">Cantidad</th>
+              
                <th class="text-left">Descripcion</th>
                <th class="text-left">Fecha</th>
                <th class="text-left">Tipo</th>

@@ -14,7 +14,6 @@ $(document).ready(function () {
     },
     columns: [
       { data: "IdNovedad" },
-      { data: "Cantidad" },
       { data: "Descripcion" },
       {data: "Fecha",},
       {
@@ -39,20 +38,11 @@ $(document).ready(function () {
           $(nTd).html(
             "<div class='btn-group'> <a title='Editar' class='btn btn-sm btn-outline-secondary' href='" +
               ruta +
-              "/Productos/VerProducto/" +
+              "/Novedades/NewDetail/" +
               oData.IdNovedad +
               "'>" +
               "<i class='fas fa-eye'></i>" +
-              "</a><a(" +
-              oData.IdNovedad +
-              "," +
-              oData.IdTipoNovedad +
-              ");'></a><a (" +
-              oData.IdNovedad +
-              "," +
-              oData.IdTipoNovedad
-               +
-              ");'></a></div>"
+              "</a>"
           );
         },
       },
@@ -171,6 +161,53 @@ function Eliminar(id) {
             console.log(datos);
             alertify.warning(
               '<i class="fas fa-ban"></i> Error al actualizar producto'
+            );
+          }
+        },
+      });
+    },
+    function () {
+      alertify.error('<i class="fas fa-ban"></i> Cancelado');
+    }
+  );
+}
+
+function actualizar1(id) {
+  var q = id;
+  var pre = document.createElement("H5");
+  //custom style.
+  pre.style.maxHeight = "400px";
+  pre.style.margin = "0";
+  pre.style.padding = "24px";
+  //pre.style.whiteSpace = "pre-wrap";
+  pre.style.textAlign = "center";
+
+  pre.appendChild(
+    document.createTextNode("Realmente desea completar esta compra")
+  );
+
+  alertify.confirm(
+    pre,
+    function () {
+      $.ajax({
+        type: "POST",
+        url: ruta + "/compras/actualizar",
+        data: "id=" + id,
+        q: q,
+        beforeSend: function (objeto) {
+          //$("#resultados").html("Mensaje: Cargando...");
+        },
+        success: function (datos) {
+          var result = datos;
+          if (datos == "true") {
+            $("#Compras").DataTable().ajax.reload();
+            alertify.success(
+              '<h6><i class="fas fa-check"></i> Compra completada correctamente</h6>'
+            );
+          } else {
+            console.log(datos);
+            alertify.warning(
+              '<i class="fas fa-ban"></i> Error al completar compra'
             );
           }
         },

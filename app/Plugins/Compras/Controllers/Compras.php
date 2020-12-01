@@ -23,6 +23,16 @@ class Compras extends Controller
         );
         $this->vista('ListadoCompras', $datos, 'Compras', true);
     }
+
+    public function pdf()
+    {
+        $datos =  array(
+            'titulo' => 'PDF',
+            'icon'   => 'fas fa-shopping-bag',
+        );
+        $this->vista('pdf', $datos, 'Compras', true);
+    }
+
     public function test2()
     {
         $dataTables = dataTables();
@@ -119,13 +129,13 @@ class Compras extends Controller
             if (isset($_POST['id']) && !empty($_POST['id'])) {
                 switch ($_POST['id']) {
                     case 1:
-                        $where = "Estado_P ='1'";
+                        $where = "IdEstado ='1'";
                         break;
                     case 2:
-                        $where = "Estado_P ='2'";
+                        $where = "IdEstado ='2'";
                         break;
                     case 3:
-                        $where = "Estado_P ='0'";
+                        $where = "IdEstado ='0'";
                         break;
                 }
 
@@ -247,6 +257,31 @@ class Compras extends Controller
                         'NombreProducto'=> $value['NombreProducto'],
                         'PrecioSugerido'=> $value['PrecioSugerido'],
                         'Marca'         => $value['Nombre']
+
+
+                    );
+                }
+                echo json_encode($dato);
+            }
+
+        endif;
+    }
+
+    public function AutoCompletarProveedor(string $key1 = "")
+    {
+        //validar que exista una llave de busqueda
+        if ($key1 != "") :
+            if (isset($_GET['term'])) {
+                $dato = array();
+                $rows = $this->model->AutoCompletarProveedor([
+                    'key' => $key1,
+                    'term' => $_GET['term'] ?? ""
+                ]);
+                foreach ($rows as $key => $value) {
+
+                    $dato[] = array(
+                        'value'         =>  $value['Nombre'],
+                        'Proveedor'         => $value['Nombre']
 
 
                     );

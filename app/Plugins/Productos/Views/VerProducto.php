@@ -4,7 +4,7 @@
         <div class="card-header">
             <h4 id="TituloProducto"><?php echo $datos['producto']->NombreProducto ?></h4>
         </div>
-        <input hidden id="TipoProductoActual" value="<?php echo $datos['producto']->IdTipoProducto?>">
+        <input hidden id="TipoProductoActual" value="<?php echo $datos['producto']->IdTipoProducto ?>">
         <div class="card-body">
             <div class="row" title="<?php echo $datos['producto']->NombreProducto ?> $<?php echo $datos['producto']->PrecioSugerido ?>">
                 <div class="col-sm-auto">
@@ -21,7 +21,11 @@
                             <input type="file" class="custom-file-input" id="ImagenProducto" name="ImagenProducto" onchange="upload_image();" accept=".jpg,.png,.jpeg">
                             <label class="custom-file-label" for="ImagenProducto" aria-describedby="inputGroupFileAddon02">Seleccione una imagen <i class="fas fa-image"></i></label>
                         </div>
-                        <div id="LoadImgProducto"></div>
+                        <div id="LoadImgProducto"></div>&nbsp&nbsp <div class="btn-group">
+                            <a class="btn btn-sm btn-outline-secondary" href="">
+                                <i class="fas fa-sync" aria-hidden="true"></i>
+                            </a>
+                        </div>
                     </div>
                     <br><br>
                 </div>

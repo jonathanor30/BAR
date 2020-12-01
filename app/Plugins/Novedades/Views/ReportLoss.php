@@ -1,24 +1,18 @@
 <?php require RUTA_APP . '/Views/inc/header.php'; ?>
+
 <div class="container-fluid">
     <br>
     <div class="card">
         <div class="card-header">
-            <center><h3>Registrar Compra</h3></center>
+            <center>
+                <h3>Registrar Venta</h3>
+            </center>
         </div>
         <div class="card-body">
             <br>
             <form class="form-horizontal" role="form" id="datos_factura" method="POST" autocomplete="on">
-            <div class="form-group row">
-            <div class="col-sm-3">
-                        <label>Proveedor</label>
-                        <!--<select class="form-control form-control-sm" name="IdTipoProducto" id="IdTipoProducto">
-                            <option value=" " disable>--Selecione un Producto--</option>
-                        </select>-->
-                        <input class="form-control form-control-sm" type="text" id="BuscaProveedor" placeholder="Nombre de proveedor...">
-                    </div>
-            </div>
-                <hr>    
-            <div class="row">
+                <hr>
+                <div class="row">
                     <div class="col-sm">
                         <label>Producto</label>
                         <!--<select class="form-control form-control-sm" name="IdTipoProducto" id="IdTipoProducto">
@@ -31,7 +25,7 @@
                     </div>
                     <div class="col-sm">
                         <label>Iva</label>
-                        <input class="form-control form-control-sm iva" type="text"  id="iva" placeholder="...%">
+                        <input class="form-control form-control-sm iva" type="text" id="iva" placeholder="...%">
                     </div>
                     <div class="col-sm">
                         <label>Precio</label>
@@ -45,9 +39,9 @@
                         <a class="btn btn-sm btn-success text-light" style="float:right; position: absolute;bottom: 2px;" onclick="validaritem();" role="button"><i class="fas fa-plus"></i></a>
                     </div>
                 </div>
-                
+
                 <hr>
-               
+
 
                 <div class="table-responsive-sm">
                     <table class="table table-striped">
@@ -86,6 +80,6 @@
         </div>
     </div>
 
+    <script src="<?php echo RUTA_URL; ?>/Novedades/files?js=recursos/js/NovedadV.js"></script>
 
-    <script src="<?php echo RUTA_URL; ?>/Compras/files?js=recursos/js/Compra.js"></script>
     <?php require RUTA_APP . '/Views/inc/footer.php'; ?>

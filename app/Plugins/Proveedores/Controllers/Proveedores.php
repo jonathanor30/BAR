@@ -229,7 +229,7 @@ class Proveedores extends Controller
 
         $proveedor = $this->model->pruebaxd($id);
             //Comprobador 404
-            $this->pagina404($proveedor);
+            $this->pagina412($proveedor);
 
             $total = $this->model->obtenertotal($id);
 

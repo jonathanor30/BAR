@@ -34,16 +34,13 @@
                                     <h5>Nª Venta Asociada</h5>
                                 </th>
                                 <th class="text-left">
-                                    <h5>Cliente</h5>
-                                </th>
-                                <th class="text-left">
-                                    <h5>Producto</h5>
-                                </th>
-                                <th class="text-left">
                                     <h5>Fecha</h5>
                                 </th>
                                 <th class="text-left">
                                     <h5>Total</h5>
+                                </th>
+                                <th class="text-left">
+                                    <h5>Detalles</h5>
                                 </th>
                             </tr>
                             <?php
@@ -54,16 +51,15 @@
                                         <h6><?php echo $key->IdVenta; ?></h6>
                                     </td>
                                     <td>
-                                        <h6><?php echo $key->IdCliente; ?></h6>
-                                    </td>
-                                    <td>
-                                        <h6><?php echo $key->NombreProducto; ?></h6>
-                                    </td>
-                                    <td>
                                         <h6><?php echo $key->Fecha; ?></h6>
                                     </td>
                                     <td>
                                         <h6><?php echo $key->total; ?></h6>
+                                    </td>
+                                    <td>
+                                         <a title='Detalle' class='btn btn-sm btn-outline-secondary' href="http://localhost/Bar70/Clientes/detalleprobar/<?php echo $key->IdVenta?>">
+                                                <i class='fas fa-eye'></i> 
+                                            </a> 
                                     </td>
                                 </tr>
                             <?php } ?>

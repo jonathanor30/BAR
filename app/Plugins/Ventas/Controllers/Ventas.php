@@ -161,10 +161,11 @@ class Ventas extends Controller
                     'IdProducto'  => $key->IdProducto,
                     'cantidad'        => $key->cantidad,
                 );
+                $probar = $this->model->actualizarproductoinventario($datos);
             }
             //Instancia del moldelo
 
-            $probar = $this->model->actualizarproductoinventario($datos);
+           
             if($probar == 1){
             switch ($this->model->actualizarVenta($_POST['id'])) {
                 case 1:

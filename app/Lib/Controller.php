@@ -36,7 +36,7 @@ class Controller extends Core
                 require_once '../app/Plugins/' . $pluginName . '/Models/' . $modelo . '.php';
                 //Instanciar el modelo
                 return new $modelo();
-            }else{
+            } else {
                 die("El modelo no existe");
             }
         }
@@ -155,6 +155,22 @@ class Controller extends Core
             return $this->vista('404') . exit();
         }
     }
+
+    //Métoo para error 408
+    public function pagina408($parametro)
+    {
+        if ($parametro == false) {
+            return $this->vista('408') . exit();
+        }
+    }
+    //Métoo para error 412
+    public function pagina412($parametro)
+    {
+        if ($parametro == false) {
+            return $this->vista('412') . exit();
+        }
+    }
+
     //Método para validación de campos vacios de un formulario
     public function formValidator($array, $exceptions = [])
     {
@@ -293,7 +309,7 @@ class Controller extends Core
         }
     }
 
-    
+
     //Método para validar acceso a Módulos/plugins
     public function modulesValidator($datos, $plugin = false)
     {

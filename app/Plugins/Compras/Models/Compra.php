@@ -122,6 +122,13 @@ class Compra
         //Retornamos valor
         return $this->db->registrosrow();
     }
+    public function AutoCompletarProveedor($datos)
+    {
+        $this->db->query("SELECT Nombre FROM proveedor  WHERE  " . $datos['key'] . " LIKE '%" . $datos['term'] . "%' LIMIT 0 ,50");
+        $this->db->execute();
+        //Retornamos valor
+        return $this->db->registrosrow();
+    }
     public function actualizarCompra($id)
     {
 

@@ -69,11 +69,9 @@
                <div class="row">
                   <div class="col-sm">
                      <label for="IdTipoDocumento" class="col-form-label">Tipo documento<b style="color:gray;">*</b></label>
-                     <select class="form-control form-control-sm" name="IdTipoDocumento" required="">
-                        <option disabled="" selected="">Selecciona tipo de documento</option>
-                        <option value="1">Cedula</option>
-                        <option value="2">Cedula extrajera</option>
-                     </select>
+                     <select class="form-control form-control-sm" name="IdTipoDocumento" id="IdTipoDocumento">
+                           <option disable>--Seleccione tipo documento--</option>
+                        </select>
                   </div>
                   <div class="col-sm">
                      <label for="Numero_Documento" class="col-form-label">Número documento<b style="color:gray;">*</b></label>
@@ -99,4 +97,5 @@
 <!-- Modal -->
 
 <script src="<?php echo RUTA_URL; ?>/Clientes/files?js=recursos/js/Clientes.js"></script>
+<script src="<?php echo RUTA_URL; ?>/Clientes/files?js=recursos/js/Cliente.js"></script>
 <?php require RUTA_APP . '/Views/inc/footer.php'; ?>
